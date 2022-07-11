@@ -1,0 +1,13 @@
+template:
+  bootswatch: flatly
+
+reference:
+- title: Download Functions
+  desc: These functions are used to download data from variaous USPTO APIs.
+  contents:
+  - starts_with("download_")
+
+home:
+  links:
+  - text: Test Coverage
+    href: coverage.html

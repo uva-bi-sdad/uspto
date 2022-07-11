@@ -1,9 +1,9 @@
-
 .Rproj.user
-.vscode
 .Rhistory
 .RData
 .httr-oauth
 .DS_Store
 *.Rproj
-original
+inst/doc
+/coverage/
+eda/original*

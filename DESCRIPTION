@@ -1,0 +1,19 @@
+Package: uspto
+Type: Package
+Title: U.S. Patent and Trademark Office API
+Version: 0.0.1
+Date: 2022-07-11
+Authors@R: c(
+    person("Biocomplexity Institute", role = c("aut", "cph")),
+    person("Micah", "Iserman", role = "cre", email = "micah.iserman@gmail.com")
+  )
+Description: Offers functions to interact with U.S. Patent and Trademark Office public data.
+License: MIT + file LICENSE
+Imports: jsonlite, httr, digest
+Suggests: 
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+Config/testthat/edition: 3
+RoxygenNote: 7.2.0
+Roxygen: list(old_usage = TRUE)
