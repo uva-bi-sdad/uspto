@@ -1,0 +1,9 @@
+
+.Rproj.user
+.vscode
+.Rhistory
+.RData
+.httr-oauth
+.DS_Store
+*.Rproj
+original
