@@ -94,7 +94,7 @@ table.table-condensed {
   font-size: 11px;
 }</style>
   <div class="col-md-8 col-md-offset-2">
-    <h2>uspto coverage - 77.22%</h2>
+    <h2>uspto coverage - 76.40%</h2>
     <div class="tabbable">
       <ul class="nav nav-tabs" data-tabsetid="covr">
         <li class="active">
@@ -106,8 +106,8 @@ table.table-condensed {
       </ul>
       <div class="tab-content" data-tabsetid="covr">
         <div class="tab-pane active" title="Files" data-value="Files" id="tab-covr-1">
-          <div id="htmlwidget-497c4ecbd2012e96ed78" style="width:100%;height:500px;" class="datatables html-widget"></div>
-          <script type="application/json" data-for="htmlwidget-497c4ecbd2012e96ed78">{"x":{"filter":"none","vertical":false,"fillContainer":true,"data":[["<a href=\"#\">R/download.R<\/a>"],[140],[72],[54],[18],["1"],["75.00%"]],"container":"<table class=\"row-border fill-container\">\n  <thead>\n    <tr>\n      <th>File<\/th>\n      <th>Lines<\/th>\n      <th>Relevant<\/th>\n      <th>Covered<\/th>\n      <th>Missed<\/th>\n      <th>Hits / Line<\/th>\n      <th>Coverage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"dom":"t","paging":false,"columnDefs":[{"targets":6,"createdCell":"function(td, cellData, rowData, row, col) {\n  var percent = cellData.replace(\"%\", \"\");\n  if (percent > 90) {\n    var grad = \"linear-gradient(90deg, #edfde7 \" + cellData + \", white \" + cellData + \")\";\n  } else if (percent > 75) {\n    var grad = \"linear-gradient(90deg, #f9ffe5 \" + cellData + \", white \" + cellData + \")\";\n  } else {\n    var grad = \"linear-gradient(90deg, #fcece9 \" + cellData + \", white \" + cellData + \")\";\n  }\n  $(td).css(\"background\", grad);\n}\n"},{"className":"dt-right","targets":[1,2,3,4]}],"order":[],"autoWidth":false,"orderClasses":false},"callback":"function(table) {\ntable.on('click.dt', 'a', function() {\n  files = $('div#files div');\n  files.not('div.hidden').addClass('hidden');\n  id = $(this).text();\n  files.filter('div[id=\\'' + id + '\\']').removeClass('hidden');\n  $('ul.nav a[data-value=Source]').text(id).tab('show');\n});\n}"},"evals":["options.columnDefs.0.createdCell","callback"],"jsHooks":[]}</script>
+          <div id="htmlwidget-9e4a317a41a0c7b72b35" style="width:100%;height:500px;" class="datatables html-widget"></div>
+          <script type="application/json" data-for="htmlwidget-9e4a317a41a0c7b72b35">{"x":{"filter":"none","vertical":false,"fillContainer":true,"data":[["<a href=\"#\">R/download.R<\/a>"],[151],[80],[59],[21],["1"],["73.75%"]],"container":"<table class=\"row-border fill-container\">\n  <thead>\n    <tr>\n      <th>File<\/th>\n      <th>Lines<\/th>\n      <th>Relevant<\/th>\n      <th>Covered<\/th>\n      <th>Missed<\/th>\n      <th>Hits / Line<\/th>\n      <th>Coverage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"dom":"t","paging":false,"columnDefs":[{"targets":6,"createdCell":"function(td, cellData, rowData, row, col) {\n  var percent = cellData.replace(\"%\", \"\");\n  if (percent > 90) {\n    var grad = \"linear-gradient(90deg, #edfde7 \" + cellData + \", white \" + cellData + \")\";\n  } else if (percent > 75) {\n    var grad = \"linear-gradient(90deg, #f9ffe5 \" + cellData + \", white \" + cellData + \")\";\n  } else {\n    var grad = \"linear-gradient(90deg, #fcece9 \" + cellData + \", white \" + cellData + \")\";\n  }\n  $(td).css(\"background\", grad);\n}\n"},{"className":"dt-right","targets":[1,2,3,4]}],"order":[],"autoWidth":false,"orderClasses":false},"callback":"function(table) {\ntable.on('click.dt', 'a', function() {\n  files = $('div#files div');\n  files.not('div.hidden').addClass('hidden');\n  id = $(this).text();\n  files.filter('div[id=\\'' + id + '\\']').removeClass('hidden');\n  $('ul.nav a[data-value=Source]').text(id).tab('show');\n});\n}"},"evals":["options.columnDefs.0.createdCell","callback"],"jsHooks":[]}</script>
         </div>
         <div class="tab-pane" title="Source" data-value="Source" id="tab-covr-2">
           <div id="files">
@@ -634,7 +634,7 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">75</td>
-                    <td class="coverage">1<em>x</em></td>
+                    <td class="coverage">2<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      retries &lt;- retries + 1</pre>
                     </td>
@@ -648,7 +648,7 @@ table.table-condensed {
                   </tr>
                   <tr class="covered">
                     <td class="num">77</td>
-                    <td class="coverage">1<em>x</em></td>
+                    <td class="coverage">2<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      Sys.sleep(wait)</pre>
                     </td>
@@ -706,389 +706,466 @@ table.table-condensed {
                     <td class="num">85</td>
                     <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  output$content &lt;- lapply(years, function(f) {</pre>
+                      <pre class="language-r">  con &lt;- unz(bundle, years[[1]])</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">86</td>
                     <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">    con &lt;- unz(bundle, f)</pre>
+                      <pre class="language-r">  if (!length(scan(con, "", 1, quiet = TRUE))) {</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">87</td>
                     <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">    on.exit(close(con))</pre>
+                      <pre class="language-r">    exdir &lt;- sub(".zip", "", bundle, fixed = TRUE)</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">88</td>
                     <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">    jsonlite::fromJSON(paste(scan(con, "", quote = "", na.strings = "", quiet = TRUE), collapse = " "))$PatentData</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">89</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  })</pre>
+                      <pre class="language-r">    system2("unzip", c("-d", shQuote(exdir), shQuote(bundle)), stdout = TRUE)</pre>
                     </td>
                   </tr>
                   <tr class="covered">
-                    <td class="num">90</td>
+                    <td class="num">89</td>
                     <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  names(output$content) &lt;- sub(".json", "", years, fixed = TRUE)</pre>
+                      <pre class="language-r">    years &lt;- list.files(exdir, full.names = TRUE)</pre>
                     </td>
                   </tr>
-                  <tr class="missed">
-                    <td class="num">91</td>
-                    <td class="coverage">!</td>
+                  <tr class="never">
+                    <td class="num">90</td>
+                    <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  if (verbose) message("writing final results: ", normalizePath(final, "/", FALSE))</pre>
+                      <pre class="language-r">  }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">91</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  close(con)</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">92</td>
                     <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  dir.create(dirname(final), FALSE, TRUE)</pre>
+                      <pre class="language-r">  output$content &lt;- lapply(years, function(f) {</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">93</td>
                     <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  jsonlite::write_json(output$content, final, auto_unbox = TRUE, pretty = TRUE)</pre>
+                      <pre class="language-r">    if (file.exists(f)) {</pre>
                     </td>
                   </tr>
-                  <tr class="never">
+                  <tr class="covered">
                     <td class="num">94</td>
-                    <td class="coverage"></td>
+                    <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">}</pre>
+                      <pre class="language-r">      jsonlite::read_json(f)$PatentData</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">95</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r"></pre>
+                      <pre class="language-r">    } else {</pre>
                     </td>
                   </tr>
-                  <tr class="never">
+                  <tr class="missed">
                     <td class="num">96</td>
-                    <td class="coverage"></td>
+                    <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">#' Download Office Actions</pre>
+                      <pre class="language-r">      con &lt;- unz(bundle, f)</pre>
                     </td>
                   </tr>
-                  <tr class="never">
+                  <tr class="missed">
                     <td class="num">97</td>
-                    <td class="coverage"></td>
+                    <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">#'</pre>
+                      <pre class="language-r">      on.exit(close(con))</pre>
                     </td>
                   </tr>
-                  <tr class="never">
+                  <tr class="missed">
                     <td class="num">98</td>
-                    <td class="coverage"></td>
+                    <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">#' Download a set of Office actions based on a query to the</pre>
+                      <pre class="language-r">      jsonlite::fromJSON(paste(scan(con, "", quote = "", na.strings = "", quiet = TRUE), collapse = " "))$PatentData</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">99</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">#' \href{https://developer.uspto.gov/api-catalog/uspto-office-action-text-retrieval-api}{Office Action Text Retrieval API}.</pre>
+                      <pre class="language-r">    }</pre>
                     </td>
                   </tr>
                   <tr class="never">
                     <td class="num">100</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">#' @param criteria Search criteria, in the form of \code{"field:value"} (e.g., \code{"examinerEmployeeNumber:80488"}).</pre>
+                      <pre class="language-r">  })</pre>
                     </td>
                   </tr>
-                  <tr class="never">
+                  <tr class="covered">
                     <td class="num">101</td>
-                    <td class="coverage"></td>
+                    <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">#' See available \href{https://developer.uspto.gov/ds-api/oa_actions/v1/fields}{fields}.</pre>
+                      <pre class="language-r">  names(output$content) &lt;- sub(".json", "", basename(years), fixed = TRUE)</pre>
                     </td>
                   </tr>
-                  <tr class="never">
+                  <tr class="missed">
                     <td class="num">102</td>
-                    <td class="coverage"></td>
+                    <td class="coverage">!</td>
                     <td class="col-sm-12">
-                      <pre class="language-r">#' @param outFile Path to the resulting JSON file; defaults to the hash of the query in the current working directory.</pre>
+                      <pre class="language-r">  if (verbose) message("writing final results: ", normalizePath(final, "/", FALSE))</pre>
                     </td>
                   </tr>
-                  <tr class="never">
+                  <tr class="covered">
                     <td class="num">103</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param start Initial record; useful if making requests in chunks.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">104</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param rows Number of rows to return; defaults to 9999.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">105</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param overwrite Logical; if \code{TRUE}, will overwrite an existing file with the same \code{outFile}.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">106</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param endpoint API endpoint.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">107</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param verbose Logical; if \code{FALSE}, will not print status messages.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">108</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @return A list of office actions.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">109</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @examples</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">110</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' \dontrun{</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">111</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' # retrieve the office actions associated with a particular application</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">112</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' office_actions &lt;- download_office_actions("patentApplicationNumber:13877637")</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">113</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' }</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">114</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @export</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">115</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r"></pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">116</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">download_office_actions &lt;- function(criteria = "*:*", outFile = NULL, start = 0, rows = 9999, overwrite = FALSE,</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">117</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">                                    endpoint = "https://developer.uspto.gov/ds-api/oa_actions/v1/records", verbose = TRUE) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">118</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  final &lt;- normalizePath(paste0(if (is.null(outFile)) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">119</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    paste0(sub(":", "_", criteria, fixed = TRUE), "_", Sys.Date())</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">120</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  } else {</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">121</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    sub("\\.json$", "", outFile)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">122</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  }, ".json"), "/", FALSE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">123</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  if (!overwrite &amp;&amp; file.exists(final)) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">124</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (verbose) message("Reading in existing results")</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">125</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    return(jsonlite::read_json(final))</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">126</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  }</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">127</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  query &lt;- httr::POST(</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">128</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    endpoint, httr::add_headers("Content-Type" = "application/x-www-form-urlencoded", Accept = "application/json"),</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">129</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    body = paste0("criteria=", criteria, "&amp;start=", start, "&amp;rows=", rows)</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">130</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  )</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">131</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  if (200 != httr::status_code(query)) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">132</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    error &lt;- httr::http_error(query)</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">133</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    stop("query failed:\n", if (is.logical(error)) httr::content(query) else error, call. = FALSE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">134</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  }</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">135</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  res &lt;- httr::content(query)$response</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">136</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  if (verbose) message("Found ", res$numFound, " office actions for ", criteria, "; including ", res$start, ":", length(res$docs))</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">137</td>
                     <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">  dir.create(dirname(final), FALSE, TRUE)</pre>
                     </td>
                   </tr>
                   <tr class="covered">
+                    <td class="num">104</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  jsonlite::write_json(output$content, final, auto_unbox = TRUE, pretty = TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">105</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">}</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">106</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r"></pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">107</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' Download Office Actions</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">108</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#'</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">109</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' Download a set of Office actions based on a query to the</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">110</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' \href{https://developer.uspto.gov/api-catalog/uspto-office-action-text-retrieval-api}{Office Action Text Retrieval API}.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">111</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param criteria Search criteria, in the form of \code{"field:value"} (e.g., \code{"examinerEmployeeNumber:80488"}).</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">112</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' See available \href{https://developer.uspto.gov/ds-api/oa_actions/v1/fields}{fields}.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">113</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param outFile Path to the resulting JSON file; defaults to the hash of the query in the current working directory.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">114</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param start Initial record; useful if making requests in chunks.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">115</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param rows Number of rows to return; defaults to 9999.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">116</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param overwrite Logical; if \code{TRUE}, will overwrite an existing file with the same \code{outFile}.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">117</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param endpoint API endpoint.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">118</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param verbose Logical; if \code{FALSE}, will not print status messages.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">119</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @return A list of office actions.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">120</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @examples</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">121</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' \dontrun{</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">122</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' # retrieve the office actions associated with a particular application</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">123</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' office_actions &lt;- download_office_actions("patentApplicationNumber:13877637")</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">124</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' }</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">125</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @export</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">126</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r"></pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">127</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">download_office_actions &lt;- function(criteria = "*:*", outFile = NULL, start = 0, rows = 9999, overwrite = FALSE,</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">128</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">                                    endpoint = "https://developer.uspto.gov/ds-api/oa_actions/v1/records", verbose = TRUE) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">129</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  final &lt;- normalizePath(paste0(if (is.null(outFile)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">130</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    paste0(sub(":", "_", criteria, fixed = TRUE), "_", Sys.Date())</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">131</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  } else {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">132</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    sub("\\.json$", "", outFile)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">133</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  }, ".json"), "/", FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">134</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  if (!overwrite &amp;&amp; file.exists(final)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">135</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (verbose) message("Reading in existing results")</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">136</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    return(jsonlite::read_json(final))</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">137</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
                     <td class="num">138</td>
                     <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
-                      <pre class="language-r">  jsonlite::write_json(res$docs, final, auto_unbox = TRUE, pretty = TRUE)</pre>
+                      <pre class="language-r">  query &lt;- httr::POST(</pre>
                     </td>
                   </tr>
                   <tr class="covered">
                     <td class="num">139</td>
                     <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
+                      <pre class="language-r">    endpoint, httr::add_headers("Content-Type" = "application/x-www-form-urlencoded", Accept = "application/json"),</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">140</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    body = paste0("criteria=", criteria, "&amp;start=", start, "&amp;rows=", rows)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">141</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  )</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">142</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  if (200 != httr::status_code(query)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">143</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    error &lt;- httr::http_error(query)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">144</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    stop("query failed:\n", if (is.logical(error)) httr::content(query) else error, call. = FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">145</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">146</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  res &lt;- httr::content(query)$response</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">147</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  if (verbose) message("Found ", res$numFound, " office actions for ", criteria, "; including ", res$start, ":", length(res$docs))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">148</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  dir.create(dirname(final), FALSE, TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">149</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  jsonlite::write_json(res$docs, final, auto_unbox = TRUE, pretty = TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">150</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
                       <pre class="language-r">  invisible(res$docs)</pre>
                     </td>
                   </tr>
                   <tr class="never">
-                    <td class="num">140</td>
+                    <td class="num">151</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
                       <pre class="language-r">}</pre>

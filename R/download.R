@@ -82,12 +82,23 @@ download_peds <- function(searchText = "*:*", filters = list("*:*"), outFile = N
   }
   if (verbose) message("Unpacking ", bundle)
   years <- unzip(bundle, list = TRUE)$Name
+  con <- unz(bundle, years[[1]])
+  if (!length(scan(con, "", 1, quiet = TRUE))) {
+    exdir <- sub(".zip", "", bundle, fixed = TRUE)
+    system2("unzip", c("-d", shQuote(exdir), shQuote(bundle)), stdout = TRUE)
+    years <- list.files(exdir, full.names = TRUE)
+  }
+  close(con)
   output$content <- lapply(years, function(f) {
-    con <- unz(bundle, f)
-    on.exit(close(con))
-    jsonlite::fromJSON(paste(scan(con, "", quote = "", na.strings = "", quiet = TRUE), collapse = " "))$PatentData
+    if (file.exists(f)) {
+      jsonlite::read_json(f)$PatentData
+    } else {
+      con <- unz(bundle, f)
+      on.exit(close(con))
+      jsonlite::fromJSON(paste(scan(con, "", quote = "", na.strings = "", quiet = TRUE), collapse = " "))$PatentData
+    }
   })
-  names(output$content) <- sub(".json", "", years, fixed = TRUE)
+  names(output$content) <- sub(".json", "", basename(years), fixed = TRUE)
   if (verbose) message("writing final results: ", normalizePath(final, "/", FALSE))
   dir.create(dirname(final), FALSE, TRUE)
   jsonlite::write_json(output$content, final, auto_unbox = TRUE, pretty = TRUE)
