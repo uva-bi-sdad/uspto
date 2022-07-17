@@ -6,6 +6,10 @@ reference:
   desc: These functions are used to download data from variaous USPTO APIs.
   contents:
   - starts_with("download_")
+- title: Search Function
+  desc: This function is used to search for patents or patent applications.
+  contents:
+  - search_fulltext
 
 home:
   links:

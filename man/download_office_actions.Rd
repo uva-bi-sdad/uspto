@@ -26,8 +26,7 @@ See available \href{https://developer.uspto.gov/ds-api/oa_actions/v1/fields}{fie
 \item{verbose}{Logical; if \code{FALSE}, will not print status messages.}
 }
 \value{
-list with entries for \code{numFound} (total office actions meeting the criteria),
-\code{start}, and \code{docs} with and entry with each included office action.
+A list of office actions.
 }
 \description{
 Download a set of Office actions based on a query to the

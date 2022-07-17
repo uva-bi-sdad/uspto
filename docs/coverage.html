@@ -94,7 +94,7 @@ table.table-condensed {
   font-size: 11px;
 }</style>
   <div class="col-md-8 col-md-offset-2">
-    <h2>uspto coverage - 76.40%</h2>
+    <h2>uspto coverage - 78.26%</h2>
     <div class="tabbable">
       <ul class="nav nav-tabs" data-tabsetid="covr">
         <li class="active">
@@ -106,8 +106,8 @@ table.table-condensed {
       </ul>
       <div class="tab-content" data-tabsetid="covr">
         <div class="tab-pane active" title="Files" data-value="Files" id="tab-covr-1">
-          <div id="htmlwidget-9e4a317a41a0c7b72b35" style="width:100%;height:500px;" class="datatables html-widget"></div>
-          <script type="application/json" data-for="htmlwidget-9e4a317a41a0c7b72b35">{"x":{"filter":"none","vertical":false,"fillContainer":true,"data":[["<a href=\"#\">R/download.R<\/a>"],[151],[80],[59],[21],["1"],["73.75%"]],"container":"<table class=\"row-border fill-container\">\n  <thead>\n    <tr>\n      <th>File<\/th>\n      <th>Lines<\/th>\n      <th>Relevant<\/th>\n      <th>Covered<\/th>\n      <th>Missed<\/th>\n      <th>Hits / Line<\/th>\n      <th>Coverage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"dom":"t","paging":false,"columnDefs":[{"targets":6,"createdCell":"function(td, cellData, rowData, row, col) {\n  var percent = cellData.replace(\"%\", \"\");\n  if (percent > 90) {\n    var grad = \"linear-gradient(90deg, #edfde7 \" + cellData + \", white \" + cellData + \")\";\n  } else if (percent > 75) {\n    var grad = \"linear-gradient(90deg, #f9ffe5 \" + cellData + \", white \" + cellData + \")\";\n  } else {\n    var grad = \"linear-gradient(90deg, #fcece9 \" + cellData + \", white \" + cellData + \")\";\n  }\n  $(td).css(\"background\", grad);\n}\n"},{"className":"dt-right","targets":[1,2,3,4]}],"order":[],"autoWidth":false,"orderClasses":false},"callback":"function(table) {\ntable.on('click.dt', 'a', function() {\n  files = $('div#files div');\n  files.not('div.hidden').addClass('hidden');\n  id = $(this).text();\n  files.filter('div[id=\\'' + id + '\\']').removeClass('hidden');\n  $('ul.nav a[data-value=Source]').text(id).tab('show');\n});\n}"},"evals":["options.columnDefs.0.createdCell","callback"],"jsHooks":[]}</script>
+          <div id="htmlwidget-4714d37923db4fe9ae9c" style="width:100%;height:500px;" class="datatables html-widget"></div>
+          <script type="application/json" data-for="htmlwidget-4714d37923db4fe9ae9c">{"x":{"filter":"none","vertical":false,"fillContainer":true,"data":[["<a href=\"#\">R/download.R<\/a>","<a href=\"#\">R/search_fulltext.R<\/a>"],[151,110],[80,57],[58,44],[22,13],["1","7"],["72.50%","77.19%"]],"container":"<table class=\"row-border fill-container\">\n  <thead>\n    <tr>\n      <th>File<\/th>\n      <th>Lines<\/th>\n      <th>Relevant<\/th>\n      <th>Covered<\/th>\n      <th>Missed<\/th>\n      <th>Hits / Line<\/th>\n      <th>Coverage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"dom":"t","paging":false,"columnDefs":[{"targets":6,"createdCell":"function(td, cellData, rowData, row, col) {\n  var percent = cellData.replace(\"%\", \"\");\n  if (percent > 90) {\n    var grad = \"linear-gradient(90deg, #edfde7 \" + cellData + \", white \" + cellData + \")\";\n  } else if (percent > 75) {\n    var grad = \"linear-gradient(90deg, #f9ffe5 \" + cellData + \", white \" + cellData + \")\";\n  } else {\n    var grad = \"linear-gradient(90deg, #fcece9 \" + cellData + \", white \" + cellData + \")\";\n  }\n  $(td).css(\"background\", grad);\n}\n"},{"className":"dt-right","targets":[1,2,3,4]}],"order":[],"autoWidth":false,"orderClasses":false},"callback":"function(table) {\ntable.on('click.dt', 'a', function() {\n  files = $('div#files div');\n  files.not('div.hidden').addClass('hidden');\n  id = $(this).text();\n  files.filter('div[id=\\'' + id + '\\']').removeClass('hidden');\n  $('ul.nav a[data-value=Source]').text(id).tab('show');\n});\n}"},"evals":["options.columnDefs.0.createdCell","callback"],"jsHooks":[]}</script>
         </div>
         <div class="tab-pane" title="Source" data-value="Source" id="tab-covr-2">
           <div id="files">
@@ -716,23 +716,23 @@ table.table-condensed {
                       <pre class="language-r">  if (!length(scan(con, "", 1, quiet = TRUE))) {</pre>
                     </td>
                   </tr>
-                  <tr class="covered">
+                  <tr class="missed">
                     <td class="num">87</td>
-                    <td class="coverage">1<em>x</em></td>
+                    <td class="coverage">!</td>
                     <td class="col-sm-12">
                       <pre class="language-r">    exdir &lt;- sub(".zip", "", bundle, fixed = TRUE)</pre>
                     </td>
                   </tr>
-                  <tr class="covered">
+                  <tr class="missed">
                     <td class="num">88</td>
-                    <td class="coverage">1<em>x</em></td>
+                    <td class="coverage">!</td>
                     <td class="col-sm-12">
                       <pre class="language-r">    system2("unzip", c("-d", shQuote(exdir), shQuote(bundle)), stdout = TRUE)</pre>
                     </td>
                   </tr>
-                  <tr class="covered">
+                  <tr class="missed">
                     <td class="num">89</td>
-                    <td class="coverage">1<em>x</em></td>
+                    <td class="coverage">!</td>
                     <td class="col-sm-12">
                       <pre class="language-r">    years &lt;- list.files(exdir, full.names = TRUE)</pre>
                     </td>
@@ -765,9 +765,9 @@ table.table-condensed {
                       <pre class="language-r">    if (file.exists(f)) {</pre>
                     </td>
                   </tr>
-                  <tr class="covered">
+                  <tr class="missed">
                     <td class="num">94</td>
-                    <td class="coverage">1<em>x</em></td>
+                    <td class="coverage">!</td>
                     <td class="col-sm-12">
                       <pre class="language-r">      jsonlite::read_json(f)$PatentData</pre>
                     </td>
@@ -779,23 +779,23 @@ table.table-condensed {
                       <pre class="language-r">    } else {</pre>
                     </td>
                   </tr>
-                  <tr class="missed">
+                  <tr class="covered">
                     <td class="num">96</td>
-                    <td class="coverage">!</td>
+                    <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      con &lt;- unz(bundle, f)</pre>
                     </td>
                   </tr>
-                  <tr class="missed">
+                  <tr class="covered">
                     <td class="num">97</td>
-                    <td class="coverage">!</td>
+                    <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      on.exit(close(con))</pre>
                     </td>
                   </tr>
-                  <tr class="missed">
+                  <tr class="covered">
                     <td class="num">98</td>
-                    <td class="coverage">!</td>
+                    <td class="coverage">1<em>x</em></td>
                     <td class="col-sm-12">
                       <pre class="language-r">      jsonlite::fromJSON(paste(scan(con, "", quote = "", na.strings = "", quiet = TRUE), collapse = " "))$PatentData</pre>
                     </td>
@@ -1166,6 +1166,782 @@ table.table-condensed {
                   </tr>
                   <tr class="never">
                     <td class="num">151</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">}</pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="R/search_fulltext.R" class="hidden">
+              <table class="table-condensed">
+                <tbody>
+                  <tr class="never">
+                    <td class="num">1</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' Search for Patents or Patent Applications</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">2</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#'</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">3</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' Searches the Application (AppFT) or Patent (PatFT)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">4</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' \href{https://appft.uspto.gov}{Full-Text Databases}, and returns</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">5</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' application/patent numbers, titles, and links.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">6</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#'</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">7</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param query A query string. This can be a set of terms (e.g., \code{"term1 OR term2"}) or</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">8</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' an exact phrase (e.g., \code{'"a phrase"'}). To search within a particular</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">9</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' \href{https://appft.uspto.gov/netahtml/PTO/help/helpflds.html}{field}, prefix with the field code</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">10</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' and a forward slash (e.g., \code{"CPCL/G01W"}, which searches for "G01W" in the CPCL field).</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">11</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param applications Logical; specifies whether to search in the application database</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">12</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' (AppFT; \code{TRUE}; default) or the patent database (PatFT; \code{FALSE}).</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">13</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param limit A limit to the number of results retrieved, in steps of 50. By default, will</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">14</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' try to retrieve all results.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">15</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param retries Number of retries for a given results page.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">16</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param outdir Path to a directory in which to save results. Only writes if specified.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">17</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param overwrite Logical; if \code{TRUE}, will overwrite caches results.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">18</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param cores Number of CPU cores to use when reading in multiple pages.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">19</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param verbose Logical; if \code{FALSE}, does not print status messages.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">20</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @return A \code{data.frame} with columns for \code{index} (index of the result),</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">21</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' \code{id} (patent or application number), and \code{title} (title of patent or application).</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">22</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @examples</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">23</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' \dontrun{</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">24</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' # search for applications with a meteorology classification:</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">25</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' # https://www.uspto.gov/web/patents/classification/cpc/html/cpc-G01W.html</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">26</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' results &lt;- search_fulltext("CPCL/G01W")</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">27</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#'</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">28</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' # search for patents by date and title keyword</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">29</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' results &lt;- search_fulltext("isd/1/8/2002 and motorcycle", FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">30</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' }</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">31</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @export</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">32</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r"></pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">33</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">search_fulltext &lt;- function(query, applications = TRUE, limit = NULL, retries = 20, outdir = NULL,</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">34</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">                            overwrite = FALSE, cores = parallel::detectCores() - 2, verbose = TRUE) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">35</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  base_url &lt;- paste0(</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">36</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    "https://", if (applications) "app" else "pat",</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">37</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    "ft.uspto.gov/netacgi/nph-Parser?Sect1=PTO2&amp;Sect2=HITOFF&amp;u=/netahtml/PTO/search-adv.html&amp;r=0&amp;f=S&amp;l=50&amp;d=",</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">38</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (applications) "PG01" else "PTXT", "&amp;p="</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">39</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  )</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">40</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  query &lt;- URLencode(gsub("\\s+", "+", query, perl = TRUE))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">41</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  outFile &lt;- normalizePath(paste0(outdir, "/", digest::digest(query), ".csv"), "/", FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">42</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  if (overwrite) unlink(outFile)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">43</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  if (file.exists(outFile)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">44</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (verbose) message("reading existing file: ", outFile)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">45</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    read.csv(outFile)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">46</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  } else {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">47</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    retrieve_page &lt;- function(input, attempt = retries, parse = TRUE) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">48</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      results &lt;- tryCatch(</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">49</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">50</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">          con &lt;- curl::curl(paste0(base_url, input, "&amp;Query=", query))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">51</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">          on.exit(close(con))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">52</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">          readLines(con, warn = FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">53</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        },</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">54</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        error = function(e) e$message</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">55</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      )</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">56</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      if (length(results) &lt; 100) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">57</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        if (attempt &gt; 0) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">58</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">          Sys.sleep(.5)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">59</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">          retrieve_page(input, attempt - 1, parse)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">60</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        } else {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">61</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">          NULL</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">62</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        }</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">63</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      } else {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">64</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        if (parse) parse_page(results) else results</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">65</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      }</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">66</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">67</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    parse_page &lt;- function(results) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">68</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      rows &lt;- c(grep("^&lt;TR&gt;&lt;TD", results, perl = TRUE), length(results))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">69</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      res &lt;- as.data.frame(do.call(rbind, lapply(seq_len(length(rows) - 1), function(i) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">70</td>
+                    <td class="coverage">109<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        row &lt;- results[seq(rows[i], rows[i + 1])]</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">71</td>
+                    <td class="coverage">109<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        split_row &lt;- strsplit(c(row[1:2], paste(row[-(1:2)], collapse = " ")), "[&gt;&lt;]")</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">72</td>
+                    <td class="coverage">109<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        c(split_row[[1]][5], split_row[[2]][5], split_row[[3]][if (split_row[[3]][5] == "") 11 else 5])</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">73</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      })), make.names = FALSE, optional = TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">74</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      colnames(res) &lt;- c("index", "id", "name")</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">75</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      res$index &lt;- as.integer(res$index)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">76</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      res$name &lt;- sub("\\s+$", "", gsub("\\s+", " ", res$name, perl = TRUE), perl = TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">77</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      res</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">78</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">79</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    initial &lt;- retrieve_page(1, retries, FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">80</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (length(initial) &lt; 30) stop("Failed to retrieve initial page: ", initial, call. = FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">81</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    report &lt;- grep("Results of Search", initial[1:100], fixed = TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">82</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (!length(report)) stop("Response is in an unexpected format; check ", paste0(base_url, 1, "&amp;Query=", query), call. = FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">83</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    n &lt;- as.numeric(regmatches(initial[report], regexec("(\\d+)\\s\\w+\\.$", initial[report]))[[1]][2])</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">84</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (verbose) message("found ", n, " results", if (is.numeric(limit)) paste("; retrieving", limit))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">85</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (is.numeric(limit)) n &lt;- min(limit, n)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">86</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    pages &lt;- ceiling(n / 50)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">87</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    res &lt;- if (pages &gt; 1) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">88</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      res &lt;- if (cores &gt; 1) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">89</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        cl &lt;- parallel::makeCluster(max(1, min(pages, cores)))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">90</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        parallel::clusterExport(cl, c("base_url", "query", "retrieve_page", "parse_page"), environment())</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">91</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        on.exit(parallel::stopCluster(cl), TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">92</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        parallel::parLapply(cl, seq(2, pages), retrieve_page)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">93</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      } else {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">94</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        lapply(seq(2, pages), retrieve_page)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">95</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">96</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      if (verbose) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">97</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        missed &lt;- vapply(res, length, 0) == 0</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">98</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        if (any(missed)) warning("missed pages: ", paste(which(missed) + 1, collapse = ", "))</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">99</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">100</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      rbind(parse_page(initial), do.call(rbind, res))</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">101</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    } else {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">102</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      parse_page(initial)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">103</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">104</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (!is.null(outdir)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">105</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      dir.create(outdir, FALSE, TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">106</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      write.csv(res, outFile, row.names = FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">107</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">108</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    res</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">109</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  }</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">110</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
                       <pre class="language-r">}</pre>
