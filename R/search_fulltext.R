@@ -1,4 +1,4 @@
-#' Search for Patents or Patent Applications
+#' Search for Patents or Patent Applications (legacy)
 #'
 #' Searches the Application (AppFT) or Patent (PatFT)
 #' \href{https://appft.uspto.gov}{Full-Text Databases}, and returns
@@ -18,7 +18,7 @@
 #' @param cores Number of CPU cores to use when reading in multiple pages.
 #' @param verbose Logical; if \code{FALSE}, does not print status messages.
 #' @return A \code{data.frame} with columns for \code{index} (index of the result),
-#' \code{id} (patent or application number), and \code{title} (title of patent or application).
+#' \code{id} (patent number or application document number), and \code{title} (title of patent or application).
 #' @examples
 #' \dontrun{
 #' # search for applications with a meteorology classification:

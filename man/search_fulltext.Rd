@@ -2,7 +2,7 @@
 % Please edit documentation in R/search_fulltext.R
 \name{search_fulltext}
 \alias{search_fulltext}
-\title{Search for Patents or Patent Applications}
+\title{Search for Patents or Patent Applications (legacy)}
 \usage{
 search_fulltext(query, applications = TRUE, limit = NULL, retries = 20,
   outdir = NULL, overwrite = FALSE, cores = parallel::detectCores() - 2,
@@ -32,7 +32,7 @@ try to retrieve all results.}
 }
 \value{
 A \code{data.frame} with columns for \code{index} (index of the result),
-\code{id} (patent or application number), and \code{title} (title of patent or application).
+\code{id} (patent number or application document number), and \code{title} (title of patent or application).
 }
 \description{
 Searches the Application (AppFT) or Patent (PatFT)

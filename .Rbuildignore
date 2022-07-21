@@ -12,3 +12,4 @@
 ^coverage$
 _snaps$
 ^eda$
+^_config.yml$
