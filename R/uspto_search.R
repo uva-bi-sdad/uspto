@@ -33,7 +33,7 @@
 uspto_search <- function(query, databases = c("US-PGPUB", "USPAT", "USOCR"), outFile = NULL, limit = FALSE, sort = "date_publ desc",
                          english_only = TRUE, spellCheck = FALSE, plurals = TRUE, britishEquivalents = TRUE, verbose = FALSE) {
   if (!is.null(outFile)) {
-    outFile <- sub("\\.csv.*$", ".csv", outFile)
+    outFile <- paste0(sub("\\.csv.*$", "", outFile), ".csv")
     if (file.exists(outFile)) {
       if (verbose) message("loading existing results")
       return(read.csv(outFile))
