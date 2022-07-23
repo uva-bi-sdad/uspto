@@ -94,7 +94,7 @@ table.table-condensed {
   font-size: 11px;
 }</style>
   <div class="col-md-8 col-md-offset-2">
-    <h2>uspto coverage - 81.67%</h2>
+    <h2>uspto coverage - 82.15%</h2>
     <div class="tabbable">
       <ul class="nav nav-tabs" data-tabsetid="covr">
         <li class="active">
@@ -106,752 +106,11 @@ table.table-condensed {
       </ul>
       <div class="tab-content" data-tabsetid="covr">
         <div class="tab-pane active" title="Files" data-value="Files" id="tab-covr-1">
-          <div id="htmlwidget-cea5352a7198ffdea6c9" style="width:100%;height:500px;" class="datatables html-widget"></div>
-          <script type="application/json" data-for="htmlwidget-cea5352a7198ffdea6c9">{"x":{"filter":"none","vertical":false,"fillContainer":true,"data":[["<a href=\"#\">R/download_office_actions.R<\/a>","<a href=\"#\">R/download_peds.R<\/a>","<a href=\"#\">R/download_patents.R<\/a>","<a href=\"#\">R/search_fulltext.R<\/a>","<a href=\"#\">R/uspto_search.R<\/a>"],[45,105,95,110,128],[18,62,48,57,84],[12,46,36,44,76],[6,16,12,13,8],["1","1","5","7","2"],["66.67%","74.19%","75.00%","77.19%","90.48%"]],"container":"<table class=\"row-border fill-container\">\n  <thead>\n    <tr>\n      <th>File<\/th>\n      <th>Lines<\/th>\n      <th>Relevant<\/th>\n      <th>Covered<\/th>\n      <th>Missed<\/th>\n      <th>Hits / Line<\/th>\n      <th>Coverage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"dom":"t","paging":false,"columnDefs":[{"targets":6,"createdCell":"function(td, cellData, rowData, row, col) {\n  var percent = cellData.replace(\"%\", \"\");\n  if (percent > 90) {\n    var grad = \"linear-gradient(90deg, #edfde7 \" + cellData + \", white \" + cellData + \")\";\n  } else if (percent > 75) {\n    var grad = \"linear-gradient(90deg, #f9ffe5 \" + cellData + \", white \" + cellData + \")\";\n  } else {\n    var grad = \"linear-gradient(90deg, #fcece9 \" + cellData + \", white \" + cellData + \")\";\n  }\n  $(td).css(\"background\", grad);\n}\n"},{"className":"dt-right","targets":[1,2,3,4]}],"order":[],"autoWidth":false,"orderClasses":false},"callback":"function(table) {\ntable.on('click.dt', 'a', function() {\n  files = $('div#files div');\n  files.not('div.hidden').addClass('hidden');\n  id = $(this).text();\n  files.filter('div[id=\\'' + id + '\\']').removeClass('hidden');\n  $('ul.nav a[data-value=Source]').text(id).tab('show');\n});\n}"},"evals":["options.columnDefs.0.createdCell","callback"],"jsHooks":[]}</script>
+          <div id="htmlwidget-d71046c455827502ec7e" style="width:100%;height:500px;" class="datatables html-widget"></div>
+          <script type="application/json" data-for="htmlwidget-d71046c455827502ec7e">{"x":{"filter":"none","vertical":false,"fillContainer":true,"data":[["<a href=\"#\">R/download_office_actions.R<\/a>","<a href=\"#\">R/download_peds.R<\/a>","<a href=\"#\">R/search_fulltext.R<\/a>","<a href=\"#\">R/download_patents.R<\/a>","<a href=\"#\">R/uspto_search.R<\/a>"],[45,105,110,122,128],[18,62,57,69,84],[12,46,44,54,76],[6,16,13,15,8],["1","1","7","5","2"],["66.67%","74.19%","77.19%","78.26%","90.48%"]],"container":"<table class=\"row-border fill-container\">\n  <thead>\n    <tr>\n      <th>File<\/th>\n      <th>Lines<\/th>\n      <th>Relevant<\/th>\n      <th>Covered<\/th>\n      <th>Missed<\/th>\n      <th>Hits / Line<\/th>\n      <th>Coverage<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":false,"dom":"t","paging":false,"columnDefs":[{"targets":6,"createdCell":"function(td, cellData, rowData, row, col) {\n  var percent = cellData.replace(\"%\", \"\");\n  if (percent > 90) {\n    var grad = \"linear-gradient(90deg, #edfde7 \" + cellData + \", white \" + cellData + \")\";\n  } else if (percent > 75) {\n    var grad = \"linear-gradient(90deg, #f9ffe5 \" + cellData + \", white \" + cellData + \")\";\n  } else {\n    var grad = \"linear-gradient(90deg, #fcece9 \" + cellData + \", white \" + cellData + \")\";\n  }\n  $(td).css(\"background\", grad);\n}\n"},{"className":"dt-right","targets":[1,2,3,4]}],"order":[],"autoWidth":false,"orderClasses":false},"callback":"function(table) {\ntable.on('click.dt', 'a', function() {\n  files = $('div#files div');\n  files.not('div.hidden').addClass('hidden');\n  id = $(this).text();\n  files.filter('div[id=\\'' + id + '\\']').removeClass('hidden');\n  $('ul.nav a[data-value=Source]').text(id).tab('show');\n});\n}"},"evals":["options.columnDefs.0.createdCell","callback"],"jsHooks":[]}</script>
         </div>
         <div class="tab-pane" title="Source" data-value="Source" id="tab-covr-2">
           <div id="files">
-            <div id="R/download_peds.R" class="hidden">
-              <table class="table-condensed">
-                <tbody>
-                  <tr class="never">
-                    <td class="num">1</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' Download Patent Examination Data</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">2</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#'</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">3</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' Download a bundled query response from the \href{https://ped.uspto.gov/peds}{Patent Examination Data System}.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">4</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#'</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">5</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param searchText Text to search for; \code{"*:*"} for none (default); see</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">6</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' the FAQ on the \href{https://ped.uspto.gov/peds}{PEDS site}.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">7</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param filters A list of characters representing filter conditions in the form of \code{"field:value"}</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">8</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' (e.g., \code{list('appStatus:"Patented Case"')}).</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">9</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param outFile Name of the final JSON file.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">10</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param start Initial record.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">11</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param minMatch Minimum number of terms required to match.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">12</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param overwrite Logical; overwrite any previous queries with the same body hash.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">13</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param waits Number of times to check for a completed bundle before giving up.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">14</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param wait Number of seconds to wait between retries (how long \code{waits} are).</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">15</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param endpoint PEDs API endpoint.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">16</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param verbose Logical; if \code{FALSE}, will not print status messages.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">17</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @return An invisible list with an entries for \code{ID} (the query ID; if one was made) and</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">18</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' \code{content} (a list with an entry for each year in the set of patent metadata).</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">19</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @examples</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">20</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' \dontrun{</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">21</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' # like case 3 in the API Documentation &gt; API Tutorial on https://ped.uspto.gov/peds</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">22</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' download_peds(</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">23</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#'   "firstNamedApplicant:(Google)",</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">24</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#'   list('appStatus:"Patented Case"', "appFilingDate:[2013-01-01T00:00:00Z TO 2013-03-31T23:59:59Z]")</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">25</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' )</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">26</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' }</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">27</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @export</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">28</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r"></pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">29</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">download_peds &lt;- function(searchText = "*:*", filters = list("*:*"), outFile = NULL, start = 0, minMatch = "100%", overwrite = FALSE,</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">30</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">                          waits = 20, wait = 10, endpoint = "https://ped.uspto.gov/api/queries/", verbose = TRUE) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">31</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  # https://ped.uspto.gov/api/search-params</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">32</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  body &lt;- list(</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">33</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    searchText = searchText,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">34</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    fq = filters,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">35</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    fl = "*",</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">36</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    mm = minMatch,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">37</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    df = "patentTitle",</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">38</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    qf = paste(</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">39</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      "appEarlyPubNumber applId appLocation appType appStatus_txt appConfrNumber appCustNumber",</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">40</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      "appGrpArtNumber appCls appSubCls appEntityStatus_txt patentNumber patentTitle primaryInventor",</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">41</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      "firstNamedApplicant appExamName appExamPrefrdName appAttrDockNumber appPCTNumber",</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">42</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      "appIntlPubNumber wipoEarlyPubNumber pctAppType firstInventorFile appClsSubCls rankAndInventorsList"</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">43</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    ),</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">44</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    facet = FALSE,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">45</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    sort = "applId asc",</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">46</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    start = start</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">47</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  )</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">48</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  hash &lt;- digest::digest(body)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">49</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  final &lt;- normalizePath(paste0(if (is.null(outFile)) hash else sub("\\.json$", "", outFile), ".json"), "/", FALSE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">50</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  if (!overwrite &amp;&amp; file.exists(final)) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">51</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (verbose) message("Reading in existing results")</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">52</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    return(list(ID = "", content = jsonlite::read_json(final)))</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">53</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  }</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">54</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  bundle &lt;- paste0(normalizePath(tempdir(), "/"), "/", hash, ".zip")</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">55</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  output &lt;- list(ID = "", content = list())</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">56</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  on.exit(return(invisible(output)))</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">57</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  if (overwrite || !file.exists(bundle)) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">58</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    query &lt;- httr::POST(</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">59</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      endpoint, httr::add_headers("Content-Type" = "application/json", Accept = "application/json"),</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">60</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      body = body, encode = "json"</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">61</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    )</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">62</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (200 != httr::status_code(query)) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">63</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      error &lt;- httr::http_error(query)</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">64</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      errorContent &lt;- httr::content(query)</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">65</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      stop("query failed:\n", if (length(errorContent)) errorContent else if (is.logical(error)) httr::status_code(query) else error, call. = FALSE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">66</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    }</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">67</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    res &lt;- httr::content(query)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">68</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    output$ID &lt;- ID &lt;- res$queryId</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">69</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (0 == res$queryResults$searchResponse$response$numFound) stop("No records found for ", ID, call. = FALSE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">70</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    httr::PUT(paste0(endpoint, ID, "/package?format=JSON"))</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">71</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (verbose) message("Package requested for ", res$queryResults$searchResponse$response$numFound, " record(s): ", ID)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">72</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    retries &lt;- 1</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">73</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    while (jsonlite::read_json(paste0(endpoint, ID))$jobStatus != "COMPLETED") {</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">74</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      if (retries &gt; waits) stop("hit wait limit without seeing COMPLETED status for ", ID)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">75</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      retries &lt;- retries + 1</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">76</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      if (verbose) cat(paste0("\rwaiting for bundle (try: ", retries, ") ... "))</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">77</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      Sys.sleep(wait)</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">78</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    }</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">79</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (verbose) cat("complete\n")</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">80</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    url &lt;- paste0(endpoint, ID, "/download?format=JSON")</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">81</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    download.file(url, bundle, mode = "wb")</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">82</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  }</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">83</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  if (verbose) message("Unpacking ", bundle)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">84</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  years &lt;- unzip(bundle, list = TRUE)$Name</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">85</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  con &lt;- unz(bundle, years[[1]])</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">86</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  if (!length(scan(con, "", 1, quiet = TRUE))) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">87</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    exdir &lt;- sub(".zip", "", bundle, fixed = TRUE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">88</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    system2("unzip", c("-d", shQuote(exdir), shQuote(bundle)), stdout = TRUE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">89</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    years &lt;- list.files(exdir, full.names = TRUE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">90</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  }</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">91</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  close(con)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">92</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  output$content &lt;- lapply(years, function(f) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">93</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (file.exists(f)) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">94</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      jsonlite::read_json(f)$PatentData</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">95</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    } else {</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">96</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      con &lt;- unz(bundle, f)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">97</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      on.exit(close(con))</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">98</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      jsonlite::fromJSON(paste(scan(con, "", quote = "", na.strings = "", quiet = TRUE), collapse = " "))$PatentData</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">99</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    }</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">100</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  })</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">101</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  names(output$content) &lt;- sub(".json", "", basename(years), fixed = TRUE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">102</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  if (verbose) message("writing final results: ", normalizePath(final, "/", FALSE))</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">103</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  dir.create(dirname(final), FALSE, TRUE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">104</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  jsonlite::write_json(output$content, final, auto_unbox = TRUE, pretty = TRUE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">105</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">}</pre>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
             <div id="R/search_fulltext.R" class="hidden">
               <table class="table-condensed">
                 <tbody>
@@ -1628,6 +887,866 @@ table.table-condensed {
                 </tbody>
               </table>
             </div>
+            <div id="R/download_patents.R" class="hidden">
+              <table class="table-condensed">
+                <tbody>
+                  <tr class="never">
+                    <td class="num">1</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' Retrieve Full Patent Text</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">2</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#'</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">3</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' Search for and return a set of full patent texts.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">4</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#'</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">5</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param ids A vector of application numbers, patent numbers, or document IDs (e.g., \code{"US9748552"}).</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">6</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param outFile Path to a \code{.csv} file to write results to.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">7</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param ids_type Specifies what \code{ids} are, between \code{applications} (default), \code{patents},</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">8</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' \code{publication} (for publication document IDs), or \code{grant} (for grant document IDs).</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">9</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param query Search query; either a term/phrase (\code{searchText}) or set of Boolean criteria (\code{criteriaSearchText}).</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">10</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param inventionTitle Invention title, as it appears on the first page of the specification.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">11</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param inventionSubjectMatterCategory Patent category (e.g., \code{DESIGN}).</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">12</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param assigneeEntityName Name of the patent assignee.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">13</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param fromDate,toDate,filingDateFromDate,filingDateToDate Publication/grant and/or filing date ranges</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">14</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' in \code{YYYY-MM-DD} format (e.g., \code{2019-01-20}).</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">15</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param inventorNameText,claimText,abstractText,descriptionText Text to search for in specific portions;</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">16</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' \code{query} will search in all portions if it is a term or phrase.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">17</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param sortField Field by which to sort results; defaults to date.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">18</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param ascending Logical; if \code{TRUE}, will sort in ascending order.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">19</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param grant Logical; if \code{TRUE}, searches for grants rather than publications.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">20</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param limit Maximum number of results to return, in steps of 100.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">21</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param series Series code to prepend to \code{ids} if they are application or patent numbers and not already included.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">22</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param cores Number of CPU cores to use when retrieving multiple pages of results.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">23</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param verbose Logical; if \code{TRUE}, will print status messages.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">24</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @return Path to the downloaded package, if it exists and \code{await} was a number; otherwise \code{NULL}.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">25</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @examples</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">26</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' \dontrun{</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">27</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' # retrieve a specific set of patents:</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">28</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' patents &lt;- download_patents(c(16978600, 17087826, 16041592, 16727940, 17070594))</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">29</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' }</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">30</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @export</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">31</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r"></pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">32</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">download_patents &lt;- function(ids = NULL, outFile = NULL, ids_type = "application", query = NULL,</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">33</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">                             inventionTitle = NULL, inventionSubjectMatterCategory = NULL, assigneeEntityName = NULL,</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">34</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">                             fromDate = NULL, toDate = NULL, filingDateFromDate = NULL,</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">35</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">                             filingDateToDate = NULL, inventorNameText = NULL, claimText = NULL,</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">36</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">                             abstractText = NULL, descriptionText = NULL, sortField = NULL, ascending = FALSE,</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">37</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">                             grant = FALSE, limit = FALSE, series = "US", cores = detectCores() - 2, verbose = FALSE) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">38</td>
+                    <td class="coverage">4<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  if (!is.null(outFile) &amp;&amp; file.exists(outFile)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">39</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (verbose) message("reading in existing file: ", outFile)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">40</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    res &lt;- read.csv(outFile)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">41</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  } else {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">42</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    args &lt;- list(</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">43</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      inventionSubjectMatterCategory = inventionSubjectMatterCategory,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">44</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      filingDateFromDate = filingDateFromDate,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">45</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      filingDateToDate = filingDateToDate,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">46</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      inventionTitle = inventionTitle,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">47</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      assigneeEntityName = assigneeEntityName,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">48</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      inventorNameText = inventorNameText,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">49</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      claimText = claimText,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">50</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      abstractText = abstractText,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">51</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      descriptionText = descriptionText,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">52</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      sortField = sortField,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">53</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      sortOrder = if (ascending) "asc" else "desc"</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">54</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    )</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">55</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (!is.null(ids)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">56</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      id_field &lt;- c(</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">57</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        ap = "patentApplicationNumber", pa = "patentNumber",</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">58</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        do = paste0(if (grant) "grant" else "publication", "DocumentIdentifier"),</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">59</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        pu = "publicationDocumentIdentifier", gr = "grantDocumentIdentifier"</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">60</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      )[tolower(substring(ids_type, 1, 2))]</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">61</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      if (!grant &amp;&amp; grepl("grant", id_field, fixed = TRUE)) grant &lt;- TRUE</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">62</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      if (is.na(id_field)) stop("ids_type not recognized", call. = FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">63</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      args[id_field] &lt;- format_numbers(ids, if (grepl("Document", id_field, fixed = TRUE)) "" else series)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">64</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">65</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (!is.null(query)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">66</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      isCriteria &lt;- grepl(":", query, fixed = TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">67</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      args[if (isCriteria) "criteriaSearchText" else "searchText"] &lt;- query</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">68</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      if (isCriteria) args$largTextSearchFlag &lt;- "Y"</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">69</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">70</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    type &lt;- if (grant) "grant" else "publication"</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">71</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (!is.null(toDate)) args[paste0(type, "ToDate")] &lt;- toDate</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">72</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (!is.null(fromDate)) args[paste0(type, "FromDate")] &lt;- fromDate</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">73</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (is.numeric(limit) &amp;&amp; limit &lt; 100) args$rows &lt;- limit</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">74</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    args &lt;- Filter(length, args)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">75</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    req &lt;- GET(paste0(</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">76</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      "https://developer.uspto.gov/ibd-api/v1/application/", if (grant) "grants" else "publications",</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">77</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      "?", paste(paste0(names(args), "=", unlist(args, use.names = FALSE)), collapse = "&amp;")</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">78</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    ))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">79</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    res &lt;- tryCatch(content(req), error = function(e) http_status(req))</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">80</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (length(res) &amp;&amp; !is.null(res$error)) stop("request failed: ", res$status, ": ", res$error, call. = FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">81</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    retrieved &lt;- length(res$results)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">82</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (!retrieved) stop("no results were not found", call. = FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">83</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    n &lt;- if (is.numeric(limit)) min(res$recordTotalQuantity, limit) else res$recordTotalQuantity</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">84</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (n &gt; retrieved) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">85</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      pages &lt;- ceiling(n / 100) - 1</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">86</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      base_url &lt;- paste0(</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">87</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        "https://developer.uspto.gov/ibd-api/v1/application/", if (grant) "grants" else "publications",</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">88</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        "?", paste(paste0(names(args), "=", unlist(args, use.names = FALSE)), collapse = "&amp;"), "&amp;start="</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">89</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      )</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">90</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      urls &lt;- vapply(seq_len(pages), function(i) paste0(base_url, i * 100), "")</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">91</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      get_page &lt;- function(url) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">92</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        res &lt;- tryCatch(content(GET(url))$results, error = function(e) NULL)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">93</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        if (is.null(res)) warning("failed to retrieve ", url)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">94</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        res</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">95</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">96</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      res2 &lt;- if (cores &gt; 1) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">97</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        cl &lt;- parallel::makeCluster(max(1, min(pages, cores)))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">98</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        on.exit(parallel::stopCluster(cl), TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">99</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        parallel::parLapply(cl, urls, get_page)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">100</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      } else {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">101</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        lapply(urls, get_page)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">102</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">103</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      if (length(res2)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">104</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">        res$results &lt;- c(res$results, unlist(res2, recursive = FALSE))</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">105</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      } else if (verbose) warning("failed to retrieve more than the initial results", call. = FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">106</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">107</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    res &lt;- as.data.frame(do.call(cbind, lapply(as.data.frame(do.call(rbind, lapply(res$results, function(d) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">108</td>
+                    <td class="coverage">210<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      lapply(d, function(e) if (is.null(e)) NA else if (is.list(e)) paste(e, collapse = " ") else e)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">109</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    }))), unlist)))</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">110</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (verbose) message("found ", nrow(res))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">111</td>
+                    <td class="coverage">3<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (!is.null(outFile)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">112</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      if (verbose) message("writing results to ", outFile)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">113</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      dir.create(dirname(outFile), FALSE, TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">114</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      write.csv(res, outFile, row.names = FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">115</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    }</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">116</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">117</td>
+                    <td class="coverage">4<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  res</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">118</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">}</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">119</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r"></pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">120</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">format_numbers &lt;- function(numbers, series) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">121</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  paste(sub("^[A-Z]{2}([A-Z]{2})", "\\1", paste0(series, gsub("[/,]+", "", numbers)), FALSE, perl = TRUE), collapse = ",")</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">122</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">}</pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <div id="R/download_office_actions.R" class="hidden">
               <table class="table-condensed">
                 <tbody>
@@ -1941,6 +2060,747 @@ table.table-condensed {
                   </tr>
                   <tr class="never">
                     <td class="num">45</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">}</pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="R/download_peds.R" class="hidden">
+              <table class="table-condensed">
+                <tbody>
+                  <tr class="never">
+                    <td class="num">1</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' Download Patent Examination Data</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">2</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#'</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">3</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' Download a bundled query response from the \href{https://ped.uspto.gov/peds}{Patent Examination Data System}.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">4</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#'</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">5</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param searchText Text to search for; \code{"*:*"} for none (default); see</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">6</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' the FAQ on the \href{https://ped.uspto.gov/peds}{PEDS site}.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">7</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param filters A list of characters representing filter conditions in the form of \code{"field:value"}</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">8</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' (e.g., \code{list('appStatus:"Patented Case"')}).</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">9</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param outFile Name of the final JSON file.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">10</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param start Initial record.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">11</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param minMatch Minimum number of terms required to match.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">12</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param overwrite Logical; overwrite any previous queries with the same body hash.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">13</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param waits Number of times to check for a completed bundle before giving up.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">14</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param wait Number of seconds to wait between retries (how long \code{waits} are).</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">15</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param endpoint PEDs API endpoint.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">16</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @param verbose Logical; if \code{FALSE}, will not print status messages.</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">17</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @return An invisible list with an entries for \code{ID} (the query ID; if one was made) and</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">18</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' \code{content} (a list with an entry for each year in the set of patent metadata).</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">19</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @examples</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">20</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' \dontrun{</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">21</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' # like case 3 in the API Documentation &gt; API Tutorial on https://ped.uspto.gov/peds</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">22</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' download_peds(</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">23</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#'   "firstNamedApplicant:(Google)",</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">24</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#'   list('appStatus:"Patented Case"', "appFilingDate:[2013-01-01T00:00:00Z TO 2013-03-31T23:59:59Z]")</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">25</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' )</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">26</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' }</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">27</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">#' @export</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">28</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r"></pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">29</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">download_peds &lt;- function(searchText = "*:*", filters = list("*:*"), outFile = NULL, start = 0, minMatch = "100%", overwrite = FALSE,</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">30</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">                          waits = 20, wait = 10, endpoint = "https://ped.uspto.gov/api/queries/", verbose = TRUE) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">31</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  # https://ped.uspto.gov/api/search-params</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">32</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  body &lt;- list(</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">33</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    searchText = searchText,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">34</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    fq = filters,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">35</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    fl = "*",</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">36</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    mm = minMatch,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">37</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    df = "patentTitle",</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">38</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    qf = paste(</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">39</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      "appEarlyPubNumber applId appLocation appType appStatus_txt appConfrNumber appCustNumber",</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">40</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      "appGrpArtNumber appCls appSubCls appEntityStatus_txt patentNumber patentTitle primaryInventor",</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">41</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      "firstNamedApplicant appExamName appExamPrefrdName appAttrDockNumber appPCTNumber",</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">42</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      "appIntlPubNumber wipoEarlyPubNumber pctAppType firstInventorFile appClsSubCls rankAndInventorsList"</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">43</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    ),</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">44</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    facet = FALSE,</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">45</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    sort = "applId asc",</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">46</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    start = start</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">47</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  )</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">48</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  hash &lt;- digest::digest(body)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">49</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  final &lt;- normalizePath(paste0(if (is.null(outFile)) hash else sub("\\.json$", "", outFile), ".json"), "/", FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">50</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  if (!overwrite &amp;&amp; file.exists(final)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">51</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (verbose) message("Reading in existing results")</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">52</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    return(list(ID = "", content = jsonlite::read_json(final)))</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">53</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">54</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  bundle &lt;- paste0(normalizePath(tempdir(), "/"), "/", hash, ".zip")</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">55</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  output &lt;- list(ID = "", content = list())</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">56</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  on.exit(return(invisible(output)))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">57</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  if (overwrite || !file.exists(bundle)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">58</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    query &lt;- httr::POST(</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">59</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      endpoint, httr::add_headers("Content-Type" = "application/json", Accept = "application/json"),</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">60</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      body = body, encode = "json"</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">61</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    )</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">62</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (200 != httr::status_code(query)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">63</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      error &lt;- httr::http_error(query)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">64</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      errorContent &lt;- httr::content(query)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">65</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      stop("query failed:\n", if (length(errorContent)) errorContent else if (is.logical(error)) httr::status_code(query) else error, call. = FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">66</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">67</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    res &lt;- httr::content(query)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">68</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    output$ID &lt;- ID &lt;- res$queryId</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">69</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (0 == res$queryResults$searchResponse$response$numFound) stop("No records found for ", ID, call. = FALSE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">70</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    httr::PUT(paste0(endpoint, ID, "/package?format=JSON"))</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">71</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (verbose) message("Package requested for ", res$queryResults$searchResponse$response$numFound, " record(s): ", ID)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">72</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    retries &lt;- 1</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">73</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    while (jsonlite::read_json(paste0(endpoint, ID))$jobStatus != "COMPLETED") {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">74</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      if (retries &gt; waits) stop("hit wait limit without seeing COMPLETED status for ", ID)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">75</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      retries &lt;- retries + 1</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">76</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      if (verbose) cat(paste0("\rwaiting for bundle (try: ", retries, ") ... "))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">77</td>
+                    <td class="coverage">2<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      Sys.sleep(wait)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">78</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    }</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">79</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (verbose) cat("complete\n")</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">80</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    url &lt;- paste0(endpoint, ID, "/download?format=JSON")</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">81</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    download.file(url, bundle, mode = "wb")</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">82</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  }</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">83</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  if (verbose) message("Unpacking ", bundle)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">84</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  years &lt;- unzip(bundle, list = TRUE)$Name</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">85</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  con &lt;- unz(bundle, years[[1]])</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">86</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  if (!length(scan(con, "", 1, quiet = TRUE))) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">87</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    exdir &lt;- sub(".zip", "", bundle, fixed = TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">88</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    system2("unzip", c("-d", shQuote(exdir), shQuote(bundle)), stdout = TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">89</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    years &lt;- list.files(exdir, full.names = TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">90</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  }</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">91</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  close(con)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">92</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  output$content &lt;- lapply(years, function(f) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">93</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    if (file.exists(f)) {</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">94</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      jsonlite::read_json(f)$PatentData</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">95</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    } else {</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">96</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      con &lt;- unz(bundle, f)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">97</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      on.exit(close(con))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">98</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">      jsonlite::fromJSON(paste(scan(con, "", quote = "", na.strings = "", quiet = TRUE), collapse = " "))$PatentData</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">99</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">    }</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">100</td>
+                    <td class="coverage"></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  })</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">101</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  names(output$content) &lt;- sub(".json", "", basename(years), fixed = TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="missed">
+                    <td class="num">102</td>
+                    <td class="coverage">!</td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  if (verbose) message("writing final results: ", normalizePath(final, "/", FALSE))</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">103</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  dir.create(dirname(final), FALSE, TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="covered">
+                    <td class="num">104</td>
+                    <td class="coverage">1<em>x</em></td>
+                    <td class="col-sm-12">
+                      <pre class="language-r">  jsonlite::write_json(output$content, final, auto_unbox = TRUE, pretty = TRUE)</pre>
+                    </td>
+                  </tr>
+                  <tr class="never">
+                    <td class="num">105</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
                       <pre class="language-r">}</pre>
@@ -2843,677 +3703,6 @@ table.table-condensed {
                   </tr>
                   <tr class="never">
                     <td class="num">128</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">}</pre>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div id="R/download_patents.R" class="hidden">
-              <table class="table-condensed">
-                <tbody>
-                  <tr class="never">
-                    <td class="num">1</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' Retrieve Full Patent Text</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">2</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#'</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">3</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' Search for and return a set of full patent texts.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">4</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#'</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">5</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param ids A vector of application numbers, patent numbers, or document IDs (e.g., \code{"US9748552"}).</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">6</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param outFile Path to a \code{.csv} file to write results to.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">7</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param ids_type Specifies what \code{ids} are, between \code{applications} (default), \code{patents},</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">8</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' \code{publication} (for publication document IDs), or \code{grant} (for grant document IDs).</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">9</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param query Search query; either a term/phrase (\code{searchText}) or set of Boolean criteria (\code{criteriaSearchText}).</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">10</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param inventionTitle Invention title, as it appears on the first page of the specification.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">11</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param inventionSubjectMatterCategory Patent category (e.g., \code{DESIGN}).</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">12</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param assigneeEntityName Name of the patent assignee.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">13</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param fromDate,toDate,filingDateFromDate,filingDateToDate Publication/grant and/or filing date ranges</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">14</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' in \code{YYYY-MM-DD} format (e.g., \code{2019-01-20}).</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">15</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param inventorNameText,claimText,abstractText,descriptionText Text to search for in specific portions;</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">16</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' \code{query} will search in all portions if it is a term or phrase.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">17</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param sortField Field by which to sort results; defaults to date.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">18</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param ascending Logical; if \code{TRUE}, will sort in ascending order.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">19</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param grant Logical; if \code{TRUE}, searches for grants rather than publications.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">20</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param limit Maximum number of results to return.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">21</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param series Series code to prepend to \code{ids} if they are application or patent numbers and not already included.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">22</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @param verbose Logical; if \code{TRUE}, will print status messages.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">23</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @return Path to the downloaded package, if it exists and \code{await} was a number; otherwise \code{NULL}.</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">24</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @examples</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">25</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' \dontrun{</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">26</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' # retrieve a specific set of patents:</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">27</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' patents &lt;- download_patents(c(16978600, 17087826, 16041592, 16727940, 17070594))</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">28</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' }</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">29</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">#' @export</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">30</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r"></pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">31</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">download_patents &lt;- function(ids = NULL, outFile = NULL, ids_type = "application", query = NULL,</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">32</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">                             inventionTitle = NULL, inventionSubjectMatterCategory = NULL, assigneeEntityName = NULL,</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">33</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">                             fromDate = NULL, toDate = NULL, filingDateFromDate = NULL,</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">34</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">                             filingDateToDate = NULL, inventorNameText = NULL, claimText = NULL,</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">35</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">                             abstractText = NULL, descriptionText = NULL, sortField = NULL, ascending = FALSE,</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">36</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">                             grant = FALSE, limit = FALSE, series = "US", verbose = FALSE) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">37</td>
-                    <td class="coverage">3<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  if (!is.null(outFile) &amp;&amp; file.exists(outFile)) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">38</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (verbose) message("reading in existing file: ", outFile)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">39</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    res &lt;- read.csv(outFile)</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">40</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  } else {</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">41</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    args &lt;- list(</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">42</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      inventionSubjectMatterCategory = inventionSubjectMatterCategory,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">43</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      filingDateFromDate = filingDateFromDate,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">44</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      filingDateToDate = filingDateToDate,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">45</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      inventionTitle = inventionTitle,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">46</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      assigneeEntityName = assigneeEntityName,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">47</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      inventorNameText = inventorNameText,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">48</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      claimText = claimText,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">49</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      abstractText = abstractText,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">50</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      descriptionText = descriptionText,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">51</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      sortField = sortField,</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">52</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      sortOrder = if (ascending) "asc" else "desc"</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">53</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    )</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">54</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (!is.null(ids)) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">55</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      id_field &lt;- c(</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">56</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">        ap = "patentApplicationNumber", pa = "patentNumber",</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">57</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">        do = paste0(if (grant) "grant" else "publication", "DocumentIdentifier"),</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">58</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">        pu = "publicationDocumentIdentifier", gr = "grantDocumentIdentifier"</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">59</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      )[tolower(substring(ids_type, 1, 2))]</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">60</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      if (!grant &amp;&amp; grepl("grant", id_field, fixed = TRUE)) grant &lt;- TRUE</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">61</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      if (is.na(id_field)) stop("ids_type not recognized", call. = FALSE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">62</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      args[id_field] &lt;- format_numbers(ids, if (grepl("Document", id_field, fixed = TRUE)) "" else series)</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">63</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    }</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">64</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (!is.null(query)) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">65</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      isCriteria &lt;- grepl(":", query, fixed = TRUE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">66</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      args[if (isCriteria) "criteriaSearchText" else "searchText"] &lt;- query</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">67</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      if (isCriteria) args$largTextSearchFlag &lt;- "Y"</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">68</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    }</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">69</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    type &lt;- if (grant) "grant" else "publication"</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">70</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (!is.null(toDate)) args[paste0(type, "ToDate")] &lt;- toDate</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">71</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (!is.null(fromDate)) args[paste0(type, "FromDate")] &lt;- fromDate</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">72</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    args &lt;- Filter(length, args)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">73</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    req &lt;- GET(paste0(</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">74</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      "https://developer.uspto.gov/ibd-api/v1/application/", if (grant) "grants" else "publications",</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">75</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      "?", paste(paste0(names(args), "=", unlist(args, use.names = FALSE)), collapse = "&amp;")</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">76</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    ))</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">77</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    res &lt;- tryCatch(content(req), error = function(e) http_status(req))</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">78</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (!is.null(res$error)) stop("request failed: ", res$status, ": ", res$error, call. = FALSE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">79</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (!length(res$results)) stop("numbers were not found", call. = FALSE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">80</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    res &lt;- as.data.frame(do.call(cbind, lapply(as.data.frame(do.call(rbind, lapply(res$results, function(d) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">81</td>
-                    <td class="coverage">200<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      lapply(d, function(e) if (is.null(e)) NA else if (is.list(e)) paste(e, collapse = " ") else e)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">82</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    }))), unlist)))</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">83</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (verbose) message("found ", nrow(res))</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">84</td>
-                    <td class="coverage">2<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    if (!is.null(outFile)) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="missed">
-                    <td class="num">85</td>
-                    <td class="coverage">!</td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      if (verbose) message("writing results to ", outFile)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">86</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      dir.create(dirname(outFile), FALSE, TRUE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">87</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">      write.csv(res, outFile, row.names = FALSE)</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">88</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">    }</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">89</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  }</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">90</td>
-                    <td class="coverage">3<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  res</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">91</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">}</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">92</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r"></pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">93</td>
-                    <td class="coverage"></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">format_numbers &lt;- function(numbers, series) {</pre>
-                    </td>
-                  </tr>
-                  <tr class="covered">
-                    <td class="num">94</td>
-                    <td class="coverage">1<em>x</em></td>
-                    <td class="col-sm-12">
-                      <pre class="language-r">  paste(sub("^[A-Z]{2}([A-Z]{2})", "\\1", paste0(series, gsub("[/,]+", "", numbers)), FALSE, perl = TRUE), collapse = ",")</pre>
-                    </td>
-                  </tr>
-                  <tr class="never">
-                    <td class="num">95</td>
                     <td class="coverage"></td>
                     <td class="col-sm-12">
                       <pre class="language-r">}</pre>

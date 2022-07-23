@@ -11,7 +11,7 @@ download_patents(ids = NULL, outFile = NULL, ids_type = "application",
   filingDateToDate = NULL, inventorNameText = NULL, claimText = NULL,
   abstractText = NULL, descriptionText = NULL, sortField = NULL,
   ascending = FALSE, grant = FALSE, limit = FALSE, series = "US",
-  verbose = FALSE)
+  cores = detectCores() - 2, verbose = FALSE)
 }
 \arguments{
 \item{ids}{A vector of application numbers, patent numbers, or document IDs (e.g., \code{"US9748552"}).}
@@ -41,9 +41,11 @@ in \code{YYYY-MM-DD} format (e.g., \code{2019-01-20}).}
 
 \item{grant}{Logical; if \code{TRUE}, searches for grants rather than publications.}
 
-\item{limit}{Maximum number of results to return.}
+\item{limit}{Maximum number of results to return, in steps of 100.}
 
 \item{series}{Series code to prepend to \code{ids} if they are application or patent numbers and not already included.}
+
+\item{cores}{Number of CPU cores to use when retrieving multiple pages of results.}
 
 \item{verbose}{Logical; if \code{TRUE}, will print status messages.}
 }

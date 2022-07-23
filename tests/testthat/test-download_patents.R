@@ -13,3 +13,8 @@ test_that("number set works", {
   patents <- download_patents(existing$patentApplicationNumber)
   expect_identical(patents$patentApplicationNumber, existing$patentApplicationNumber)
 })
+
+test_that("pagination works", {
+  patents <- download_patents(limit = 200)
+  expect_true(nrow(patents) == 200)
+})

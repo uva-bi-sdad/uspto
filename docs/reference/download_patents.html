@@ -51,7 +51,7 @@
 <span>  filingDateToDate <span class="op">=</span> <span class="cn">NULL</span>, inventorNameText <span class="op">=</span> <span class="cn">NULL</span>, claimText <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  abstractText <span class="op">=</span> <span class="cn">NULL</span>, descriptionText <span class="op">=</span> <span class="cn">NULL</span>, sortField <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ascending <span class="op">=</span> <span class="cn">FALSE</span>, grant <span class="op">=</span> <span class="cn">FALSE</span>, limit <span class="op">=</span> <span class="cn">FALSE</span>, series <span class="op">=</span> <span class="st">"US"</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>  cores <span class="op">=</span> <span class="fu">detectCores</span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">2</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -108,11 +108,15 @@ in <code>YYYY-MM-DD</code> format (e.g., <code>2019-01-20</code>).</p></dd>
 
 
 <dt>limit</dt>
-<dd><p>Maximum number of results to return.</p></dd>
+<dd><p>Maximum number of results to return, in steps of 100.</p></dd>
 
 
 <dt>series</dt>
 <dd><p>Series code to prepend to <code>ids</code> if they are application or patent numbers and not already included.</p></dd>
+
+
+<dt>cores</dt>
+<dd><p>Number of CPU cores to use when retrieving multiple pages of results.</p></dd>
 
 
 <dt>verbose</dt>
