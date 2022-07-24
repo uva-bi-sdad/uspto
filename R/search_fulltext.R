@@ -2,7 +2,7 @@
 #'
 #' Searches the Application (AppFT) or Patent (PatFT)
 #' \href{https://appft.uspto.gov}{Full-Text Databases}, and returns
-#' application/patent numbers and titles.
+#' document/patent numbers and titles.
 #'
 #' @param query A query string. This can be a set of terms (e.g., \code{"term1 OR term2"}) or
 #' an exact phrase (e.g., \code{'"a phrase"'}). To search within a particular
@@ -19,6 +19,7 @@
 #' @param verbose Logical; if \code{FALSE}, does not print status messages.
 #' @return A \code{data.frame} with columns for \code{index} (index of the result),
 #' \code{id} (patent number or application document number), and \code{title} (title of patent or application).
+#' @seealso For the newer search mechanism, see \code{\link{uspto_search}}.
 #' @examples
 #' \dontrun{
 #' # search for applications with a meteorology classification:

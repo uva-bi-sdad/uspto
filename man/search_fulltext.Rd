@@ -37,7 +37,7 @@ A \code{data.frame} with columns for \code{index} (index of the result),
 \description{
 Searches the Application (AppFT) or Patent (PatFT)
 \href{https://appft.uspto.gov}{Full-Text Databases}, and returns
-application/patent numbers and titles.
+document/patent numbers and titles.
 }
 \examples{
 \dontrun{
@@ -48,4 +48,7 @@ results <- search_fulltext("CPCL/G01W")
 # search for patents by date and title keyword
 results <- search_fulltext("isd/1/8/2002 and motorcycle", FALSE)
 }
+}
+\seealso{
+For the newer search mechanism, see \code{\link{uspto_search}}.
 }

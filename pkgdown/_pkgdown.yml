@@ -3,8 +3,9 @@ template:
 
 reference:
 - title: Download Functions
-  desc: These functions are used to download data from variaous USPTO APIs.
+  desc: These functions are used to download data from various USPTO APIs.
   contents:
+  - uspto_download
   - starts_with("download_")
 - title: Search Functions
   desc: These functions can be used to search for patents and/or applications.
