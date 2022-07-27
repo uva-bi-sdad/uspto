@@ -37,6 +37,8 @@ uspto_search <- function(query, databases = c("US-PGPUB", "USPAT", "USOCR"), out
     if (file.exists(outFile)) {
       if (verbose) message("loading existing results")
       return(read.csv(outFile))
+    } else {
+      dir.create(dirname(outFile), FALSE)
     }
   }
   databases <- unname(c(b = "US-PGPUB", t = "USPAT", r = "USOCR")[unique(tolower(substring(databases, nchar(databases))))])

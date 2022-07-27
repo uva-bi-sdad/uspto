@@ -5,9 +5,9 @@
 \title{Download Office Actions}
 \usage{
 download_office_actions(criteria = "*:*", outFile = NULL, start = 0,
-  rows = 9999, overwrite = FALSE,
+  limit = FALSE, overwrite = FALSE,
   endpoint = "https://developer.uspto.gov/ds-api/oa_actions/v1/records",
-  verbose = TRUE)
+  compress = TRUE, cores = detectCores() - 2, verbose = TRUE)
 }
 \arguments{
 \item{criteria}{Search criteria, in the form of \code{"field:value"} (e.g., \code{"examinerEmployeeNumber:80488"}).
@@ -17,11 +17,15 @@ See available \href{https://developer.uspto.gov/ds-api/oa_actions/v1/fields}{fie
 
 \item{start}{Initial record; useful if making requests in chunks.}
 
-\item{rows}{Number of rows to return; defaults to 9999.}
+\item{limit}{Maximum number of office actions to return; under 1,000, or in steps of 1,000; defaults to all found.}
 
 \item{overwrite}{Logical; if \code{TRUE}, will overwrite an existing file with the same \code{outFile}.}
 
 \item{endpoint}{API endpoint.}
+
+\item{compress}{Logical; if \code{FALSE}, will not write a compressed file.}
+
+\item{cores}{Number of CPU cores to split calls across if necessary.}
 
 \item{verbose}{Logical; if \code{FALSE}, will not print status messages.}
 }

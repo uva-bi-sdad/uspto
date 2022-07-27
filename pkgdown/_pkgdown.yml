@@ -12,6 +12,10 @@ reference:
   contents:
   - uspto_search
   - search_fulltext
+- title: Utility Functions
+  desc: These functions can be used to help use the information collected from the other functions.
+  contents:
+  - extract_examiner_name
 
 home:
   links:

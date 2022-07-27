@@ -1,0 +1,175 @@
+---
+title: "Expand from a Seed Set"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Expand from a Seed Set}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+*Built with R 
+`r getRversion()`*
+
+***
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 5,
+  fig.width = 8.84,
+  dev = "CairoSVG",
+  fig.ext = "svg"
+)
+library(uspto)
+outDir <- "eda/seed_expand/"
+if (!dir.exists(outDir)) outDir <- "../eda/seed_expand/"
+```
+
+This example looks at a set of patent applications based on an initial seed set.
+
+## Data Collection
+
+### Setup
+
+Before starting, we'll need to load the package, and point to a directory where we'd like things saved:
+```r
+# install if needed: remotes::install_guthub("uva-bi-sdad/uspto")
+library(uspto)
+outDir <- "eda/seed_expand/"
+```
+
+### Initial Search
+
+We'll start by identifying a small set of applications with a meteorology Cooperative Patent Classification (CPC) class,
+and that mention "global warming" or "climate change" in their abstracts:
+```{r}
+seed_set <- uspto_search(
+  'g01w.cpcl. AND ("global warming".ab. "climate change".ab.)',
+  "US-PGPUB",
+  outFile = paste0(outDir, "seed_set.csv")
+)
+```
+
+This gives us `r nrow(seed_set)` applications from between `r min(as.Date(seed_set$datePublished))`
+and `r max(as.Date(seed_set$datePublished))`.
+
+### Examination Expansions
+
+For some context around the examination of these applications, we'll want to collect all of the other applications
+examined by the examiners of the initial set. Examiners are not included in applications,
+so we'll need to identify them by the office actions associated with the applications.
+
+#### Seed Office Actions
+
+First, we need to know which examiners examined the seed set of applications:
+```{r}
+office_actions <- download_office_actions(
+  paste0("patentApplicationNumber:(", paste(
+    sub("/", "", seed_set$applicationNumber, fixed = TRUE),
+    collapse = " "
+  ), ")"),
+  paste0(outDir, "seed_set_office_actions.json.xz"),
+  verbose = FALSE
+)
+```
+
+From these `r length(office_actions)` office actions, we can get a set of examiners:
+```{r}
+examiners_ids <- unique(trimws(office_actions$examinerEmployeeNumber))
+```
+
+And now we have `r length(examiners_ids)` examiners who examined at least one application
+in our seed set.
+
+#### Examiner-Based Expansion
+
+Next, we want to collect all of the other applications our identified examiners examined.
+Again, since examiners are not directly associated with applications, we'll have to first collect
+all of their office actions:
+```{r}
+all_office_actions <- download_office_actions(
+  paste0("examinerEmployeeNumber:(", paste(examiners_ids, collapse = " "), ")"),
+  paste0(outDir, "all_office_actions.json.xz"),
+  verbose = FALSE
+)
+all_applications <- unique(unlist(all_office_actions$patentApplicationNumber))
+```
+
+This gives us `r length(all_applications)` total applications. 
+
+### Collect Application Data
+
+There are at least three sources of information that might be of interest when considering the examination
+of a patent application: One we have in office actions, another similar to those are the full
+prosecution histories, and finally, the text of the applications themselves.
+
+#### Prosecution Histories
+
+Prosecution histories track when happens to an application between the submitter and the patent office.
+These are recorded in the Patent Examination Data System (PEDS):
+
+```{r}
+library(jsonlite)
+examinations_file <- paste0(outDir, "examination_records.json.xz")
+if (file.exists(examinations_file)) {
+  con <- gzfile(examinations_file)
+  examination_records <- fromJSON(readLines(con))
+  close(con)
+} else {
+  # have to break up the calls based on some limit on query length theoretically
+  n <- length(all_applications)
+  filters <- lapply(
+    split(sub("/", "", all_applications, fixed = TRUE), sort(rep_len(seq_len(ceiling(n / 500)), n))),
+    function(set) paste0("applId:(", paste(set, collapse = " "), ")")
+  )
+  examination_records <- unlist(lapply(filters, function(f) {
+    unlist(
+      download_peds(filters = list(f), verbose = FALSE)$content, FALSE, FALSE
+    )
+  }), FALSE, FALSE)
+  con <- xzfile(examinations_file)
+  write_json(examination_records, con, auto_unbox = TRUE)
+  close(con)
+}
+```
+
+### Application Text
+
+Finally, we can collect the actual content of each application, based on the document IDs included in
+the examination records:
+```{r}
+document_ids <- unique(unlist(lapply(examination_records, function(r) {
+  if (is.list(r)) r$patentPublicationIdentification$publicationNumber else NULL
+})))
+document_ids <- document_ids[!is.na(document_ids)]
+oriDir <- "eda/original/"
+if (!dir.exists(oriDir)) oriDir <- "../eda/original/"
+applications <- uspto_download(document_ids, outDir = paste0(oriDir, "applications"))
+```
+
+## Analysis
+
+We can start with a simple look at the text to get a feel for what sets our seed set apart:
+```{r}
+# identify the applications that were part of the initial seed set
+applications$seed <- applications$applicationNumber %in% seed_set$applicationNumber
+
+# count up terms used within abstracts
+library(lingmatch)
+dtm <- lma_dtm(applications$abstractHtml, "function")
+
+# identify the terms that most identify the seed set
+term_seed_sim <- lma_simets(t(dtm), !applications$seed, metric = "cosine")
+term_seed_sim <- sort(term_seed_sim[term_seed_sim > .25], TRUE)
+```
+
+```{r}
+library(splot)
+splot(
+  term_seed_sim ~ names(term_seed_sim),
+  type = "bar", sort = FALSE, title = FALSE, labx = FALSE, laby = "Cosine Similarity"
+)
+```

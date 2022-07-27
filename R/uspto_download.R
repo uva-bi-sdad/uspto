@@ -26,9 +26,15 @@
 #' @export
 
 uspto_download <- function(guid, outDir = tempdir(), type = "US-PGPUB", cores = detectCores() - 2, verbose = FALSE) {
-  if (missing(type) && !is.null(guid$type)) type <- guid$type
+  if (missing(type) && is.list(guid) && !is.null(guid$type)) type <- guid$type
   if (!is.character(guid)) guid <- guid$guid
   if (!length(guid)) stop("unrecognized guid input; should be a data.frame with a guid column, or a character vector", call. = FALSE)
+  invalid <- !grepl("[A-Z]{2}-\\d+-[A-Z]\\d+", guid, perl = TRUE)
+  if (any(invalid)) {
+    if (any(!grepl("-", guid[invalid], fixed = TRUE))) guid[invalid] <- sub("(\\d+)", "-\\1-", guid[invalid], perl = TRUE)
+    invalid <- !grepl("[A-Z]{2}-\\d+-[A-Z]\\d+", guid, perl = TRUE)
+    if (any(invalid)) stop("invalid ID format: ", if (all(invalid)) "all" else guid[invalid])
+  }
   type <- rep_len(type, length(guid))
   outDir <- paste0(normalizePath(outDir, "/", FALSE), "/")
   dir.create(outDir, FALSE)

@@ -46,7 +46,11 @@ download_peds <- function(searchText = "*:*", filters = list("*:*"), outFile = N
     start = start
   )
   hash <- digest::digest(body)
-  final <- normalizePath(paste0(if (is.null(outFile)) hash else sub("\\.json$", "", outFile), ".json"), "/", FALSE)
+  final <- normalizePath(paste0(if (is.null(outFile)) {
+    paste0(tempdir(), "/", hash)
+  } else {
+    sub("\\.json$", "", outFile)
+  }, ".json"), "/", FALSE)
   if (!overwrite && file.exists(final)) {
     if (verbose) message("Reading in existing results")
     return(list(ID = "", content = jsonlite::read_json(final)))
