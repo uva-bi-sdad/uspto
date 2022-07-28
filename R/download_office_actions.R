@@ -30,7 +30,7 @@ download_office_actions <- function(criteria = "*:*", outFile = NULL, start = 0,
   }, ".json", if (compress) ".xz"), "/", FALSE)
   if (!overwrite && file.exists(final)) {
     if (verbose) message("Reading in existing results")
-    return(invisible(jsonlite::read_json(final)))
+    return(invisible(read_json(final)))
   }
   query <- httr::POST(
     endpoint, httr::add_headers("Content-Type" = "application/x-www-form-urlencoded", Accept = "application/json"),
@@ -74,7 +74,6 @@ download_office_actions <- function(criteria = "*:*", outFile = NULL, start = 0,
     con <- xzfile(final)
     on.exit(close(con), add = TRUE)
   }
-  json <- toJSON(res$docs, auto_unbox = TRUE)
-  writeLines(json, if (compress) con else final)
-  invisible(fromJSON(json))
+  write_json(res$docs, if (compress) con else final, auto_unbox = TRUE)
+  invisible(res$docs)
 }

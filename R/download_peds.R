@@ -27,7 +27,7 @@
 #' @export
 
 download_peds <- function(searchText = "*:*", filters = list("*:*"), outFile = NULL, start = 0, minMatch = "100%", overwrite = FALSE,
-                          waits = 20, wait = 10, endpoint = "https://ped.uspto.gov/api/queries/", verbose = TRUE) {
+                          waits = 50, wait = 10, endpoint = "https://ped.uspto.gov/api/queries/", verbose = TRUE) {
   # https://ped.uspto.gov/api/search-params
   body <- list(
     searchText = searchText,
@@ -53,11 +53,11 @@ download_peds <- function(searchText = "*:*", filters = list("*:*"), outFile = N
   }, ".json"), "/", FALSE)
   if (!overwrite && file.exists(final)) {
     if (verbose) message("Reading in existing results")
-    return(list(ID = "", content = jsonlite::read_json(final)))
+    return(jsonlite::read_json(final))
   }
   bundle <- paste0(normalizePath(tempdir(), "/"), "/", hash, ".zip")
   output <- list(ID = "", content = list())
-  on.exit(return(invisible(output)))
+  on.exit(return(invisible(output$content)))
   if (overwrite || !file.exists(bundle)) {
     query <- httr::POST(
       endpoint, httr::add_headers("Content-Type" = "application/json", Accept = "application/json"),
@@ -93,7 +93,7 @@ download_peds <- function(searchText = "*:*", filters = list("*:*"), outFile = N
     years <- list.files(exdir, full.names = TRUE)
   }
   close(con)
-  output$content <- lapply(years, function(f) {
+  output$content <- unlist(lapply(years, function(f) {
     if (file.exists(f)) {
       jsonlite::read_json(f)$PatentData
     } else {
@@ -101,9 +101,8 @@ download_peds <- function(searchText = "*:*", filters = list("*:*"), outFile = N
       on.exit(close(con))
       jsonlite::fromJSON(paste(scan(con, "", quote = "", na.strings = "", quiet = TRUE), collapse = " "))$PatentData
     }
-  })
-  names(output$content) <- sub(".json", "", basename(years), fixed = TRUE)
+  }), recursive = FALSE)
   if (verbose) message("writing final results: ", normalizePath(final, "/", FALSE))
   dir.create(dirname(final), FALSE, TRUE)
-  jsonlite::write_json(output$content, final, auto_unbox = TRUE, pretty = TRUE)
+  jsonlite::write_json(output$content, final, auto_unbox = TRUE)
 }

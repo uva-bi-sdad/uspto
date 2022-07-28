@@ -5,7 +5,7 @@
 \title{Download Patent Examination Data}
 \usage{
 download_peds(searchText = "*:*", filters = list("*:*"), outFile = NULL,
-  start = 0, minMatch = "100\%", overwrite = FALSE, waits = 20,
+  start = 0, minMatch = "100\%", overwrite = FALSE, waits = 50,
   wait = 10, endpoint = "https://ped.uspto.gov/api/queries/",
   verbose = TRUE)
 }

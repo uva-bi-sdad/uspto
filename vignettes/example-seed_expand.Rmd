@@ -78,7 +78,7 @@ office_actions <- download_office_actions(
 
 From these `r length(office_actions)` office actions, we can get a set of examiners:
 ```{r}
-examiners_ids <- unique(trimws(office_actions$examinerEmployeeNumber))
+examiners_ids <- unique(vapply(office_actions, function(oa) trimws(oa$examinerEmployeeNumber[[1]]), ""))
 ```
 
 And now we have `r length(examiners_ids)` examiners who examined at least one application
@@ -95,7 +95,7 @@ all_office_actions <- download_office_actions(
   paste0(outDir, "all_office_actions.json.xz"),
   verbose = FALSE
 )
-all_applications <- unique(unlist(all_office_actions$patentApplicationNumber))
+all_applications <- unique(vapply(all_office_actions, function(oa) oa$patentApplicationNumber[[1]], ""))
 ```
 
 This gives us `r length(all_applications)` total applications. 
@@ -115,9 +115,7 @@ These are recorded in the Patent Examination Data System (PEDS):
 library(jsonlite)
 examinations_file <- paste0(outDir, "examination_records.json.xz")
 if (file.exists(examinations_file)) {
-  con <- gzfile(examinations_file)
-  examination_records <- fromJSON(readLines(con))
-  close(con)
+  examination_records <- read_json(examinations_file)
 } else {
   # have to break up the calls based on some limit on query length theoretically
   n <- length(all_applications)
@@ -126,9 +124,7 @@ if (file.exists(examinations_file)) {
     function(set) paste0("applId:(", paste(set, collapse = " "), ")")
   )
   examination_records <- unlist(lapply(filters, function(f) {
-    unlist(
-      download_peds(filters = list(f), verbose = FALSE)$content, FALSE, FALSE
-    )
+    download_peds(filters = list(f), verbose = FALSE)
   }), FALSE, FALSE)
   con <- xzfile(examinations_file)
   write_json(examination_records, con, auto_unbox = TRUE)
@@ -162,14 +158,14 @@ library(lingmatch)
 dtm <- lma_dtm(applications$abstractHtml, "function")
 
 # identify the terms that most identify the seed set
-term_seed_sim <- lma_simets(t(dtm), !applications$seed, metric = "cosine")
-term_seed_sim <- sort(term_seed_sim[term_seed_sim > .25], TRUE)
+term_seed_sim <- lma_simets(t(dtm), applications$seed, metric = "cosine")
+term_seed_sim <- sort(term_seed_sim[term_seed_sim > .15], TRUE)
 ```
 
 ```{r}
 library(splot)
 splot(
   term_seed_sim ~ names(term_seed_sim),
-  type = "bar", sort = FALSE, title = FALSE, labx = FALSE, laby = "Cosine Similarity"
+  type = "bar", sort = FALSE, title = FALSE, labx = FALSE, laby = "Similarity with Seed"
 )
 ```
