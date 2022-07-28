@@ -5,5 +5,5 @@ test_that("example works", {
   unlink(outFile)
   download_peds("applId:13877637", outFile = outFile, verbose = FALSE)
   expect_true(file.exists(outFile))
-  expect_identical(jsonlite::read_json(outFile)[["2013"]][[1]]$patentCaseMetadata$applicationNumberText$value, "13877637")
+  expect_identical(jsonlite::read_json(outFile)[[1]]$patentCaseMetadata$applicationNumberText$value, "13877637")
 })

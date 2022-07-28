@@ -138,7 +138,7 @@ Finally, we can collect the actual content of each application, based on the doc
 the examination records:
 ```{r}
 document_ids <- unique(unlist(lapply(examination_records, function(r) {
-  if (is.list(r)) r$patentPublicationIdentification$publicationNumber else NULL
+  if (is.list(r)) r$patentCaseMetadata$patentPublicationIdentification$publicationNumber else NULL
 })))
 document_ids <- document_ids[!is.na(document_ids)]
 oriDir <- "eda/original/"
@@ -155,7 +155,7 @@ applications$seed <- applications$applicationNumber %in% seed_set$applicationNum
 
 # count up terms used within abstracts
 library(lingmatch)
-dtm <- lma_dtm(applications$abstractHtml, "function")
+dtm <- lma_dtm(as.factor(applications$abstractHtml), "function")
 
 # identify the terms that most identify the seed set
 term_seed_sim <- lma_simets(t(dtm), applications$seed, metric = "cosine")
@@ -168,4 +168,47 @@ splot(
   term_seed_sim ~ names(term_seed_sim),
   type = "bar", sort = FALSE, title = FALSE, labx = FALSE, laby = "Similarity with Seed"
 )
+```
+
+## Examination Timing
+
+Of more interest might be how long aspects of examination takes, and what features
+of the application might be associated with that time.
+
+We can extract timing from the examination record:
+```{r}
+examination_timing <- do.call(rbind, lapply(examination_records, function(r) {
+  times <- extract_event_timing(r$prosecutionHistoryDataBag$prosecutionHistoryData)
+  data.frame(
+    Classification_Time = if (!is.null(times[[1]])) times[[1]]$days[[1]] else NA,
+    Assignment_Time = if (!is.null(times[[2]])) times[[2]]$days[[1]] else NA,
+    First_Action_Time = if (!is.null(times[[3]])) times[[3]]$days[[1]] else NA,
+    Averaqge_Action_Time = if (!is.null(times[[3]])) mean(times[[3]]$days) else NA,
+    Number_of_Actions = if (!is.null(times[[3]])) nrow(times[[3]]) else 0,
+    row.names = paste0(
+      substring(r$patentCaseMetadata$applicationNumberText$value, 1, 2),
+      "/",
+      substring(r$patentCaseMetadata$applicationNumberText$value, 3)
+    )
+  )
+}))
+examination_timing <- examination_timing[applications$applicationNumber, ]
+```
+
+Then associate timing and number of actions with terms used in the application's abstract:
+```{r}
+# align applications with valid timings
+term_time_sim <- lma_simets(t(dtm), t(examination_timing), metric = "cos")
+```
+
+```{r, fig.height=3}
+for (aspect in colnames(term_time_sim)) {
+  terms <- term_time_sim[, aspect]
+  terms <- sort(terms, TRUE)[1:45]
+  splot(
+    terms ~ names(terms),
+    laby = paste0("Similarity with ", gsub("_", " ", aspect, fixed = TRUE)),
+    type = "bar", sort = FALSE, title = FALSE, labx = FALSE
+  )
+}
 ```

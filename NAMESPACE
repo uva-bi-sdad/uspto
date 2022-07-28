@@ -3,6 +3,7 @@
 export(download_office_actions)
 export(download_patents)
 export(download_peds)
+export(extract_event_timing)
 export(extract_examiner_name)
 export(search_fulltext)
 export(uspto_download)
