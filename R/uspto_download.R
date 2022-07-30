@@ -12,6 +12,7 @@
 #' @param type A vector the same length as \code{guid} (repeated as necessary), indicating the source database of
 #' the \code{guid}. Defaults to \code{US-PGPUB} for every ID.
 #' @param cores Number of CPU cores to split requests across.
+#' @param compress Logical; if \code{FALSE}, will not xz-compress each file.
 #' @param verbose Logical; if \code{FALSE}, does not print status messages.
 #' @return A \code{data.frame} with a row for each document.
 #' @seealso You can more efficiently download granted patents using \code{\link{download_patents}}.
@@ -25,7 +26,7 @@
 #' }
 #' @export
 
-uspto_download <- function(guid, outDir = tempdir(), type = "US-PGPUB", cores = detectCores() - 2, verbose = FALSE) {
+uspto_download <- function(guid, outDir = tempdir(), type = "US-PGPUB", cores = detectCores() - 2, compress = TRUE, verbose = FALSE) {
   if (missing(type) && is.list(guid) && !is.null(guid$type)) type <- guid$type
   if (!is.character(guid)) guid <- guid$guid
   if (!length(guid)) stop("unrecognized guid input; should be a data.frame with a guid column, or a character vector", call. = FALSE)
@@ -40,8 +41,8 @@ uspto_download <- function(guid, outDir = tempdir(), type = "US-PGPUB", cores = 
   dir.create(outDir, FALSE)
   urls <- paste0("https://ppubs.uspto.gov/dirsearch-public/patents/", guid, "/highlight?queryId=0&source=", type)
   if (verbose) message("retrieving ", length(urls), " documents; saving in ", outDir)
-  retrieve_document <- function(url, out = outDir) {
-    file <- paste0(out, gsub("^.*patents/|/highlight.*$", "", url), ".json")
+  retrieve_document <- function(url, out = outDir, comp = compress) {
+    file <- paste0(out, gsub("^.*patents/|/highlight.*$", "", url), ".json", if (comp) ".xz")
     doc <- NULL
     if (file.exists(file)) {
       doc <- as.data.frame(read_json(file)[[1]])
@@ -60,6 +61,10 @@ uspto_download <- function(guid, outDir = tempdir(), type = "US-PGPUB", cores = 
             ),
             perl = TRUE
           )
+        }
+        if (comp) {
+          file <- xzfile(file)
+          on.exit(close(file))
         }
         write_json(doc, file, auto_unbox = TRUE)
       }

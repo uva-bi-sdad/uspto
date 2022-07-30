@@ -59,7 +59,7 @@ for an interactive search.</p>
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">uspto_search</span><span class="op">(</span><span class="va">query</span>, databases <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"US-PGPUB"</span>, <span class="st">"USPAT"</span>, <span class="st">"USOCR"</span><span class="op">)</span>,</span>
-<span>  outFile <span class="op">=</span> <span class="cn">NULL</span>, limit <span class="op">=</span> <span class="cn">FALSE</span>, sort <span class="op">=</span> <span class="st">"date_publ desc"</span>,</span>
+<span>  outFile <span class="op">=</span> <span class="cn">NULL</span>, start <span class="op">=</span> <span class="fl">0</span>, limit <span class="op">=</span> <span class="cn">FALSE</span>, sort <span class="op">=</span> <span class="st">"date_publ desc"</span>,</span>
 <span>  english_only <span class="op">=</span> <span class="cn">TRUE</span>, spellCheck <span class="op">=</span> <span class="cn">FALSE</span>, plurals <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  britishEquivalents <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -80,6 +80,10 @@ for an interactive search.</p>
 <dt>outFile</dt>
 <dd><p>Name of a <code>.csv</code> file to save results to. If this file exists, it will
 be loaded instead of searching.</p></dd>
+
+
+<dt>start</dt>
+<dd><p>Result of the search to start from.</p></dd>
 
 
 <dt>limit</dt>

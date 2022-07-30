@@ -1,7 +1,7 @@
 skip_if(!grepl("R_LIBS", getwd(), fixed = TRUE), "not downloading data")
 
 test_that("example works", {
-  outFile <- paste0(tempdir(), "/peds.json")
+  outFile <- paste0(tempdir(), "/peds.json.xz")
   unlink(outFile)
   download_peds("applId:13877637", outFile = outFile, verbose = FALSE)
   expect_true(file.exists(outFile))

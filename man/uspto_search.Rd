@@ -5,7 +5,7 @@
 \title{Search for Patents or Patent Applications}
 \usage{
 uspto_search(query, databases = c("US-PGPUB", "USPAT", "USOCR"),
-  outFile = NULL, limit = FALSE, sort = "date_publ desc",
+  outFile = NULL, start = 0, limit = FALSE, sort = "date_publ desc",
   english_only = TRUE, spellCheck = FALSE, plurals = TRUE,
   britishEquivalents = TRUE, verbose = FALSE)
 }
@@ -19,6 +19,8 @@ uspto_search(query, databases = c("US-PGPUB", "USPAT", "USOCR"),
 
 \item{outFile}{Name of a \code{.csv} file to save results to. If this file exists, it will
 be loaded instead of searching.}
+
+\item{start}{Result of the search to start from.}
 
 \item{limit}{Maximum number of results to return; defaults to all results.}
 

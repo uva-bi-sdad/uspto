@@ -12,7 +12,7 @@ test_that("main input works", {
     uspto_download(test_apps, outDir = dir, verbose = TRUE),
     paste0("retrieving ", nrow(test_apps), " documents; saving in ", paste0(normalizePath(dir, "/"), "/"))
   ))
-  expect_true(all(file.exists(paste0(dir, "/", test_apps$guid, ".json"))))
+  expect_true(all(file.exists(paste0(dir, "/", test_apps$guid, ".json.xz"))))
 })
 
 test_that("alternate input", {

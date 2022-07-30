@@ -24,6 +24,7 @@ knitr::opts_chunk$set(
   fig.ext = "svg"
 )
 library(uspto)
+library(lingmatch)
 outDir <- "eda/seed_expand/"
 if (!dir.exists(outDir)) outDir <- "../eda/seed_expand/"
 ```
@@ -120,7 +121,7 @@ if (file.exists(examinations_file)) {
   # have to break up the calls based on some limit on query length theoretically
   n <- length(all_applications)
   filters <- lapply(
-    split(sub("/", "", all_applications, fixed = TRUE), sort(rep_len(seq_len(ceiling(n / 500)), n))),
+    split(sub("/", "", all_applications, fixed = TRUE), sort(rep_len(seq_len(ceiling(n / 750)), n))),
     function(set) paste0("applId:(", paste(set, collapse = " "), ")")
   )
   examination_records <- unlist(lapply(filters, function(f) {
@@ -138,9 +139,8 @@ Finally, we can collect the actual content of each application, based on the doc
 the examination records:
 ```{r}
 document_ids <- unique(unlist(lapply(examination_records, function(r) {
-  if (is.list(r)) r$patentCaseMetadata$patentPublicationIdentification$publicationNumber else NULL
+  r$patentCaseMetadata$patentPublicationIdentification$publicationNumber
 })))
-document_ids <- document_ids[!is.na(document_ids)]
 oriDir <- "eda/original/"
 if (!dir.exists(oriDir)) oriDir <- "../eda/original/"
 applications <- uspto_download(document_ids, outDir = paste0(oriDir, "applications"))
@@ -155,11 +155,11 @@ applications$seed <- applications$applicationNumber %in% seed_set$applicationNum
 
 # count up terms used within abstracts
 library(lingmatch)
-dtm <- lma_dtm(as.factor(applications$abstractHtml), "function")
+dtm <- lma_dtm(applications$abstractHtml, "function", dc.min = 3)
 
 # identify the terms that most identify the seed set
 term_seed_sim <- lma_simets(t(dtm), applications$seed, metric = "cosine")
-term_seed_sim <- sort(term_seed_sim[term_seed_sim > .15], TRUE)
+term_seed_sim <- sort(term_seed_sim, TRUE)[1:45]
 ```
 
 ```{r}
@@ -175,7 +175,7 @@ splot(
 Of more interest might be how long aspects of examination takes, and what features
 of the application might be associated with that time.
 
-We can extract timing from the examination record:
+We can extract timing from the examination records:
 ```{r}
 examination_timing <- do.call(rbind, lapply(examination_records, function(r) {
   times <- extract_event_timing(r$prosecutionHistoryDataBag$prosecutionHistoryData)
@@ -183,7 +183,7 @@ examination_timing <- do.call(rbind, lapply(examination_records, function(r) {
     Classification_Time = if (!is.null(times[[1]])) times[[1]]$days[[1]] else NA,
     Assignment_Time = if (!is.null(times[[2]])) times[[2]]$days[[1]] else NA,
     First_Action_Time = if (!is.null(times[[3]])) times[[3]]$days[[1]] else NA,
-    Averaqge_Action_Time = if (!is.null(times[[3]])) mean(times[[3]]$days) else NA,
+    Average_Action_Time = if (!is.null(times[[3]])) mean(times[[3]]$days) else NA,
     Number_of_Actions = if (!is.null(times[[3]])) nrow(times[[3]]) else 0,
     row.names = paste0(
       substring(r$patentCaseMetadata$applicationNumberText$value, 1, 2),
@@ -193,12 +193,24 @@ examination_timing <- do.call(rbind, lapply(examination_records, function(r) {
   )
 }))
 examination_timing <- examination_timing[applications$applicationNumber, ]
+
+# look at only applications with extracted times
+has_timings <- which(!is.na(examination_timing$First_Action_Time))
+examination_timing <- examination_timing[has_timings, ]
 ```
 
-Then associate timing and number of actions with terms used in the application's abstract:
+Then look at the relationship between timings and actions:
+```{r}
+cors <- lma_simets(t(examination_timing), metric = "pearsons")
+colnames(cors) <- seq_len(ncol(cors))
+rownames(cors) <- paste0("(", colnames(cors), ") ", rownames(cors))
+round(cors, 3)
+```
+
+Or associate timing and number of actions with terms used in the application's abstract:
 ```{r}
 # align applications with valid timings
-term_time_sim <- lma_simets(t(dtm), t(examination_timing), metric = "cos")
+term_time_sim <- lma_simets(t(dtm[has_timings, ]), t(examination_timing), metric = "pearsons")
 ```
 
 ```{r, fig.height=3}
@@ -207,8 +219,8 @@ for (aspect in colnames(term_time_sim)) {
   terms <- sort(terms, TRUE)[1:45]
   splot(
     terms ~ names(terms),
-    laby = paste0("Similarity with ", gsub("_", " ", aspect, fixed = TRUE)),
-    type = "bar", sort = FALSE, title = FALSE, labx = FALSE
+    title = paste0("Terms Most Associated With ", gsub("_", " ", aspect, fixed = TRUE)),
+    type = "bar", sort = FALSE, laby = "Pearson's r", labx = FALSE
   )
 }
 ```

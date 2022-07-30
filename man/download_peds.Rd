@@ -7,7 +7,7 @@
 download_peds(searchText = "*:*", filters = list("*:*"), outFile = NULL,
   start = 0, minMatch = "100\%", overwrite = FALSE, waits = 50,
   wait = 10, endpoint = "https://ped.uspto.gov/api/queries/",
-  verbose = TRUE)
+  compress = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{searchText}{Text to search for; \code{"*:*"} for none (default); see
@@ -16,7 +16,7 @@ the FAQ on the \href{https://ped.uspto.gov/peds}{PEDS site}.}
 \item{filters}{A list of characters representing filter conditions in the form of \code{"field:value"}
 (e.g., \code{list('appStatus:"Patented Case"')}).}
 
-\item{outFile}{Name of the final JSON file.}
+\item{outFile}{Name of the final JSON file, or directory in which to save files with parameter-hash names.}
 
 \item{start}{Initial record.}
 
@@ -30,11 +30,12 @@ the FAQ on the \href{https://ped.uspto.gov/peds}{PEDS site}.}
 
 \item{endpoint}{PEDs API endpoint.}
 
+\item{compress}{Logical; if \code{FALSE}, will not xz-compress the \code{outFile}.}
+
 \item{verbose}{Logical; if \code{FALSE}, will not print status messages.}
 }
 \value{
-An invisible list with an entries for \code{ID} (the query ID; if one was made) and
-\code{content} (a list with an entry for each year in the set of patent metadata).
+A list with an entry for each year in the set of patent metadata.
 }
 \description{
 Download a bundled query response from the \href{https://ped.uspto.gov/peds}{Patent Examination Data System}.

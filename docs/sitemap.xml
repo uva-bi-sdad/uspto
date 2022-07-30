@@ -4,12 +4,6 @@
     <loc>/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
     <loc>/articles/example-seed_expand.html</loc>
   </url>
   <url>
@@ -25,6 +19,12 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>/LICENSE.html</loc>
+  </url>
+  <url>
     <loc>/reference/download_office_actions.html</loc>
   </url>
   <url>
@@ -38,6 +38,9 @@
   </url>
   <url>
     <loc>/reference/extract_examiner_name.html</loc>
+  </url>
+  <url>
+    <loc>/reference/extract_inventors.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>

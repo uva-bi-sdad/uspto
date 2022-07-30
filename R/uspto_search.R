@@ -11,6 +11,7 @@
 #' \code{c("US-PGPUB", "USPAT", "USOCR")}.
 #' @param outFile Name of a \code{.csv} file to save results to. If this file exists, it will
 #' be loaded instead of searching.
+#' @param start Result of the search to start from.
 #' @param limit Maximum number of results to return; defaults to all results.
 #' @param sort How to sort results; defaults to publication date (\code{"date_publ desc"}).
 #' @param english_only Logical; if \code{FALSE}, will return patent and/or applications of any language.
@@ -30,7 +31,7 @@
 #' }
 #' @export
 
-uspto_search <- function(query, databases = c("US-PGPUB", "USPAT", "USOCR"), outFile = NULL, limit = FALSE, sort = "date_publ desc",
+uspto_search <- function(query, databases = c("US-PGPUB", "USPAT", "USOCR"), outFile = NULL, start = 0, limit = FALSE, sort = "date_publ desc",
                          english_only = TRUE, spellCheck = FALSE, plurals = TRUE, britishEquivalents = TRUE, verbose = FALSE) {
   if (!is.null(outFile)) {
     outFile <- paste0(sub("\\.csv.*$", "", outFile), ".csv")
@@ -89,15 +90,16 @@ uspto_search <- function(query, databases = c("US-PGPUB", "USPAT", "USOCR"), out
     ), auto_unbox = TRUE)
   )
   count <- content(count_request)
+  limit <- if (is.numeric(limit)) limit else count$numResults
   if (is.null(count$numResults)) stop("failed to execute query: ", count, call. = FALSE)
-  if (verbose) message("matches: ", count$numResults)
+  if (verbose) message("matches: ", count$numResults, "; retrieving ", start, " through ", limit)
   if (count$numResults != 0) {
     result_request <- POST(
       "https://ppubs.uspto.gov/dirsearch-public/searches/searchWithBeFamily",
       add_headers("Content-Type" = "application/json"),
       body = toJSON(list(
-        start = 0,
-        pageCount = if (is.numeric(limit)) limit else 99999999,
+        start = start,
+        pageCount = limit,
         sort = sort,
         docFamilyFiltering = "familyIdFiltering",
         searchType = 1,

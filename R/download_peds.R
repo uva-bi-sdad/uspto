@@ -6,16 +6,16 @@
 #' the FAQ on the \href{https://ped.uspto.gov/peds}{PEDS site}.
 #' @param filters A list of characters representing filter conditions in the form of \code{"field:value"}
 #' (e.g., \code{list('appStatus:"Patented Case"')}).
-#' @param outFile Name of the final JSON file.
+#' @param outFile Name of the final JSON file, or directory in which to save files with parameter-hash names.
 #' @param start Initial record.
 #' @param minMatch Minimum number of terms required to match.
 #' @param overwrite Logical; overwrite any previous queries with the same body hash.
 #' @param waits Number of times to check for a completed bundle before giving up.
 #' @param wait Number of seconds to wait between retries (how long \code{waits} are).
 #' @param endpoint PEDs API endpoint.
+#' @param compress Logical; if \code{FALSE}, will not xz-compress the \code{outFile}.
 #' @param verbose Logical; if \code{FALSE}, will not print status messages.
-#' @return An invisible list with an entries for \code{ID} (the query ID; if one was made) and
-#' \code{content} (a list with an entry for each year in the set of patent metadata).
+#' @return A list with an entry for each year in the set of patent metadata.
 #' @examples
 #' \dontrun{
 #' # like case 3 in the API Documentation > API Tutorial on https://ped.uspto.gov/peds
@@ -27,7 +27,7 @@
 #' @export
 
 download_peds <- function(searchText = "*:*", filters = list("*:*"), outFile = NULL, start = 0, minMatch = "100%", overwrite = FALSE,
-                          waits = 50, wait = 10, endpoint = "https://ped.uspto.gov/api/queries/", verbose = TRUE) {
+                          waits = 50, wait = 10, endpoint = "https://ped.uspto.gov/api/queries/", compress = TRUE, verbose = TRUE) {
   # https://ped.uspto.gov/api/search-params
   body <- list(
     searchText = searchText,
@@ -46,14 +46,14 @@ download_peds <- function(searchText = "*:*", filters = list("*:*"), outFile = N
     start = start
   )
   hash <- digest::digest(body)
-  final <- normalizePath(paste0(if (is.null(outFile)) {
-    paste0(tempdir(), "/", hash)
+  final <- normalizePath(paste0(if (is.null(outFile) || dir.exists(outFile)) {
+    paste0(if (is.null(outFile)) tempdir() else outFile, "/", hash)
   } else {
-    sub("\\.json$", "", outFile)
-  }, ".json"), "/", FALSE)
+    sub("\\.json.*$", "", outFile)
+  }, ".json", if (compress) ".xz"), "/", FALSE)
   if (!overwrite && file.exists(final)) {
     if (verbose) message("Reading in existing results")
-    return(jsonlite::read_json(final))
+    return(jsonlite::read_json(final, simplifyDataFrame = FALSE))
   }
   bundle <- paste0(normalizePath(tempdir(), "/"), "/", hash, ".zip")
   output <- list(ID = "", content = list())
@@ -95,14 +95,21 @@ download_peds <- function(searchText = "*:*", filters = list("*:*"), outFile = N
   close(con)
   output$content <- unlist(lapply(years, function(f) {
     if (file.exists(f)) {
-      jsonlite::read_json(f)$PatentData
+      jsonlite::read_json(f, simplifyDataFrame = FALSE)$PatentData
     } else {
       con <- unz(bundle, f)
       on.exit(close(con))
-      jsonlite::fromJSON(paste(scan(con, "", quote = "", na.strings = "", quiet = TRUE), collapse = " "))$PatentData
+      jsonlite::fromJSON(
+        paste(scan(con, "", quote = "", na.strings = "", quiet = TRUE), collapse = " "),
+        simplifyDataFrame = FALSE
+      )$PatentData
     }
-  }), recursive = FALSE)
+  }), recursive = FALSE, use.names = FALSE)
   if (verbose) message("writing final results: ", normalizePath(final, "/", FALSE))
   dir.create(dirname(final), FALSE, TRUE)
+  if (compress) {
+    final <- xzfile(final)
+    on.exit(close(final), add = TRUE)
+  }
   jsonlite::write_json(output$content, final, auto_unbox = TRUE)
 }
