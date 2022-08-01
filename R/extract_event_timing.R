@@ -20,13 +20,21 @@ extract_event_timing <- function(record, spans = list(
                                    "Examiner to Action" = list(start = "^FWDX$", end = "^(?:CT|EX\\.R|N/=\\.)", before = "^(?:DOCK$|A)")
                                  )) {
   if (is.list(record) && !is.data.frame(record)) {
+    if ("prosecutionHistoryDataBag" %in% names(record)) {
+      record <- record$prosecutionHistoryDataBag$prosecutionHistoryData
+    } else if ("prosecutionHistoryDataBag" %in% names(record[[1]])) {
+      timings <- lapply(record, function(r) extract_event_timing(r$prosecutionHistoryDataBag$prosecutionHistoryData))
+      names(timings) <- vapply(record, function(r) r$patentCaseMetadata$applicationNumberText$value, "")
+      return(timings)
+    }
     record <- as.data.frame(lapply(
       as.data.frame(do.call(rbind, record)), unlist,
       recursive = FALSE, use.names = FALSE
     ))
   }
   if (ncol(record) < 2) stop("record is not in the expected format", call. = FALSE)
-  record[, 1] <- as.Date(record[, 1])
+  record[, 1] <- as.Date(record[, 1], tryFormats = "%Y-%m-%d", options = TRUE)
+  if (anyNA(record[, 1])) record <- record[!is.na(record[, 1]), ]
   record <- record[order(record[, 1]), ]
   dates <- record[, 1]
   events <- record[, 2]

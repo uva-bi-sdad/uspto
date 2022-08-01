@@ -25,8 +25,13 @@ knitr::opts_chunk$set(
 )
 library(uspto)
 library(lingmatch)
+library(knitr)
 outDir <- "eda/seed_expand/"
 if (!dir.exists(outDir)) outDir <- "../eda/seed_expand/"
+```
+
+```{css, echo = FALSE}
+td {white-space: nowrap}
 ```
 
 This example looks at a set of patent applications based on an initial seed set.
@@ -155,7 +160,7 @@ applications$seed <- applications$applicationNumber %in% seed_set$applicationNum
 
 # count up terms used within abstracts
 library(lingmatch)
-dtm <- lma_dtm(applications$abstractHtml, "function", dc.min = 3)
+dtm <- lma_dtm(applications$abstractHtml, "function", dc.min = 2)
 
 # identify the terms that most identify the seed set
 term_seed_sim <- lma_simets(t(dtm), applications$seed, metric = "cosine")
@@ -201,7 +206,7 @@ examination_timing <- examination_timing[has_timings, ]
 
 Then look at the relationship between timings and actions:
 ```{r}
-cors <- lma_simets(t(examination_timing), metric = "pearsons")
+cors <- lma_simets(t(examination_timing), metric = "pearson")
 colnames(cors) <- seq_len(ncol(cors))
 rownames(cors) <- paste0("(", colnames(cors), ") ", rownames(cors))
 round(cors, 3)
@@ -210,7 +215,7 @@ round(cors, 3)
 Or associate timing and number of actions with terms used in the application's abstract:
 ```{r}
 # align applications with valid timings
-term_time_sim <- lma_simets(t(dtm[has_timings, ]), t(examination_timing), metric = "pearsons")
+term_time_sim <- lma_simets(t(dtm[has_timings, ]), t(examination_timing), metric = "pearson")
 ```
 
 ```{r, fig.height=3}
@@ -223,4 +228,105 @@ for (aspect in colnames(term_time_sim)) {
     type = "bar", sort = FALSE, laby = "Pearson's r", labx = FALSE
   )
 }
+```
+
+## Art Unit Topics
+
+We can also get a feel for what seems to characterize Group Art Units by extracting topics from the
+applications they review.
+
+We can start by getting art unit information for each application:
+```{r}
+artunits <- unlist(lapply(examination_records, function(r) {
+  res <- r$patentCaseMetadata$groupArtUnitNumber$value
+  names(res) <- sub("(\\d{2})", "\\1/", r$patentCaseMetadata$applicationNumberText$value, perl = TRUE)
+  res
+}))[applications$applicationNumber]
+
+# number of applications assigned to each art unit
+table(artunits)
+```
+
+Then, we could get the same sort of associated set of terms, as with the seed set:
+```{r}
+gaus <- unique(artunits)
+term_artunit <- lma_simets(
+  t(dtm), vapply(artunits, "==", logical(length(gaus)), gaus),
+  metric = "pearson"
+)
+colnames(term_artunit) <- gaus
+
+# look at top 10 terms for each
+get_top_terms <- function(loadings, n = 10) {
+  kable(as.data.frame(vapply(colnames(loadings), function(col) {
+    rownames(loadings)[order(loadings[, col], decreasing = TRUE)[seq_len(n)]]
+  }, character(n))))
+}
+get_top_terms(term_artunit)
+
+# we could use this to roughly predict art unit in-sample:
+predicted_art_unit <- gaus[max.col(dtm %*% term_artunit)]
+round(table(artunits, predicted_art_unit) / as.numeric(table(artunits)), 4)
+```
+
+We could also extract general topics from this set of applications, then see how
+much they are represented in each art unit's assigned applications:
+```{r}
+# weigh terms
+wdtm <- lma_weight(dtm, "tf-idf", FALSE)
+
+# get 10 simple topics
+## remotes::install_github("miserman/lusilab")
+library(lusilab)
+loadings <- taffyInf(wdtm, 10)
+colnames(loadings) <- paste0("taffy_", seq_len(ncol(loadings)))
+scores <- dtm %*% loadings
+get_top_terms(loadings)
+# compare with kmeans
+topics_km <- kmeans(wdtm, 10)
+loadings_km <- t(topics_km$centers)
+dimnames(loadings_km) <- list(colnames(dtm), paste0("km_", seq_len(ncol(loadings))))
+scores_km <- dtm %*% loadings_km
+get_top_terms(loadings_km)
+# compare with NMF
+library(RcppML)
+topics_nmf <- nmf(wdtm, 10, verbose = FALSE)
+loadings_nmf <- t(topics_nmf$h)
+dimnames(loadings_nmf) <- list(colnames(dtm), paste0("nmf_", seq_len(ncol(loadings_nmf))))
+colnames(topics_nmf$w) <- colnames(loadings_nmf)
+get_top_terms(loadings_nmf)
+# see how similar topics are in terms of loadings
+loadings_all <- cbind(loadings, loadings_km, loadings_nmf)
+loading_cors <- lma_simets(t(loadings_all), metric = "pearson")
+topic_names <- rownames(loading_cors)
+scores_all <- dtm %*% loadings_all
+
+display_matrix <- function(l, threshold = .1) {
+  v <- as.data.frame(as.matrix(l))
+  v[abs(v) < threshold] <- 0
+  kable(v, digits = 3, format.args = list(zero.print = "."))
+}
+
+display_matrix(loading_cors[grep("km", topic_names), grep("taffy", topic_names)])
+display_matrix(loading_cors[grep("nmf", topic_names), grep("taffy", topic_names)])
+display_matrix(loading_cors[grep("nmf", topic_names), grep("km", topic_names)])
+```
+
+Now we can look at trends in these topics over time within art unit:
+```{r}
+applications$year <- as.numeric(applications$datePublYear)
+trends <- vapply(gaus, function(au) {
+  su <- artunits == au
+  lma_simets(t(scores_all[artunits == au, ]), applications[su, "year"], metric = "pearson")
+}, numeric(ncol(scores_all)))
+display_matrix(t(trends), .1)
+focal_unit <- names(which.max(colMeans(abs(trends))))
+focal_topics <- names(which(apply(abs(trends), 1, max) > .4))
+get_top_terms(loadings_all[, focal_topics])
+splot(
+  scores_all[, focal_topics] ~ applications$year,
+  su = artunits == focal_unit, mv.scale = TRUE, sud = FALSE, myl = c(-2, 9),
+  title = paste("Topic Over Time in Art Unit", focal_unit),
+  lines = "spline", laby = "Topic Use (z-scored)", labx = FALSE
+)
 ```

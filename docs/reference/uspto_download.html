@@ -59,7 +59,8 @@ to search for and view documents from the same source.</p>
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">uspto_download</span><span class="op">(</span><span class="va">guid</span>, outDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"US-PGPUB"</span>,</span>
-<span>  cores <span class="op">=</span> <span class="fu">detectCores</span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">2</span>, compress <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>  cores <span class="op">=</span> <span class="fu">detectCores</span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">2</span>, compress <span class="op">=</span> <span class="cn">TRUE</span>, load <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -86,6 +87,10 @@ the <code>guid</code>. Defaults to <code>US-PGPUB</code> for every ID.</p></dd>
 
 <dt>compress</dt>
 <dd><p>Logical; if <code>FALSE</code>, will not xz-compress each file.</p></dd>
+
+
+<dt>load</dt>
+<dd><p>Logical; if <code>FALSE</code>, will not return content, or load existing files.</p></dd>
 
 
 <dt>verbose</dt>

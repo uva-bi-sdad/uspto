@@ -42,14 +42,16 @@ extract_inventors <- function(input) {
       res
     })))
   } else {
-    do.call(rbind, lapply(input, function(r) {
+    ex <- function(r) {
+      if (length(r) == 1) r <- r[[1]]
       party <- r$patentCaseMetadata$partyBag$applicantBagOrInventorBagOrOwnerBag
       app <- list(
         guid = sub("(\\d+)", "-\\1-", r$patentCaseMetadata$patentPublicationIdentification$publicationNumber),
         applicationNumber = sub("(\\d{2})", "\\1/", r$patentCaseMetadata$applicationNumberText$value)
       )
+      if (!length(app$guid)) app$guid <- ""
       if (!is.null(party)) {
-        i <- which(vapply(party, names, "") == "inventorOrDeceasedInventor")
+        i <- which(vapply(party, function(p) if (length(p)) names(p) else "", "") == "inventorOrDeceasedInventor")
         if (length(i)) {
           do.call(rbind, lapply(party[[i]]$inventorOrDeceasedInventor, function(g) {
             do.call(rbind, lapply(g$contactOrPublicationContact, function(p) {
@@ -62,6 +64,7 @@ extract_inventors <- function(input) {
           }))
         }
       }
-    }))
+    }
+    if ("patentCaseMetaData" %in% names(input[[1]])) do.call(rbind, lapply(input, ex)) else ex(input)
   }
 }

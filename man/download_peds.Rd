@@ -7,7 +7,7 @@
 download_peds(searchText = "*:*", filters = list("*:*"), outFile = NULL,
   start = 0, minMatch = "100\%", overwrite = FALSE, waits = 50,
   wait = 10, endpoint = "https://ped.uspto.gov/api/queries/",
-  compress = TRUE, verbose = TRUE)
+  compress = TRUE, load = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{searchText}{Text to search for; \code{"*:*"} for none (default); see
@@ -31,6 +31,8 @@ the FAQ on the \href{https://ped.uspto.gov/peds}{PEDS site}.}
 \item{endpoint}{PEDs API endpoint.}
 
 \item{compress}{Logical; if \code{FALSE}, will not xz-compress the \code{outFile}.}
+
+\item{load}{Logical; if \code{FALSE}, will not return the downloaded content, or load in existing content.}
 
 \item{verbose}{Logical; if \code{FALSE}, will not print status messages.}
 }

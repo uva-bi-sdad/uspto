@@ -5,7 +5,8 @@
 \title{Download Patents or Patent Applications}
 \usage{
 uspto_download(guid, outDir = tempdir(), type = "US-PGPUB",
-  cores = detectCores() - 2, compress = TRUE, verbose = FALSE)
+  cores = detectCores() - 2, compress = TRUE, load = TRUE,
+  verbose = FALSE)
 }
 \arguments{
 \item{guid}{Vector of document numbers (e.g., \code{US-20220230294-A1}). Can also be a \code{data.frame} of results,
@@ -21,6 +22,8 @@ the \code{guid}. Defaults to \code{US-PGPUB} for every ID.}
 \item{cores}{Number of CPU cores to split requests across.}
 
 \item{compress}{Logical; if \code{FALSE}, will not xz-compress each file.}
+
+\item{load}{Logical; if \code{FALSE}, will not return content, or load existing files.}
 
 \item{verbose}{Logical; if \code{FALSE}, does not print status messages.}
 }

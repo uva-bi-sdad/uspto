@@ -13,6 +13,7 @@
 #' the \code{guid}. Defaults to \code{US-PGPUB} for every ID.
 #' @param cores Number of CPU cores to split requests across.
 #' @param compress Logical; if \code{FALSE}, will not xz-compress each file.
+#' @param load Logical; if \code{FALSE}, will not return content, or load existing files.
 #' @param verbose Logical; if \code{FALSE}, does not print status messages.
 #' @return A \code{data.frame} with a row for each document.
 #' @seealso You can more efficiently download granted patents using \code{\link{download_patents}}.
@@ -26,7 +27,7 @@
 #' }
 #' @export
 
-uspto_download <- function(guid, outDir = tempdir(), type = "US-PGPUB", cores = detectCores() - 2, compress = TRUE, verbose = FALSE) {
+uspto_download <- function(guid, outDir = tempdir(), type = "US-PGPUB", cores = detectCores() - 2, compress = TRUE, load = TRUE, verbose = FALSE) {
   if (missing(type) && is.list(guid) && !is.null(guid$type)) type <- guid$type
   if (!is.character(guid)) guid <- guid$guid
   if (!length(guid)) stop("unrecognized guid input; should be a data.frame with a guid column, or a character vector", call. = FALSE)
@@ -38,16 +39,22 @@ uspto_download <- function(guid, outDir = tempdir(), type = "US-PGPUB", cores = 
   }
   type <- rep_len(type, length(guid))
   outDir <- paste0(normalizePath(outDir, "/", FALSE), "/")
-  dir.create(outDir, FALSE)
+  dir.create(outDir, FALSE, TRUE)
   urls <- paste0("https://ppubs.uspto.gov/dirsearch-public/patents/", guid, "/highlight?queryId=0&source=", type)
   if (verbose) message("retrieving ", length(urls), " documents; saving in ", outDir)
   retrieve_document <- function(url, out = outDir, comp = compress) {
     file <- paste0(out, gsub("^.*patents/|/highlight.*$", "", url), ".json", if (comp) ".xz")
     doc <- NULL
     if (file.exists(file)) {
-      doc <- as.data.frame(read_json(file)[[1]])
-      doc$score <- as.numeric(doc$score)
+      if (load) {
+        if (verbose) message("loading existing document: ", file)
+        doc <- as.data.frame(read_json(file)[[1]])
+        doc$score <- as.numeric(doc$score)
+      } else {
+        message("document exists; not loading")
+      }
     } else {
+      if (verbose) message("retrieving document: ", url)
       req <- GET(url)
       if (req$status_code == 200) {
         res <- content(req)
@@ -69,7 +76,7 @@ uspto_download <- function(guid, outDir = tempdir(), type = "US-PGPUB", cores = 
         write_json(doc, file, auto_unbox = TRUE)
       }
     }
-    doc
+    if (load) doc
   }
   res <- if (cores > 1) {
     cl <- parallel::makeCluster(max(1, min(length(urls), cores)))
@@ -78,5 +85,5 @@ uspto_download <- function(guid, outDir = tempdir(), type = "US-PGPUB", cores = 
   } else {
     lapply(urls, retrieve_document)
   }
-  invisible(do.call(rbind, res))
+  if (load) invisible(do.call(rbind, res))
 }

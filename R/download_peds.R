@@ -14,6 +14,7 @@
 #' @param wait Number of seconds to wait between retries (how long \code{waits} are).
 #' @param endpoint PEDs API endpoint.
 #' @param compress Logical; if \code{FALSE}, will not xz-compress the \code{outFile}.
+#' @param load Logical; if \code{FALSE}, will not return the downloaded content, or load in existing content.
 #' @param verbose Logical; if \code{FALSE}, will not print status messages.
 #' @return A list with an entry for each year in the set of patent metadata.
 #' @examples
@@ -27,7 +28,7 @@
 #' @export
 
 download_peds <- function(searchText = "*:*", filters = list("*:*"), outFile = NULL, start = 0, minMatch = "100%", overwrite = FALSE,
-                          waits = 50, wait = 10, endpoint = "https://ped.uspto.gov/api/queries/", compress = TRUE, verbose = TRUE) {
+                          waits = 50, wait = 10, endpoint = "https://ped.uspto.gov/api/queries/", compress = TRUE, load = TRUE, verbose = TRUE) {
   # https://ped.uspto.gov/api/search-params
   body <- list(
     searchText = searchText,
@@ -52,13 +53,19 @@ download_peds <- function(searchText = "*:*", filters = list("*:*"), outFile = N
     sub("\\.json.*$", "", outFile)
   }, ".json", if (compress) ".xz"), "/", FALSE)
   if (!overwrite && file.exists(final)) {
-    if (verbose) message("Reading in existing results")
-    return(jsonlite::read_json(final, simplifyDataFrame = FALSE))
+    if (load) {
+      if (verbose) message("Reading in existing results")
+      return(invisible(jsonlite::read_json(final, simplifyDataFrame = FALSE)))
+    } else {
+      if (verbose) message("Results already exist")
+      return()
+    }
   }
   bundle <- paste0(normalizePath(tempdir(), "/"), "/", hash, ".zip")
+  exdir <- sub(".zip", "", bundle, fixed = TRUE)
   output <- list(ID = "", content = list())
-  on.exit(return(invisible(output$content)))
-  if (overwrite || !file.exists(bundle)) {
+  if (load) on.exit(return(invisible(output$content)))
+  if (overwrite || (!file.exists(bundle) && !dir.exists(exdir))) {
     query <- httr::POST(
       endpoint, httr::add_headers("Content-Type" = "application/json", Accept = "application/json"),
       body = body, encode = "json"
@@ -84,26 +91,22 @@ download_peds <- function(searchText = "*:*", filters = list("*:*"), outFile = N
     url <- paste0(endpoint, ID, "/download?format=JSON")
     download.file(url, bundle, mode = "wb")
   }
-  if (verbose) message("Unpacking ", bundle)
-  years <- unzip(bundle, list = TRUE)$Name
-  con <- unz(bundle, years[[1]])
-  if (!length(scan(con, "", 1, quiet = TRUE))) {
-    exdir <- sub(".zip", "", bundle, fixed = TRUE)
+  if (file.exists(bundle)) {
+    if (verbose) message("Unpacking ", bundle)
     system2("unzip", c("-d", shQuote(exdir), shQuote(bundle)), stdout = TRUE)
-    years <- list.files(exdir, full.names = TRUE)
+    unlink(bundle)
   }
-  close(con)
-  output$content <- unlist(lapply(years, function(f) {
-    if (file.exists(f)) {
-      jsonlite::read_json(f, simplifyDataFrame = FALSE)$PatentData
-    } else {
-      con <- unz(bundle, f)
+  output$content <- unlist(lapply(list.files(exdir, full.names = TRUE), function(f) {
+    res <- tryCatch(jsonlite::read_json(f, simplifyDataFrame = FALSE)$PatentData, error = function(e) NULL)
+    if (is.null(res)) {
+      con <- gzfile(f)
       on.exit(close(con))
-      jsonlite::fromJSON(
-        paste(scan(con, "", quote = "", na.strings = "", quiet = TRUE), collapse = " "),
-        simplifyDataFrame = FALSE
-      )$PatentData
+      res <- tryCatch(fromJSON(paste(
+        c(scan(con, "", quote = "", na.strings = "", quiet = TRUE), "]}"),
+        collapse = " "
+      ), simplifyDataFrame = FALSE)$PatentData, error = function(e) NULL)
     }
+    res
   }), recursive = FALSE, use.names = FALSE)
   if (verbose) message("writing final results: ", normalizePath(final, "/", FALSE))
   dir.create(dirname(final), FALSE, TRUE)

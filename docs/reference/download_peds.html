@@ -57,7 +57,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">download_peds</span><span class="op">(</span>searchText <span class="op">=</span> <span class="st">"*:*"</span>, filters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"*:*"</span><span class="op">)</span>, outFile <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  start <span class="op">=</span> <span class="fl">0</span>, minMatch <span class="op">=</span> <span class="st">"100%"</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span>, waits <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>  wait <span class="op">=</span> <span class="fl">10</span>, endpoint <span class="op">=</span> <span class="st">"https://ped.uspto.gov/api/queries/"</span>,</span>
-<span>  compress <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>  compress <span class="op">=</span> <span class="cn">TRUE</span>, load <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -102,6 +102,10 @@ the FAQ on the <a href="https://ped.uspto.gov/peds" class="external-link">PEDS s
 
 <dt>compress</dt>
 <dd><p>Logical; if <code>FALSE</code>, will not xz-compress the <code>outFile</code>.</p></dd>
+
+
+<dt>load</dt>
+<dd><p>Logical; if <code>FALSE</code>, will not return the downloaded content, or load in existing content.</p></dd>
 
 
 <dt>verbose</dt>
