@@ -80,34 +80,54 @@ if (!dir.exists("../searches")) {
   
   
   # gather inventors from records
-  inventors <- list()
-  timing <- list()
-  files <- list.files("../searches/examinations", full.names = TRUE)
-  ids <- sub(".json.xz", "", basename(files), fixed = TRUE)
-  for (i in which(!ids %in% names(inventors))) {
-    id <- ids[i]
-    r <- read_json(files[i])
-    inventors[[id]] <- extract_inventors(r)
-    timing[[id]] <- extract_event_timing(r)
-    cat("\r", length(inventors))
-  }
-  inventors <- do.call(rbind, inventors)
+  library(parallel)
+  cl = makeCluster(detectCores() - 1)
+  summaries <- parLapplyLB(cl, list.files("../searches/examinations", full.names = TRUE), function(f) {
+    library(uspto)
+    id <- sub(".json.xz", "", basename(f), fixed = TRUE)
+    r <- jsonlite::read_json(f)
+    inventors <- extract_inventors(r)
+    if (is.null(inventors)) {
+      inventors <- data.frame(
+        guid = r$patentCaseMetadata$patentPublicationIdentification$publicationNumber,
+        applicationNumber = r$patentCaseMetadata$applicationNumberText$value,
+        firstName = NA, middleName = NA, lastName = NA, inventorCountry = NA, inventorState = NA,
+        inventorCity = NA
+      )
+    }
+    inventors$date <- r$patentCaseMetadata$patentPublicationIdentification$publicationDate
+    inventors$art_unit <- if (is.null(r$patentCaseMetadata$groupArtUnitNumber$value)) NA else r$patentCaseMetadata$groupArtUnitNumber$value
+    inventors$status <- if (is.null(r$patentCaseMetadata$applicationStatusCategory)) NA else r$patentCaseMetadata$applicationStatusCategory
+    inventors$category <- r$patentCaseMetadata$applicationTypeCategory
+    inventors$classification <- paste(unlist(
+      r$patentCaseMetadata$patentClassificationBag$cpcClassificationBagOrIPCClassificationOrECLAClassificationBag,
+      TRUE, FALSE
+    ), collapse = " ")
+    inventors$business <- r$patentCaseMetadata$businessEntityStatusCategory
+    inventors$first_inventor <- if (is.null(r$patentCaseMetadata$firstInventorToFileIndicator)) "false" else r$patentCaseMetadata$firstInventorToFileIndicator
+    
+    timings <- extract_event_timing(r)
+    inventors$time_initial_classificaiton <- if (!is.null(timings$`Initial Classification`)) timings$`Initial Classification`[1, "days"] else NA
+    if (!is.null(timings$`Examiner to Action`)) {
+      d <- timings$`Examiner to Action`
+      inventors$time_first_action <- d[1, "days"]
+      inventors$examination_rounds <- nrow(d)
+      inventors$any_accepts <- if (nrow(d)) any(!d$endEvent %in% c("CTNF", "CTFR")) else FALSE
+    } else {
+      inventors$time_first_action <- NA
+      inventors$examination_rounds <- 0
+      inventors$any_accepts <- FALSE
+    }
+    inventors
+  })
+  stopCluster(cl)
+
+  inventors <- do.call(rbind, summaries)
   write.csv(inventors, xzfile("eda/searches/inventors.csv.xz"), row.names = FALSE)
-  timings_flat <- list()
-  for (a in names(timing)) {
-    d <- timing[[a]]
-    for (n in names(d)) if (!is.null(d[[n]])) d[[n]] <- cbind(application = a, eventType = n, d[[n]])
-    res <- do.call(rbind, d)
-    rownames(res) <- NULL
-    timings_flat[[a]] <- res
-  }
-  timing <- do.call(rbind, timings_flat)
-  write.csv(timing, bzfile("eda/searches/timing.csv.bz2"), row.names = FALSE)
 }
 
 # predict demographics
 if (!exists("inventors")) inventors <- read.csv(gzfile("eda/searches/inventors.csv.xz"))
-if (!exists("timing")) timing <- read.csv(gzfile("eda/searches/timing.csv.bz2"))
 
 ## remotes::install_github("miserman/lusilab")
 library(lusilab)
@@ -128,11 +148,12 @@ rownames(inventors) <- inventors$id
 # sex inventors
 
 ## Social Security US
-us_names <- get_baby_names("../names")
-inventors$prob_fem_us <- .5
-rownames(us_names$summary) <- tolower(rownames(us_names$summary))
-su <- tolower(inventors$firstName) %in% rownames(us_names$summary)
-inventors[su, "prob_fem_us"] <- us_names$summary[tolower(inventors[su, "firstName"]), 2]
+inventors[is.na(inventors$inventorCountry), "inventorCountry"] = ""
+demo_preds <- predict_demographics(
+  tolower(inventors$firstName), tolower(inventors$lastName), inventors$inventorCountry,
+  dir = "../names"
+)
+inventors <- cbind(inventors, demo_preds[, -(1:3)])
 
 ## Social Security US/UK combined
 usuk <- GenderInfer::assign_gender(inventors, "firstName")
@@ -156,14 +177,36 @@ for (s in names(gender_preds)) {
 }
 
 ## searching
-inventor_query <- unique(gsub("\\s+", " ", do.call(
+inventor_query <- gsub("\\s+", " ", do.call(
   paste, inventors[, c("firstName", "middleName", "lastName", "inventorCountry")]
-), perl = TRUE))
+), perl = TRUE)
 
-yahoo = guess_sex(inventor_query[1:1000])
-google = guess_sex(inventor_query[1001:2000], search_source = "https://www.google.com/search?q=")
-bing = guess_sex(inventor_query[2001:3000], search_source = "https://www.bing.com/search?q=")
-duck = guess_sex(inventor_query[3001:4000], search_source = "https://duckduckgo.com/?q=")
+### adds to the aggregate searches
+if (FALSE) {
+  unique_queries <- unique(inventor_query)
+  add_to_agg <- function(n = 1000, engine = "https://www.google.com/search?q=") {
+    agg <- read.csv("../sex_guess_agg.csv")
+    set <- unique_queries[!unique_queries %in% agg$name]
+    set <- sample(set, n)
+    d <- guess_sex(set, search_source = engine, retry = FALSE)
+    d <- d[(d$female + d$male) != 0,]
+    message("new results: ", nrow(d))
+    if (nrow(d)) {
+      d$source = sub("^.*\\.(\\w+)\\.com.*$", "\\1", engine, perl = TRUE)
+      write.csv(rbind(agg, d), "../sex_guess_agg.csv", row.names = FALSE)
+    }
+  }
+  add_to_agg(2000, "https://www.bing.com/search?q=")
+  add_to_agg(2000, "https://www.ask.com/web?q=")
+}
+
+agg <- read.csv("../sex_guess_agg.csv")
+agg <- agg[!duplicated(agg$name),]
+rownames(agg) <- agg$name
+agg$prob_fem <- agg$female / (agg$female + agg$male)
+su <- inventor_query %in% agg$name
+inventors$prob_fem_search <- NA
+inventors[su, "prob_fem_search"] <- agg[inventor_query[su], "prob_fem"]
 
 # predict inventor ethnicity
 
@@ -173,6 +216,7 @@ ethnicity <- rethnicity::predict_ethnicity(
 )
 probs <- grep("^prob", colnames(ethnicity), value = TRUE)
 inventors[, probs] <- ethnicity[, probs]
+
 
 write.csv(
   inventors[inventors$search_set == "pharmaceutical",],

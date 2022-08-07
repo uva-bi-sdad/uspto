@@ -46,8 +46,8 @@ extract_inventors <- function(input) {
       if (length(r) == 1) r <- r[[1]]
       party <- r$patentCaseMetadata$partyBag$applicantBagOrInventorBagOrOwnerBag
       app <- list(
-        guid = sub("(\\d+)", "-\\1-", r$patentCaseMetadata$patentPublicationIdentification$publicationNumber),
-        applicationNumber = sub("(\\d{2})", "\\1/", r$patentCaseMetadata$applicationNumberText$value)
+        guid = sub("-?(\\d+)-?", "-\\1-", r$patentCaseMetadata$patentPublicationIdentification$publicationNumber, perl = TRUE),
+        applicationNumber = sub("(\\d{2})/?", "\\1/", r$patentCaseMetadata$applicationNumberText$value, perl = TRUE)
       )
       if (!length(app$guid)) app$guid <- ""
       if (!is.null(party)) {
