@@ -1,6 +1,6 @@
 #' Get Patent Classification Information
 #'
-#' Retrieve U.S. patent Class definitions and subclassess from
+#' Retrieve U.S. patent Class definitions and subclasses from
 #' \href{https://www.uspto.gov/web/patents/classification}{USPTO Classification Resources}.
 #'
 #' @param code A vector of USPC classification symbols (e.g., \code{D14}).

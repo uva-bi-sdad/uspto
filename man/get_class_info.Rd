@@ -14,7 +14,7 @@ A list with an entry for \code{class} and \code{description} for the entered cod
 containing a \code{data.frame} with a \code{subclass} (the subclass code) and \code{description} column.
 }
 \description{
-Retrieve U.S. patent Class definitions and subclassess from
+Retrieve U.S. patent Class definitions and subclasses from
 \href{https://www.uspto.gov/web/patents/classification}{USPTO Classification Resources}.
 }
 \examples{

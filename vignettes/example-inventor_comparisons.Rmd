@@ -27,7 +27,6 @@ knitr::opts_chunk$set(
   fig.ext = "svg"
 )
 library(uspto)
-library(lingmatch)
 library(knitr)
 outDir <- "eda/searches/"
 if (!dir.exists(outDir)) outDir <- "../eda/searches/"
@@ -48,12 +47,12 @@ outDir <- "eda/searches/"
 
 First, we can load in the original search results:
 ```{r}
-search_mechanical <- read.csv(xzfile(paste0(outDir, "mechanical.csv.xz")))
 search_pharmaceutical <- read.csv(xzfile(paste0(outDir, "pharmaceutical.csv.xz")))
+search_mechanical <- read.csv(xzfile(paste0(outDir, "mechanical.csv.xz")))
 ```
 
-The mechanical search returned `r prettyNum(nrow(search_mechanical), big.mark = ",")` results, and the pharmaceutical search
-returned `r prettyNum(nrow(search_pharmaceutical), big.mark = ",")` results.
+The pharmaceutical search returned `r prettyNum(nrow(search_pharmaceutical), big.mark = ",")` results, and the mechanical search
+returned `r prettyNum(nrow(search_mechanical), big.mark = ",")` results.
 
 The files are split into separate search sets, which we'll combine:
 ```{r}
@@ -107,6 +106,7 @@ class_highlights <- data.frame(
 )
 
 ## add descriptions
+library(uspto)
 class_info <- get_class_info(class_highlights$class, paste0(dirname(outDir), "/original/class_info"))
 class_highlights$description <- vapply(class_info, "[[", "", "description")
 kable(
@@ -128,7 +128,7 @@ summaries <- vapply(split(applications, applications$search_set), function(d) {
     "Proportion Utility" = mean(d$category == "Utility"),
     "Proportion Small Business" = (1 - mean(d$business == "UNDISCOUNTED")),
     "Proportion Inventor First" = mean(d$first_inventor == "true"),
-    "Mean Number of Inventors" = mean(d$n_inventors),
+    "Mean Inventors Per Team" = mean(d$n_inventors),
     "Mean Time To classification" = mean(d$time_initial_classificaiton, na.rm = TRUE),
     "Mean Time To First Action" = mean(d$time_first_action, na.rm = TRUE),
     "Mean Examination Rounds" = mean(d[d$examination_rounds != 0, "examination_rounds"]),
@@ -137,7 +137,7 @@ summaries <- vapply(split(applications, applications$search_set), function(d) {
   )
 }, numeric(12))
 summaries <- cbind(summaries, summaries[, 1] - summaries[, 2])
-kable(summaries, digits = 3, col.names = c("Mechanical", "Pharmaceutical", "Difference"))
+kable(summaries, digits = 3, col.names = c("Mechanical", "Pharmaceutical", "Mechanical - Pharmaceutical"))
 ```
 
 # Inventor Sexing
@@ -187,7 +187,41 @@ prediction_summaries <- data.frame(
   )),
   Percent_Determinate = colMeans(vapply(inventors[, sex_cols], "!=", logical(nrow(inventors)), "U"))
 )
-kable(prediction_summaries, digits = 3)
+kable(prediction_summaries[order(-prediction_summaries$Accuracy),], digits = 3)
+```
+
+# Sex Differences
+
+With the potential limitations of our sample and inventor sexing methods in mind, 
+we can look at differences between sex-based inventor groups:
+```{r}
+inventors$n_inventors <- tapply(inventors$guid, inventors$guid, length)[inventors$guid]
+summaries_sex <- vapply(split(inventors, inventors$sex_in_country_wgnd), function(d) {
+  c(
+    "Pharmaceutical Set" = mean(d$search_set == "pharmaceutical"),
+    "Proportion US" = mean(d$inventorCountry == "US", na.rm = TRUE),
+    "Proportion California" = mean(d[
+      !is.na(d$inventorCountry) & d$inventorCountry == "US", "inventorState"
+    ] == "CA"),
+    "Mean Year" = mean(as.numeric(substring(d$date, 1, 4))),
+    "Proportion Utility" = mean(d$category == "Utility"),
+    "Proportion Small Business" = (1 - mean(d$business == "UNDISCOUNTED")),
+    "Proportion Inventor First" = mean(d$first_inventor == "true"),
+    "Mean Inventors Per Team" = mean(d$n_inventors),
+    "Mean Time To classification" = mean(d$time_initial_classificaiton, na.rm = TRUE),
+    "Mean Time To First Action" = mean(d$time_first_action, na.rm = TRUE),
+    "Mean Examination Rounds" = mean(d[d$examination_rounds != 0, "examination_rounds"]),
+    "Proportion Accepted" = mean(d$any_accepts),
+    "Proportion Patented" = mean(d$status == "Patented Case", na.rm = TRUE)
+  )
+}, numeric(13))
+kable(data.frame(
+  Female = as.numeric(summaries_sex[, 1, drop = FALSE]),
+  Male = summaries_sex[, 2],
+  "Female - Male" = summaries_sex[, 1] - summaries_sex[, 2],
+  Unknown = summaries_sex[, 3],
+  check.names = FALSE
+), digits = 3)
 ```
 
 # References

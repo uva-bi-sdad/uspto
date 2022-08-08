@@ -96,10 +96,10 @@ directory:</p>
 </h2>
 <p>First, we can load in the original search results:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">search_mechanical</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">xzfile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">outDir</span>, <span class="st">"mechanical.csv.xz"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">search_pharmaceutical</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">xzfile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">outDir</span>, <span class="st">"pharmaceutical.csv.xz"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>The mechanical search returned 89,487 results, and the pharmaceutical
-search returned 94,998 results.</p>
+<code class="sourceCode R"><span><span class="va">search_pharmaceutical</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">xzfile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">outDir</span>, <span class="st">"pharmaceutical.csv.xz"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">search_mechanical</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">xzfile</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">outDir</span>, <span class="st">"mechanical.csv.xz"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>The pharmaceutical search returned 94,998 results, and the mechanical
+search returned 89,487 results.</p>
 <p>The files are split into separate search sets, which we’ll
 combine:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -126,10 +126,11 @@ from mechanical set.</p>
 differ in their proportion of female inventors, where mechanical (such
 as machine tools and mechanical elements) has a particularly low
 proportion, and pharmaceutical (along with biotechnology and areas of
-chemistry) has a higher proportion <span class="citation">(<a href="#ref-pto19" role="doc-biblioref">Miguelez et al., 2019</a>; <a href="#ref-ipo19" role="doc-biblioref">Office, 2019</a>)</span>. The
-field-specific subsets are only defined by their simple search terms,
-however, so we’ll want to see how representative of those fields these
-applications might actually be.</p>
+chemistry) has a higher proportion <span class="citation">(<a href="#ref-ipo19" role="doc-biblioref">Intellectual Property Office,
+2019</a>; <a href="#ref-pto19" role="doc-biblioref">Miguelez et al.,
+2019</a>)</span>. The field-specific subsets are only defined by their
+simple search terms, however, so we’ll want to see how representative of
+those fields these applications might actually be.</p>
 <p>One way to get a feel for how representative our sets are might be to
 look at the distribution of classifications within each:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -153,6 +154,7 @@ look at the distribution of classifications within each:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## add descriptions</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">uspto</span><span class="op">)</span></span>
 <span><span class="va">class_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_class_info.html">get_class_info</a></span><span class="op">(</span><span class="va">class_highlights</span><span class="op">$</span><span class="va">class</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">dirname</a></span><span class="op">(</span><span class="va">outDir</span><span class="op">)</span>, <span class="st">"/original/class_info"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">class_highlights</span><span class="op">$</span><span class="va">description</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="va">class_info</span>, <span class="st">"[["</span>, <span class="st">""</span>, <span class="st">"description"</span><span class="op">)</span></span>
 <span><span class="fu">kable</span><span class="op">(</span></span>
@@ -413,7 +415,7 @@ balanced they are incidentally:</p>
 <span>    <span class="st">"Proportion Utility"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">category</span> <span class="op">==</span> <span class="st">"Utility"</span><span class="op">)</span>,</span>
 <span>    <span class="st">"Proportion Small Business"</span> <span class="op">=</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">business</span> <span class="op">==</span> <span class="st">"UNDISCOUNTED"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    <span class="st">"Proportion Inventor First"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">first_inventor</span> <span class="op">==</span> <span class="st">"true"</span><span class="op">)</span>,</span>
-<span>    <span class="st">"Mean Number of Inventors"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">n_inventors</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Mean Inventors Per Team"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">n_inventors</span><span class="op">)</span>,</span>
 <span>    <span class="st">"Mean Time To classification"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">time_initial_classificaiton</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>    <span class="st">"Mean Time To First Action"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">time_first_action</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>    <span class="st">"Mean Examination Rounds"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span><span class="va">d</span><span class="op">$</span><span class="va">examination_rounds</span> <span class="op">!=</span> <span class="fl">0</span>, <span class="st">"examination_rounds"</span><span class="op">]</span><span class="op">)</span>,</span>
@@ -422,13 +424,19 @@ balanced they are incidentally:</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">summaries</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">summaries</span>, <span class="va">summaries</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">summaries</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="fu">kable</span><span class="op">(</span><span class="va">summaries</span>, digits <span class="op">=</span> <span class="fl">3</span>, col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mechanical"</span>, <span class="st">"Pharmaceutical"</span>, <span class="st">"Difference"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">kable</span><span class="op">(</span><span class="va">summaries</span>, digits <span class="op">=</span> <span class="fl">3</span>, col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mechanical"</span>, <span class="st">"Pharmaceutical"</span>, <span class="st">"Mechanical - Pharmaceutical"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
+<colgroup>
+<col width="34%">
+<col width="13%">
+<col width="18%">
+<col width="34%">
+</colgroup>
 <thead><tr class="header">
 <th align="left"></th>
 <th align="right">Mechanical</th>
 <th align="right">Pharmaceutical</th>
-<th align="right">Difference</th>
+<th align="right">Mechanical - Pharmaceutical</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -468,7 +476,7 @@ balanced they are incidentally:</p>
 <td align="right">0.145</td>
 </tr>
 <tr class="odd">
-<td align="left">Mean Number of Inventors</td>
+<td align="left">Mean Inventors Per Team</td>
 <td align="right">2.710</td>
 <td align="right">4.130</td>
 <td align="right">-1.420</td>
@@ -523,7 +531,7 @@ different source:</p>
 <span class="citation">(with some additional sources; <a href="#ref-wgnd" role="doc-biblioref">Raffo, 2021</a>)</span>
 </li>
 <li>
-<code>prob_fem_skydeck</code> <span class="citation">(<a href="#ref-skydeck" role="doc-biblioref">Raffo, 2020</a>)</span>
+<code>prob_fem_skydeck</code> <span class="citation">(<a href="#ref-skydeck" role="doc-biblioref">Rao, 2020</a>)</span>
 </li>
 <li>
 <code>prob_fem_usssa</code> <span class="citation">(<a href="#ref-ssa" role="doc-biblioref">Social Security Administration,
@@ -723,7 +731,7 @@ at accuracy of the others:</p>
 <span>  <span class="op">)</span><span class="op">)</span>,</span>
 <span>  Percent_Determinate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colMeans</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="va">inventors</span><span class="op">[</span>, <span class="va">sex_cols</span><span class="op">]</span>, <span class="st">"!="</span>, <span class="fu"><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">inventors</span><span class="op">)</span><span class="op">)</span>, <span class="st">"U"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu">kable</span><span class="op">(</span><span class="va">prediction_summaries</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">kable</span><span class="op">(</span><span class="va">prediction_summaries</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="va">prediction_summaries</span><span class="op">$</span><span class="va">Accuracy</span><span class="op">)</span>,<span class="op">]</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left"></th>
@@ -737,39 +745,39 @@ at accuracy of the others:</p>
 <td align="right">0.829</td>
 </tr>
 <tr class="even">
+<td align="left">sex_wgnd</td>
+<td align="right">0.912</td>
+<td align="right">0.908</td>
+</tr>
+<tr class="odd">
+<td align="left">sex_fb</td>
+<td align="right">0.871</td>
+<td align="right">0.915</td>
+</tr>
+<tr class="even">
 <td align="left">sex_usuk</td>
 <td align="right">0.864</td>
 <td align="right">0.765</td>
 </tr>
 <tr class="odd">
-<td align="left">sex_wgnd</td>
-<td align="right">0.912</td>
-<td align="right">0.908</td>
-</tr>
-<tr class="even">
-<td align="left">sex_fb</td>
-<td align="right">0.871</td>
-<td align="right">0.915</td>
-</tr>
-<tr class="odd">
-<td align="left">sex_fb_scraped</td>
-<td align="right">0.819</td>
-<td align="right">0.751</td>
-</tr>
-<tr class="even">
 <td align="left">sex_skydeck</td>
 <td align="right">0.860</td>
 <td align="right">0.804</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">sex_usssa</td>
 <td align="right">0.846</td>
 <td align="right">0.781</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">sex_ssa</td>
 <td align="right">0.835</td>
 <td align="right">0.766</td>
+</tr>
+<tr class="even">
+<td align="left">sex_fb_scraped</td>
+<td align="right">0.819</td>
+<td align="right">0.751</td>
 </tr>
 <tr class="odd">
 <td align="left">sex_ipums</td>
@@ -790,12 +798,161 @@ at accuracy of the others:</p>
 </table>
 </div>
 <div class="section level2">
+<h2 id="sex-differences">Sex Differences<a class="anchor" aria-label="anchor" href="#sex-differences"></a>
+</h2>
+<p>With the potential limitations of our sample and inventor sexing
+methods in mind, we can look at differences between sex-based inventor
+groups:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">inventors</span><span class="op">$</span><span class="va">n_inventors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span><span class="va">inventors</span><span class="op">$</span><span class="va">guid</span>, <span class="va">inventors</span><span class="op">$</span><span class="va">guid</span>, <span class="va">length</span><span class="op">)</span><span class="op">[</span><span class="va">inventors</span><span class="op">$</span><span class="va">guid</span><span class="op">]</span></span>
+<span><span class="va">summaries_sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">inventors</span>, <span class="va">inventors</span><span class="op">$</span><span class="va">sex_in_country_wgnd</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Pharmaceutical Set"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">search_set</span> <span class="op">==</span> <span class="st">"pharmaceutical"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Proportion US"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">inventorCountry</span> <span class="op">==</span> <span class="st">"US"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Proportion California"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span></span>
+<span>      <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">inventorCountry</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">d</span><span class="op">$</span><span class="va">inventorCountry</span> <span class="op">==</span> <span class="st">"US"</span>, <span class="st">"inventorState"</span></span>
+<span>    <span class="op">]</span> <span class="op">==</span> <span class="st">"CA"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Mean Year"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substring</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">date</span>, <span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Proportion Utility"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">category</span> <span class="op">==</span> <span class="st">"Utility"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Proportion Small Business"</span> <span class="op">=</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">business</span> <span class="op">==</span> <span class="st">"UNDISCOUNTED"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Proportion Inventor First"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">first_inventor</span> <span class="op">==</span> <span class="st">"true"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Mean Inventors Per Team"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">n_inventors</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Mean Time To classification"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">time_initial_classificaiton</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Mean Time To First Action"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">time_first_action</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Mean Examination Rounds"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">[</span><span class="va">d</span><span class="op">$</span><span class="va">examination_rounds</span> <span class="op">!=</span> <span class="fl">0</span>, <span class="st">"examination_rounds"</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Proportion Accepted"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">any_accepts</span><span class="op">)</span>,</span>
+<span>    <span class="st">"Proportion Patented"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">status</span> <span class="op">==</span> <span class="st">"Patented Case"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">13</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">kable</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  Female <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">summaries_sex</span><span class="op">[</span>, <span class="fl">1</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  Male <span class="op">=</span> <span class="va">summaries_sex</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>,</span>
+<span>  <span class="st">"Female - Male"</span> <span class="op">=</span> <span class="va">summaries_sex</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">summaries_sex</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>,</span>
+<span>  Unknown <span class="op">=</span> <span class="va">summaries_sex</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span>,</span>
+<span>  check.names <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="40%">
+<col width="13%">
+<col width="13%">
+<col width="20%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">Female</th>
+<th align="right">Male</th>
+<th align="right">Female - Male</th>
+<th align="right">Unknown</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Pharmaceutical Set</td>
+<td align="right">0.864</td>
+<td align="right">0.540</td>
+<td align="right">0.324</td>
+<td align="right">0.751</td>
+</tr>
+<tr class="even">
+<td align="left">Proportion US</td>
+<td align="right">0.439</td>
+<td align="right">0.471</td>
+<td align="right">-0.032</td>
+<td align="right">0.383</td>
+</tr>
+<tr class="odd">
+<td align="left">Proportion California</td>
+<td align="right">0.261</td>
+<td align="right">0.175</td>
+<td align="right">0.086</td>
+<td align="right">0.264</td>
+</tr>
+<tr class="even">
+<td align="left">Mean Year</td>
+<td align="right">2012.968</td>
+<td align="right">2012.589</td>
+<td align="right">0.379</td>
+<td align="right">2013.979</td>
+</tr>
+<tr class="odd">
+<td align="left">Proportion Utility</td>
+<td align="right">1.000</td>
+<td align="right">1.000</td>
+<td align="right">0.000</td>
+<td align="right">1.000</td>
+</tr>
+<tr class="even">
+<td align="left">Proportion Small Business</td>
+<td align="right">0.255</td>
+<td align="right">0.174</td>
+<td align="right">0.081</td>
+<td align="right">0.333</td>
+</tr>
+<tr class="odd">
+<td align="left">Proportion Inventor First</td>
+<td align="right">0.331</td>
+<td align="right">0.340</td>
+<td align="right">-0.008</td>
+<td align="right">0.433</td>
+</tr>
+<tr class="even">
+<td align="left">Mean Inventors Per Team</td>
+<td align="right">6.186</td>
+<td align="right">5.047</td>
+<td align="right">1.138</td>
+<td align="right">6.133</td>
+</tr>
+<tr class="odd">
+<td align="left">Mean Time To classification</td>
+<td align="right">22.884</td>
+<td align="right">31.423</td>
+<td align="right">-8.539</td>
+<td align="right">26.859</td>
+</tr>
+<tr class="even">
+<td align="left">Mean Time To First Action</td>
+<td align="right">47.073</td>
+<td align="right">46.258</td>
+<td align="right">0.815</td>
+<td align="right">44.621</td>
+</tr>
+<tr class="odd">
+<td align="left">Mean Examination Rounds</td>
+<td align="right">2.117</td>
+<td align="right">1.993</td>
+<td align="right">0.124</td>
+<td align="right">1.990</td>
+</tr>
+<tr class="even">
+<td align="left">Proportion Accepted</td>
+<td align="right">0.524</td>
+<td align="right">0.563</td>
+<td align="right">-0.039</td>
+<td align="right">0.538</td>
+</tr>
+<tr class="odd">
+<td align="left">Proportion Patented</td>
+<td align="right">0.418</td>
+<td align="right">0.481</td>
+<td align="right">-0.063</td>
+<td align="right">0.478</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
 <div id="ref-R-GenderInfer" class="csl-entry">
 Giordano, R., Day, A., &amp; Boyle, J. (2021). <em>GenderInfer: This is
 a collection of functions to analyse gender differences</em>. <a href="https://CRAN.R-project.org/package=GenderInfer" class="external-link">https://CRAN.R-project.org/package=GenderInfer</a>
+</div>
+<div id="ref-ipo19" class="csl-entry">
+Intellectual Property Office. (2019). Gender profiles in worldwide
+patenting: An analysis of female inventorship. <em>Intellectual Property
+Office</em>. <a href="https://www.gov.uk/government/publications/gender-profiles-in-worldwide-patenting-an-analysis-of-female-inventorship-2019-edition" class="external-link">https://www.gov.uk/government/publications/gender-profiles-in-worldwide-patenting-an-analysis-of-female-inventorship-2019-edition</a>
 </div>
 <div id="ref-pto19" class="csl-entry">
 Miguelez, E., Toole, A., Myers, A., Breschi, S., Ferruci, E., Lissoni,
@@ -807,18 +964,13 @@ Office, Office of the Chief Economist</em>. <a href="https://www.uspto.gov/sites
 Mullen, L. (2021). <em>Gender: Predict gender from names using
 historical data</em>. <a href="https://github.com/lmullen/gender" class="external-link">https://github.com/lmullen/gender</a>
 </div>
-<div id="ref-ipo19" class="csl-entry">
-Office, I. P. (2019). Gender profiles in worldwide patenting: An
-analysis of female inventorship. <em>Intellectual Property Office</em>.
-<a href="https://www.gov.uk/government/publications/gender-profiles-in-worldwide-patenting-an-analysis-of-female-inventorship-2019-edition" class="external-link">https://www.gov.uk/government/publications/gender-profiles-in-worldwide-patenting-an-analysis-of-female-inventorship-2019-edition</a>
-</div>
-<div id="ref-skydeck" class="csl-entry">
-Raffo, J. (2020). <em>Gender by name data set</em> [Data set].
-<span>UCI</span> Machine Learning Repository. <a href="https://archive.ics.uci.edu/ml/datasets/Gender+by+Name" class="external-link">https://archive.ics.uci.edu/ml/datasets/Gender+by+Name</a>
-</div>
 <div id="ref-wgnd" class="csl-entry">
 Raffo, J. (2021). <em>World gender name dictionary (<span>WGND
 2.0</span>)</em> (DRAFT VERSION) [Data set]. Harvard Dataverse. <a href="https://doi.org/10.7910/DVN/MSEGSJ" class="external-link">https://doi.org/10.7910/DVN/MSEGSJ</a>
+</div>
+<div id="ref-skydeck" class="csl-entry">
+Rao, A. (2020). <em>Gender by name data set</em> [Data set].
+<span>UCI</span> Machine Learning Repository. <a href="https://archive.ics.uci.edu/ml/datasets/Gender+by+Name" class="external-link">https://archive.ics.uci.edu/ml/datasets/Gender+by+Name</a>
 </div>
 <div id="ref-fb" class="csl-entry">
 Remy, P. (2021). <em>Name dataset</em> [Data set]. GitHub. <a href="https://github.com/philipperemy/name-dataset" class="external-link">https://github.com/philipperemy/name-dataset</a>
