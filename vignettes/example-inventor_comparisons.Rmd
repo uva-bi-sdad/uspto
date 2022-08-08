@@ -1,0 +1,193 @@
+---
+title: "Compare Inventors Between Search Sets"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Compare Inventors Between Search Sets}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+bibliography: citations.bib
+csl: apa.csl
+link-citations: true
+---
+  
+*Built with R 
+`r getRversion()`*
+  
+***
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 5,
+  fig.width = 8.84,
+  dev = "CairoSVG",
+  fig.ext = "svg"
+)
+library(uspto)
+library(lingmatch)
+library(knitr)
+outDir <- "eda/searches/"
+if (!dir.exists(outDir)) outDir <- "../eda/searches/"
+```
+
+```{css, echo = FALSE}
+td {white-space: nowrap}
+```
+
+This example explores the inventor-focused search set created by [example_inventor_sexing.R](https://github.com/uva-bi-sdad/uspto/blob/main/eda/example_inventor_sexing.R).
+
+The files in produces are in the [eda/searches](https://github.com/uva-bi-sdad/uspto/tree/main/eda/searches) directory:
+```r
+outDir <- "eda/searches/"
+```
+
+# Load Data
+
+First, we can load in the original search results:
+```{r}
+search_mechanical <- read.csv(xzfile(paste0(outDir, "mechanical.csv.xz")))
+search_pharmaceutical <- read.csv(xzfile(paste0(outDir, "pharmaceutical.csv.xz")))
+```
+
+The mechanical search returned `r prettyNum(nrow(search_mechanical), big.mark = ",")` results, and the pharmaceutical search
+returned `r prettyNum(nrow(search_pharmaceutical), big.mark = ",")` results.
+
+The files are split into separate search sets, which we'll combine:
+```{r}
+inventors <- rbind(
+  # based on the search pharmaceutical.ab.
+  read.csv(xzfile(paste0(outDir, "inventors_pharmaceutical.csv.xz"))),
+  # based on the search F01?.cpcl.
+  read.csv(xzfile(paste0(outDir, "inventors_mechanical.csv.xz")))
+)
+
+# ensure our working set is from the original searches
+inventors <- inventors[inventors$applicationNumber %in% c(
+  search_mechanical$applicationNumber, search_pharmaceutical$applicationNumber
+), ]
+```
+
+This set includes information from `r prettyNum(length(unique(inventors$guid)), big.mark = ",")` patent applications, with
+`r prettyNum(length(unique(inventors$fullname)), big.mark = ",")` inventors (going by unique full name anyway). Of those
+applications, `r prettyNum(length(unique(inventors[inventors$search_set == "pharmaceutical", "guid"])), big.mark = ",")`
+are from the pharmaceutical search, and
+`r prettyNum(length(unique(inventors[inventors$search_set == "mechanical", "guid"])), big.mark = ",")` are from mechanical set.
+
+# Set Assessment
+
+This set of applications is meant to represent technology fields that differ in their proportion of
+female inventors, where mechanical (such as machine tools and mechanical elements) has a particularly
+low proportion, and pharmaceutical (along with biotechnology and areas of chemistry) has a higher
+proportion [@pto19; @ipo19]. The field-specific subsets are only defined by their simple search terms,
+however, so we'll want to see how representative of those fields these applications might actually be.
+
+One way to get a feel for how representative our sets are might be to look at the distribution of
+classifications within each:
+```{r}
+# make a subset that contains only one line per applications
+applications <- inventors[!duplicated(inventors$guid), ]
+
+# look at the overall UPC class of each application between sets
+overall_classes <- substring(applications$classification, 4, 6)
+classes <- table(overall_classes, applications$search_set)
+
+class_highlights <- rbind(
+  # most differing classes
+  classes[order(classes[, 2] - classes[, 1])[c(1:10, (1:10) + nrow(classes) - 10)], ],
+  # most overlapping classes
+  classes[order(abs(classes[, 2] - classes[, 1]) - rowSums(classes))[1:10], ]
+)
+class_highlights <- data.frame(
+  class = rownames(class_highlights),
+  criteria = rep(c("differing", "overlapping"), c(20, 10)),
+  class_highlights
+)
+
+## add descriptions
+class_info <- get_class_info(class_highlights$class, paste0(dirname(outDir), "/original/class_info"))
+class_highlights$description <- vapply(class_info, "[[", "", "description")
+kable(
+  class_highlights,
+  row.names = FALSE,
+  col.names = c("Class", "Criteria", "Mechanical", "Pharmaceutical", "Description")
+)
+```
+
+Some other application-level features might also affect the comparisons we might want to make between sets,
+so we can see how balanced they are incidentally:
+```{r}
+applications$n_inventors <- tapply(inventors$guid, inventors$guid, length)[applications$guid]
+summaries <- vapply(split(applications, applications$search_set), function(d) {
+  c(
+    "Proportion US" = mean(d$inventorCountry == "US"),
+    "Proportion California" = mean(d[d$inventorCountry == "US", "inventorState"] == "CA"),
+    "Mean Year" = mean(as.numeric(substring(d$date, 1, 4))),
+    "Proportion Utility" = mean(d$category == "Utility"),
+    "Proportion Small Business" = (1 - mean(d$business == "UNDISCOUNTED")),
+    "Proportion Inventor First" = mean(d$first_inventor == "true"),
+    "Mean Number of Inventors" = mean(d$n_inventors),
+    "Mean Time To classification" = mean(d$time_initial_classificaiton, na.rm = TRUE),
+    "Mean Time To First Action" = mean(d$time_first_action, na.rm = TRUE),
+    "Mean Examination Rounds" = mean(d[d$examination_rounds != 0, "examination_rounds"]),
+    "Proportion Accepted" = mean(d$any_accepts),
+    "Proportion Patented" = mean(d$status == "Patented Case", na.rm = TRUE)
+  )
+}, numeric(12))
+summaries <- cbind(summaries, summaries[, 1] - summaries[, 2])
+kable(summaries, digits = 3, col.names = c("Mechanical", "Pharmaceutical", "Difference"))
+```
+
+# Inventor Sexing
+
+The only inventor information included in USPTO data is name, country, states (in some countries),
+and city. We are particularly interested in looking at differences in the sex-distribution
+of inventors between technology areas, so we used that inventor information to assign sex.
+For some comparison, we used 3 basic methods with several different source:
+
+- Historical or public name-sex datasets:
+  - `sex_in_country_wgnd` and `prop_fem_wgnd` [with some additional sources\; @wgnd]
+  - `prob_fem_skydeck` [@skydeck]
+  - `prob_fem_usssa` [@ssa]
+  - `sex_usuk` [@R-GenderInfer]
+  - `prob_fem_ssa`, `prob_fem_ipums`, and `prob_fem_napp` [@R-gender]
+- Social media profiles:
+  - `prob_fem_fb` [from leaked account details\; @fb]
+  - `prob_fb_scraped` [scraped from profiles\; @fbs]
+- Search cues:
+  - `prob_fem_search` ([guess_sex.R](https://github.com/miserman/lusilab/blob/main/R/guess_sex.R))
+
+First, we can just look at the correlation between sources:
+```{r}
+prob_cols <- grep("prob_fem", colnames(inventors), fixed = TRUE, value = TRUE)
+cors <- cor(inventors[, prob_cols], use = "pairwise.complete.obs")
+rownames(cors) <- paste0("(", seq_along(prob_cols), ") ", prob_cols)
+colnames(cors) <- paste0("(", seq_along(prob_cols), ")")
+kable(cors, digits = 3)
+```
+
+The World Gender Name Dictionary has the broadest coverage and widest range of source,
+so we could also treat that as the best guess, and look at accuracy of the others:
+```{r}
+# convert probabilities to predictions
+sex_predictions <- inventors[, prob_cols]
+sex_predictions[is.na(sex_predictions)] <- .5
+sex_predictions[sex_predictions == .5] <- "U"
+sex_predictions[inventors[, prob_cols] > .5] <- "F"
+sex_predictions[inventors[, prob_cols] < .5] <- "M"
+inventors[, sub("prob_fem", "sex", prob_cols, fixed = TRUE)] <- sex_predictions
+sex_cols <- grep("sex_", colnames(inventors), fixed = TRUE, value = TRUE)
+
+# then get accuracy to WGND in country
+prediction_summaries <- data.frame(
+  Accuracy = colMeans(vapply(
+    inventors[, sex_cols], "==", logical(nrow(inventors)), inventors$sex_in_country_wgnd
+  )),
+  Percent_Determinate = colMeans(vapply(inventors[, sex_cols], "!=", logical(nrow(inventors)), "U"))
+)
+kable(prediction_summaries, digits = 3)
+```
+
+# References

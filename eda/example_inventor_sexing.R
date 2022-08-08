@@ -144,26 +144,26 @@ inventors$fullname <- sub(
 )
 inventors$id <- paste0("i", seq_len(nrow(inventors)))
 rownames(inventors) <- inventors$id
+inventors$lower_firstname <- tolower(inventors$firstName)
 
 # sex inventors
 
 ## Social Security US
-inventors[is.na(inventors$inventorCountry), "inventorCountry"] = ""
 demo_preds <- predict_demographics(
-  tolower(inventors$firstName), tolower(inventors$lastName), inventors$inventorCountry,
-  dir = "../names"
+  inventors$lower_firstname, tolower(inventors$lastName), inventors$inventorCountry,
+  dir = "../names/"
 )
 inventors <- cbind(inventors, demo_preds[, -(1:3)])
 
 ## Social Security US/UK combined
-usuk <- GenderInfer::assign_gender(inventors, "firstName")
+usuk <- GenderInfer::assign_gender(inventors, "lower_firstname")
 usuk <- usuk[!duplicated(usuk$id),]
 inventors$sex_usuk <- "U"
 inventors[usuk$id, "sex_usuk"] <- usuk$gender
 
 ## U.S. Social Security Administration, U.S. Census Integrated Public Use Microdata Series
 ## North Atlantic Population Project (1801-1910 censuses)
-firstNames <- unique(inventors$firstName)
+firstNames <- unique(inventors$lower_firstname)
 gender_preds <- lapply(c("ssa", "ipums", "napp"), function(m) {
   res <- gender::gender(firstNames, method = m)
   structure(res$proportion_female, names = res$name)
@@ -172,8 +172,8 @@ names(gender_preds) <- c("ssa", "ipums", "napp")
 
 inventors[, paste0("prob_fem_", names(gender_preds))] <- .5
 for (s in names(gender_preds)) {
-  su <- inventors$firstName %in% names(gender_preds[[s]])
-  inventors[su, paste0("prob_fem_", s)] <- gender_preds[[s]][inventors[su, "firstName"]]
+  su <- inventors$lower_firstname %in% names(gender_preds[[s]])
+  inventors[su, paste0("prob_fem_", s)] <- gender_preds[[s]][inventors[su, "lower_firstname"]]
 }
 
 ## searching
@@ -217,7 +217,7 @@ ethnicity <- rethnicity::predict_ethnicity(
 probs <- grep("^prob", colnames(ethnicity), value = TRUE)
 inventors[, probs] <- ethnicity[, probs]
 
-
+inventors <- inventors[, !colnames(inventors) %in% c("id", "lower_firstname")]
 write.csv(
   inventors[inventors$search_set == "pharmaceutical",],
   xzfile("eda/searches/inventors_pharmaceutical.csv.xz"),

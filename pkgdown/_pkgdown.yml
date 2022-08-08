@@ -16,6 +16,7 @@ reference:
   desc: These functions can be used to help use the information collected from the other functions.
   contents:
   - starts_with("extract_")
+  - starts_with("get_")
 
 home:
   links:
