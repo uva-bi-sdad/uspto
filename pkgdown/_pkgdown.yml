@@ -11,6 +11,7 @@ reference:
   desc: These functions can be used to search for patents and/or applications.
   contents:
   - uspto_search
+  - uspto_search_patentsview
   - search_fulltext
 - title: Utility Functions
   desc: These functions can be used to help use the information collected from the other functions.

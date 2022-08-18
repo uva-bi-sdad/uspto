@@ -8,6 +8,8 @@ get_class_info(code, dir = tempdir())
 }
 \arguments{
 \item{code}{A vector of USPC classification symbols (e.g., \code{D14}).}
+
+\item{dir}{Directory in which to save results.}
 }
 \value{
 A list with an entry for \code{class} and \code{description} for the entered code, and \code{subclasses}

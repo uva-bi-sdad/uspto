@@ -4,6 +4,7 @@
 #' \href{https://www.uspto.gov/web/patents/classification}{USPTO Classification Resources}.
 #'
 #' @param code A vector of USPC classification symbols (e.g., \code{D14}).
+#' @param dir Directory in which to save results.
 #' @returns A list with an entry for \code{class} and \code{description} for the entered code, and \code{subclasses}
 #' containing a \code{data.frame} with a \code{subclass} (the subclass code) and \code{description} column.
 #' @examples

@@ -187,7 +187,7 @@ prediction_summaries <- data.frame(
   )),
   Percent_Determinate = colMeans(vapply(inventors[, sex_cols], "!=", logical(nrow(inventors)), "U"))
 )
-kable(prediction_summaries[order(-prediction_summaries$Accuracy),], digits = 3)
+kable(prediction_summaries[order(-prediction_summaries$Accuracy), ], digits = 3)
 ```
 
 # Sex Differences
@@ -196,7 +196,10 @@ With the potential limitations of our sample and inventor sexing methods in mind
 we can look at differences between sex-based inventor groups:
 ```{r}
 inventors$n_inventors <- tapply(inventors$guid, inventors$guid, length)[inventors$guid]
-summaries_sex <- vapply(split(inventors, inventors$sex_in_country_wgnd), function(d) {
+unique_inventors <- inventors[!duplicated(paste(
+  inventors$firstName, inventors$lastName, inventors$inventorCountry
+)), ]
+summaries_sex <- vapply(split(unique_inventors, unique_inventors$sex_in_country_wgnd), function(d) {
   c(
     "Pharmaceutical Set" = mean(d$search_set == "pharmaceutical"),
     "Proportion US" = mean(d$inventorCountry == "US", na.rm = TRUE),
