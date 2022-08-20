@@ -15,7 +15,7 @@ uspto_search_patentsview(query, fields = NULL, sort = NULL,
 \code{'{"_text_all": {"patent_abstract": ["photographic", "noodle"]}}'}. See
 \href{https://patentsview.org/apis/api-query-language}{API Query Language}.}
 
-\item{fields}{A vector of fields to return; defaults to all for the given endpoint. Set to \code{NULL},
+\item{fields}{A vector of fields to return; defaults to all for the given endpoint. Set to \code{NULL}
 to use the API's default.}
 
 \item{sort}{A list or list of lists specifying how to sort results (e.g., \code{list(patent_date = "asc")}).}
@@ -26,7 +26,8 @@ to use the API's default.}
 
 \item{start}{Page to start collecting results on.}
 
-\item{limit}{Maximum number of results to return; sets page size, up to 10,000 per page.}
+\item{limit}{Maximum number of results to return; sets page size, up to 10,000 per page
+(1,000 if \code{legacy} if \code{FALSE}).}
 
 \item{endpoint}{Name of the API endpoint to search in, as listed on
 \href{https://patentsview.org/apis/api-endpoints}{PatentsView}.}
