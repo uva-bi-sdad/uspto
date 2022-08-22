@@ -27,7 +27,7 @@ a column with the number of unique values closest to 20.}
 
 \item{return_table}{Logical; if \code{FALSE}, returns the path to the file, rather than the read-in table.}
 
-\item{overwrite}{Logical; if \code{TRUE}, overwrites an existing files (raw and prepared).}
+\item{overwrite}{Logical; if \code{TRUE}, overwrites any existing files (raw and prepared).}
 }
 \value{
 The original table (if \code{return_table} is \code{TRUE}; as a \code{tibble}), an opened dataset

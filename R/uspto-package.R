@@ -5,6 +5,7 @@
 #' @importFrom utils download.file unzip URLencode read.csv write.csv
 #' @importFrom parallel detectCores makeCluster clusterExport stopCluster parLapply
 #' @importFrom arrow read_delim_arrow write_dataset open_dataset
+#' @importFrom Matrix sparseMatrix
 #' @keywords internal
 "_PACKAGE"
 

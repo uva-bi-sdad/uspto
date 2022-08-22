@@ -9,11 +9,12 @@ Authors@R: c(
   )
 Description: Offers functions to interact with U.S. Patent and Trademark Office public data.
 License: MIT + file LICENSE
-Imports: jsonlite, curl, httr, digest, parallel, arrow
+Imports: jsonlite, curl, httr, digest, parallel, arrow, Matrix
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    dplyr
 Config/testthat/edition: 3
 RoxygenNote: 7.2.1
 Roxygen: list(old_usage = TRUE)

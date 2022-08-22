@@ -14,7 +14,7 @@
 #' @param make_db Logical; if \code{TRUE}, will make an Arrow dataset out of the downloaded table.
 #' @param format Format of the dataset, if \code{make_db} is \code{TRUE}.
 #' @param return_table Logical; if \code{FALSE}, returns the path to the file, rather than the read-in table.
-#' @param overwrite Logical; if \code{TRUE}, overwrites an existing files (raw and prepared).
+#' @param overwrite Logical; if \code{TRUE}, overwrites any existing files (raw and prepared).
 #' @return The original table (if \code{return_table} is \code{TRUE}; as a \code{tibble}), an opened dataset
 #' (if the path to the dataset exists), or the path to the downloaded file.
 #' @examples
