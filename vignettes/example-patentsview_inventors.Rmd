@@ -1,0 +1,127 @@
+---
+title: "Analyze inventor features using PatentsView data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analyze inventor features using PatentsView data}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+*Built with R 
+`r getRversion()`*
+
+***
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 5,
+  fig.width = 8.84,
+  dev = "CairoSVG",
+  fig.ext = "svg"
+)
+library(uspto)
+library(knitr)
+outDir <- "../patentsview/"
+if (!dir.exists(outDir)) outDir <- "../../patentsview/"
+```
+
+```{css, echo = FALSE}
+td {white-space: nowrap}
+```
+
+This example looks at a set of patent applications based on an initial seed set.
+
+## Setup
+
+Before starting, we'll need to load the package, and point to a directory where we'd like things saved:
+```r
+# install if needed: remotes::install_guthub("uva-bi-sdad/uspto")
+library(uspto)
+outDir <- "../patentsview/"
+```
+
+## Which patent categories have most and fewest female inventors?
+
+The first step toward answering this question is to join the table listing inventor
+details (which includes a name-based sex prediction) with that associating inventors
+with patents:
+```{r}
+# start with inventors
+inventors <- as.data.frame(download_patentsview_bulk("inventor", outDir))
+
+## focus on just sexed inventors
+inventors <- inventors[inventors$attribution_status == 1, ]
+rownames(inventors) <- inventors$id
+
+# add patent IDs
+patent_inventor <- download_patentsview_bulk("patent_inventor", outDir)
+patent_inventor <- patent_inventor[patent_inventor$inventor_id %in% inventors$id, ]
+inventors <- cbind(inventors[patent_inventor$inventor_id, -1], patent_inventor)
+
+# count inventors predicted to be female in each patent
+female_inventors <- tapply(inventors$male_flag == 0, inventors$patent_id, sum)
+```
+
+Now we can add patent category information, to get breakdowns of classes by inventor sex.
+There are multiple classification schemes, but we can start with the
+World Intellectual Property Organization (WIPO) technology fields for a high-level overview:
+```{r}
+library(Matrix)
+
+# this makes a patent x WIPO category matrix
+categories_wipo <- patentsview_class_matrix("wipo", paste0(outDir, "wipo_matrix.rds"), dir = outDir)
+dim(categories_wipo)
+
+# which we can join to the inventors matrix
+inventors_wipo <- female_inventors[names(female_inventors) %in% rownames(categories_wipo)]
+inventors_wipo <- cbind(as.numeric(inventors_wipo), categories_wipo[names(inventors_wipo), ])
+
+# and get category breakdowns by inventor sex
+wipo_summary <- data.frame(
+  Any_Female = colSums(inventors_wipo[inventors_wipo[, 1] != 0, -1] != 0),
+  No_Female = colSums(inventors_wipo[inventors_wipo[, 1] == 0, -1] != 0)
+)
+wipo_summary$Any_Female_Proportion <- wipo_summary$Any_Female / rowSums(wipo_summary)
+wipo_summary <- wipo_summary[order(-wipo_summary$Any_Female_Proportion), ]
+
+# add category titles
+wipo_field <- as.data.frame(download_patentsview_bulk("wipo_field", outDir))
+rownames(wipo_field) <- wipo_field$id
+rownames(wipo_summary) <- wipo_field[rownames(wipo_summary), "field_title"]
+
+kable(wipo_summary, col.names = gsub("_", " ", colnames(wipo_summary), fixed = TRUE))
+```
+
+For a more refined classification, we might look at the United States Patent Classification (USPC),
+which is most closely related to examination process:
+```{r}
+# get the patent x USPC category matrix
+categories_uspc <- patentsview_class_matrix(
+  "uspc_current", paste0(outDir, "uspc_current_matrix.rds"),
+  dir = outDir
+)
+dim(categories_uspc)
+
+# join to the inventors matrix
+inventors_uspc <- female_inventors[names(female_inventors) %in% rownames(categories_uspc)]
+inventors_uspc <- cbind(as.numeric(inventors_uspc), categories_uspc[names(inventors_uspc), ])
+
+# and get category breakdowns by inventor sex
+uspc_summary <- data.frame(
+  Any_Female = colSums(inventors_uspc[inventors_uspc[, 1] != 0, -1] != 0),
+  No_Female = colSums(inventors_uspc[inventors_uspc[, 1] == 0, -1] != 0)
+)
+uspc_summary$Any_Female_Proportion <- uspc_summary$Any_Female / rowSums(uspc_summary)
+uspc_summary <- uspc_summary[order(-uspc_summary$Any_Female_Proportion), ]
+
+# add category titles
+uspc_field <- as.data.frame(download_patentsview_bulk("mainclass_current", outDir))
+rownames(uspc_field) <- uspc_field$id
+uspc_summary$Title <- uspc_field[rownames(uspc_summary), "title"]
+
+kable(uspc_summary, col.names = gsub("_", " ", colnames(uspc_summary), fixed = TRUE))
+```
