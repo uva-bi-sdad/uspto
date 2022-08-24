@@ -6,6 +6,7 @@
 #' @importFrom parallel detectCores makeCluster clusterExport stopCluster parLapply
 #' @importFrom arrow read_delim_arrow write_dataset open_dataset
 #' @importFrom Matrix sparseMatrix
+#' @importFrom vroom vroom
 #' @keywords internal
 "_PACKAGE"
 

@@ -14,6 +14,7 @@
 #' @param make_db Logical; if \code{TRUE}, will make an Arrow dataset out of the downloaded table.
 #' @param format Format of the dataset, if \code{make_db} is \code{TRUE}.
 #' @param return_table Logical; if \code{FALSE}, returns the path to the file, rather than the read-in table.
+#' @param ... Passes assitional arguments to \code{\link[vrook]{vroom}} when reading in tables.
 #' @param overwrite Logical; if \code{TRUE}, overwrites any existing files (raw and prepared).
 #' @return The original table (if \code{return_table} is \code{TRUE}; as a \code{tibble}), an opened dataset
 #' (if the path to the dataset exists), or the path to the downloaded file.
@@ -25,7 +26,7 @@
 #' @export
 
 download_patentsview_bulk <- function(table, dir = tempdir(), pregrant = FALSE, partition = NULL, make_db = FALSE,
-                                      format = "parquet", return_table = TRUE, overwrite = FALSE) {
+                                      format = "parquet", return_table = TRUE, ..., overwrite = FALSE) {
   url <- paste0(
     "https://s3.amazonaws.com/data.patentsview.org/",
     if (pregrant) "pregrant_publications" else "download",
@@ -47,7 +48,7 @@ download_patentsview_bulk <- function(table, dir = tempdir(), pregrant = FALSE, 
   if (missing(make_db) && (!missing(partition) || !missing(format))) make_db <- TRUE
   if (missing(return_table) && make_db) return_table <- FALSE
   if (make_db) {
-    raw <- arrow::read_delim_arrow(file, delim = "\t", escape_backslash = TRUE)
+    raw <- vroom::vroom(file, delim = "\t", show_col_types = FALSE, ...)
     if (is.null(partition)) {
       partition <- names(which.min(abs(20 - vapply(raw, function(x) length(unique(x)), 0))))
     } else if (is.list(partition)) {
@@ -63,7 +64,7 @@ download_patentsview_bulk <- function(table, dir = tempdir(), pregrant = FALSE, 
   } else {
     if (return_table) {
       if (is.null(raw)) {
-        arrow::read_delim_arrow(file, delim = "\t", escape_backslash = TRUE)
+        vroom::vroom(file, delim = "\t", show_col_types = FALSE, ...)
       } else {
         raw
       }

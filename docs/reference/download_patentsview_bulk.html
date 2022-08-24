@@ -64,7 +64,7 @@ make an Arrow dataset from it.</p>
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">download_patentsview_bulk</span><span class="op">(</span><span class="va">table</span>, dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, pregrant <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  partition <span class="op">=</span> <span class="cn">NULL</span>, make_db <span class="op">=</span> <span class="cn">FALSE</span>, format <span class="op">=</span> <span class="st">"parquet"</span>,</span>
-<span>  return_table <span class="op">=</span> <span class="cn">TRUE</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>  return_table <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -99,6 +99,10 @@ a column with the number of unique values closest to 20.</p></dd>
 
 <dt>return_table</dt>
 <dd><p>Logical; if <code>FALSE</code>, returns the path to the file, rather than the read-in table.</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Passes assitional arguments to <code>vroom</code> when reading in tables.</p></dd>
 
 
 <dt>overwrite</dt>

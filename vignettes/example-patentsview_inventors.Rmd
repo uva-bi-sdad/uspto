@@ -8,7 +8,7 @@ vignette: >
 editor_options: 
   chunk_output_type: console
 ---
-
+* 
 *Built with R 
 `r getRversion()`*
 
@@ -50,6 +50,9 @@ The first step toward answering this question is to join the table listing inven
 details (which includes a name-based sex prediction) with that associating inventors
 with patents:
 ```{r}
+# you may need to increase your download timeout, depending on your connection
+options(timeout = 300)
+
 # start with inventors
 inventors <- as.data.frame(download_patentsview_bulk("inventor", outDir))
 
@@ -91,7 +94,7 @@ wipo_summary <- wipo_summary[order(-wipo_summary$Any_Female_Proportion), ]
 # add category titles
 wipo_field <- as.data.frame(download_patentsview_bulk("wipo_field", outDir))
 rownames(wipo_field) <- wipo_field$id
-rownames(wipo_summary) <- wipo_field[rownames(wipo_summary), "field_title"]
+wipo_summary$Title <- wipo_field[rownames(wipo_summary), "field_title"]
 
 kable(wipo_summary, col.names = gsub("_", " ", colnames(wipo_summary), fixed = TRUE))
 ```
@@ -123,5 +126,42 @@ uspc_field <- as.data.frame(download_patentsview_bulk("mainclass_current", outDi
 rownames(uspc_field) <- uspc_field$id
 uspc_summary$Title <- uspc_field[rownames(uspc_summary), "title"]
 
-kable(uspc_summary, col.names = gsub("_", " ", colnames(uspc_summary), fixed = TRUE))
+# 20 categories with the highest and lowest proportion of any female inventor
+kable(
+  uspc_summary[c(1:20, 1:20 + nrow(uspc_summary) - 20), ],
+  col.names = gsub("_", " ", colnames(uspc_summary), fixed = TRUE)
+)
+```
+
+### How have those category breakdowns changed over time?
+
+To get at this question, we'll need to associate a date with each patent number:
+```{r}
+# start with the main patents file
+patents <- download_patentsview_bulk("patent", outDir)
+all_years <- structure(substr(patents$date, 1, 4), names = patents$number)
+
+# select those that are also found in the USPC set
+uspc_year <- all_years[names(all_years) %in% rownames(inventors_uspc)]
+
+# use this set of years to break down the overall summaries
+uspc_yearly_summaries <- do.call(rbind, lapply(sort(unique(uspc_year)), function(year) {
+  d <- inventors_uspc[names(which(uspc_year == year)), ]
+  r <- data.frame(
+    Any_Female = colSums(d[d[, 1] != 0, -1] != 0, na.rm = TRUE),
+    No_Female = colSums(d[d[, 1] == 0, -1] != 0, na.rm = TRUE)
+  )
+  structure(c(as.numeric(year), r$Any_Female / rowSums(r)), names = c("Year", rownames(r)))
+}))
+uspc_yearly_summaries[is.na(uspc_yearly_summaries)] <- 0
+
+# plot categories with the most positive and negative trends
+library(splot)
+trends <- sort(cor(uspc_yearly_summaries[, -1], uspc_yearly_summaries[, 1])[, 1], TRUE)
+splot(
+  uspc_yearly_summaries[, names(trends[c(1:5, 1:4 + length(trends) - 4)])] ~ uspc_yearly_summaries[, 1],
+  lines = "spline", levels = list(mv = uspc_field[names(trends[c(1:5, 1:4 + length(trends) - 4)]), "title"]),
+  title = "Proportion of Female Inventors Over Time", laby = "Proportion of Patents With Any Female Inventor",
+  labx = "Year", myl = c(0, .4), leg.title = "U.S. Patent Classification"
+)
 ```

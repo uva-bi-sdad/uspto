@@ -6,7 +6,7 @@
 \usage{
 download_patentsview_bulk(table, dir = tempdir(), pregrant = FALSE,
   partition = NULL, make_db = FALSE, format = "parquet",
-  return_table = TRUE, overwrite = FALSE)
+  return_table = TRUE, ..., overwrite = FALSE)
 }
 \arguments{
 \item{table}{Name of the table to download, as listed on the
@@ -26,6 +26,8 @@ a column with the number of unique values closest to 20.}
 \item{format}{Format of the dataset, if \code{make_db} is \code{TRUE}.}
 
 \item{return_table}{Logical; if \code{FALSE}, returns the path to the file, rather than the read-in table.}
+
+\item{...}{Passes assitional arguments to \code{\link[vrook]{vroom}} when reading in tables.}
 
 \item{overwrite}{Logical; if \code{TRUE}, overwrites any existing files (raw and prepared).}
 }
