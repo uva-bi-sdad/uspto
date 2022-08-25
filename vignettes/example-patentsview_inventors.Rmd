@@ -1,14 +1,14 @@
 ---
-title: "Analyze inventor features using PatentsView data"
+title: "Analyze Inventor Features Using PatentsView Data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Analyze inventor features using PatentsView data}
+  %\VignetteIndexEntry{Analyze Inventor Features Using PatentsView Data}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
 ---
-* 
+
 *Built with R 
 `r getRversion()`*
 
@@ -18,13 +18,15 @@ editor_options:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.height = 5,
+  fig.height = 5.5,
   fig.width = 8.84,
   dev = "CairoSVG",
   fig.ext = "svg"
 )
 library(uspto)
 library(knitr)
+library(lusilab)
+library(sf)
 outDir <- "../patentsview/"
 if (!dir.exists(outDir)) outDir <- "../../patentsview/"
 ```
@@ -46,18 +48,75 @@ outDir <- "../patentsview/"
 
 ## Which patent categories have most and fewest female inventors?
 
-The first step toward answering this question is to join the table listing inventor
-details (which includes a name-based sex prediction) with that associating inventors
-with patents:
+The first step toward answering this question is to assign a sex to inventors
+based on their given name. The inventors table includes USPTO's assignment,
+which we'll start with:
 ```{r}
 # you may need to increase your download timeout, depending on your connection
 options(timeout = 300)
 
-# start with inventors
 inventors <- as.data.frame(download_patentsview_bulk("inventor", outDir))
+```
+
+Now, we can add a few of our own prediction methods, including one based on
+the included USPTO flags:
+```{r}
+# add a standardized version of given names
+inventors$name_first[is.na(inventors$name_first)] <- ""
+inventors$given <- sub(
+  "^(.)", "\\U\\1", gsub("^([a-z-]{,6}[.-])+ | +.*", "", tolower(inventors$name_first)),
+  perl = TRUE
+)
+
+# associate a sex with each unique given name
+## install if needed: remotes::install_github("miserman/lusilab")
+library(lusilab)
+inventor_sex <- predict_demographics(unique(inventors$given), dir = paste0(dirname(outDir), "/names"))
+inventor_sex <- inventor_sex[!duplicated(inventor_sex$given), ]
+
+# get categorical predictions
+prob_cols <- grep("^prob_", colnames(inventor_sex), value = TRUE)
+inventor_sex_preds <- inventor_sex[, prob_cols]
+dimnames(inventor_sex_preds) <- list(
+  inventor_sex$given,
+  sub("prob", "pred", prob_cols, fixed = TRUE)
+)
+inventor_sex_preds[inventor_sex_preds > .5] <- 1
+inventor_sex_preds[inventor_sex_preds < .5] <- 0
+```
+
+Before adding this to the inventors data, we can compare these different methods with
+the USPTO assignments:
+```{r}
+# start with unique, assignment-processed inventors
+unique_inventors <- inventors[inventors$attribution_status != 98, ]
+unique_inventors <- unique_inventors[
+  !duplicated(unique_inventors$id) & unique_inventors$given %in% rownames(inventor_sex_preds),
+  c("given", "male_flag")
+]
+
+# reverse the male flag, and add the other predictions
+unique_inventors$male_flag[is.na(unique_inventors$male_flag)] <- .5
+unique_inventors$pred_fem_patentsview <- 1 - unique_inventors$male_flag
+unique_inventors <- cbind(unique_inventors[, c(1, 3)], inventor_sex_preds[unique_inventors$given, ])
+
+kable(
+  data.frame(
+    "Proportion Sexed" = colMeans(unique_inventors[, -1] != .5),
+    "Accuracy to PatentsView" = colMeans(unique_inventors[, -1] == unique_inventors[, 2]),
+    check.names = FALSE
+  ),
+  caption = "Sex Predition Method Comparisons"
+)
+```
+
+Now we can move forward with the method with most coverage:
+```{r}
+# add assigned sex to inventors data
+inventors$pred_fem <- inventor_sex_preds[inventors$given, "pred_fem_uspto"]
 
 ## focus on just sexed inventors
-inventors <- inventors[inventors$attribution_status == 1, ]
+inventors <- inventors[!is.na(inventors$pred_fem) & inventors$pred_fem != .5, ]
 rownames(inventors) <- inventors$id
 
 # add patent IDs
@@ -66,8 +125,10 @@ patent_inventor <- patent_inventor[patent_inventor$inventor_id %in% inventors$id
 inventors <- cbind(inventors[patent_inventor$inventor_id, -1], patent_inventor)
 
 # count inventors predicted to be female in each patent
-female_inventors <- tapply(inventors$male_flag == 0, inventors$patent_id, sum)
+female_inventors <- tapply(inventors$pred_fem == 1, inventors$patent_id, sum)
 ```
+
+### World Intellectual Property Organization
 
 Now we can add patent category information, to get breakdowns of classes by inventor sex.
 There are multiple classification schemes, but we can start with the
@@ -96,8 +157,14 @@ wipo_field <- as.data.frame(download_patentsview_bulk("wipo_field", outDir))
 rownames(wipo_field) <- wipo_field$id
 wipo_summary$Title <- wipo_field[rownames(wipo_summary), "field_title"]
 
-kable(wipo_summary, col.names = gsub("_", " ", colnames(wipo_summary), fixed = TRUE))
+kable(
+  wipo_summary,
+  col.names = gsub("_", " ", colnames(wipo_summary), fixed = TRUE),
+  caption = "World Intellectual Property Organization Categories"
+)
 ```
+
+### United States Patent Classification
 
 For a more refined classification, we might look at the United States Patent Classification (USPC),
 which is most closely related to examination process:
@@ -126,23 +193,28 @@ uspc_field <- as.data.frame(download_patentsview_bulk("mainclass_current", outDi
 rownames(uspc_field) <- uspc_field$id
 uspc_summary$Title <- uspc_field[rownames(uspc_summary), "title"]
 
-# 20 categories with the highest and lowest proportion of any female inventor
 kable(
   uspc_summary[c(1:20, 1:20 + nrow(uspc_summary) - 20), ],
-  col.names = gsub("_", " ", colnames(uspc_summary), fixed = TRUE)
+  col.names = gsub("_", " ", colnames(uspc_summary), fixed = TRUE),
+  caption = paste(
+    "U.S. Patent Classification categories with the highest and lowest",
+    "proportion of any female inventor"
+  )
 )
 ```
 
-### How have those category breakdowns changed over time?
+### How have category breakdowns changed over time?
 
 To get at this question, we'll need to associate a date with each patent number:
 ```{r}
-# start with the main patents file
+# start with all patent information
 patents <- download_patentsview_bulk("patent", outDir)
-all_years <- structure(substr(patents$date, 1, 4), names = patents$number)
 
-# select those that are also found in the USPC set
-uspc_year <- all_years[names(all_years) %in% rownames(inventors_uspc)]
+# associate a date with each patent number
+all_dates <- structure(patents$date, names = patents$number)
+
+# get years, and focus on only those found in the USPC set
+uspc_year <- substr(all_dates[names(all_dates) %in% rownames(inventors_uspc)], 1, 4)
 
 # use this set of years to break down the overall summaries
 uspc_yearly_summaries <- do.call(rbind, lapply(sort(unique(uspc_year)), function(year) {
@@ -154,14 +226,246 @@ uspc_yearly_summaries <- do.call(rbind, lapply(sort(unique(uspc_year)), function
   structure(c(as.numeric(year), r$Any_Female / rowSums(r)), names = c("Year", rownames(r)))
 }))
 uspc_yearly_summaries[is.na(uspc_yearly_summaries)] <- 0
+uspc_yearly_summaries <- uspc_yearly_summaries[, colSums(uspc_yearly_summaries) != 0]
 
 # plot categories with the most positive and negative trends
 library(splot)
 trends <- sort(cor(uspc_yearly_summaries[, -1], uspc_yearly_summaries[, 1])[, 1], TRUE)
 splot(
-  uspc_yearly_summaries[, names(trends[c(1:5, 1:4 + length(trends) - 4)])] ~ uspc_yearly_summaries[, 1],
-  lines = "spline", levels = list(mv = uspc_field[names(trends[c(1:5, 1:4 + length(trends) - 4)]), "title"]),
-  title = "Proportion of Female Inventors Over Time", laby = "Proportion of Patents With Any Female Inventor",
+  uspc_yearly_summaries[, names(trends[c(1:6, 1:3 + length(trends) - 3)])] ~ uspc_yearly_summaries[, 1],
+  lines = "spline", levels = list(mv = uspc_field[names(trends[c(1:6, 1:3 + length(trends) - 3)]), "title"]),
+  title = "Proportion of Female-Assigned Inventors over Time",
+  laby = "Proportion of Patents With Any Female-Assigned Inventor",
   labx = "Year", myl = c(0, .4), leg.title = "U.S. Patent Classification"
+)
+```
+
+### Cooperative Patent Classifications
+
+Cooperative Patent Classifications (CPC) might give an even more refined look,
+and could be compared across patent offices:
+```{r}
+# get the patent x CPC category matrix
+categories_cpc <- patentsview_class_matrix(
+  "cpc_current", paste0(outDir, "cpc_current_matrix.rds"),
+  dir = outDir
+)
+dim(categories_cpc)
+
+# join to the inventors matrix
+inventors_cpc <- female_inventors[names(female_inventors) %in% rownames(categories_cpc)]
+inventors_cpc <- cbind(as.numeric(inventors_cpc), categories_cpc[names(inventors_cpc), ])
+
+# and get category breakdowns by inventor sex
+cpc_summary <- data.frame(
+  Any_Female = colSums(inventors_cpc[inventors_cpc[, 1] != 0, -1] != 0),
+  No_Female = colSums(inventors_cpc[inventors_cpc[, 1] == 0, -1] != 0)
+)
+cpc_summary$Any_Female_Proportion <- cpc_summary$Any_Female / rowSums(cpc_summary)
+cpc_summary <- cpc_summary[order(-cpc_summary$Any_Female_Proportion), ]
+
+# add category titles
+cpc_group <- as.data.frame(download_patentsview_bulk("cpc_group", outDir))
+rownames(cpc_group) <- cpc_group$id
+cpc_summary <- cpc_summary[rownames(cpc_summary) %in% cpc_group$id, ]
+cpc_summary$Title <- cpc_group[rownames(cpc_summary), "title"]
+
+cpc_selection <- names(which(rowSums(cpc_summary[, 1:2]) > 5))
+cpc_selection <- cpc_selection[c(1:20, 1:20 + length(cpc_selection) - 20)]
+kable(
+  cpc_summary[cpc_selection, ],
+  col.names = gsub("_", " ", colnames(cpc_summary), fixed = TRUE),
+  caption = paste(
+    "Cooperative Patent Classifications: 20 categories with the highest and lowest",
+    "proportion of any female inventor with at least 5 associated patents"
+  )
+)
+```
+
+## Where are there most and fewest female inventors?
+
+The locations table associates inventor IDs with location IDs:
+```{r}
+locations <- as.data.frame(download_patentsview_bulk("location", outDir))
+locations$state_fips[!is.na(locations$state_fips)] <- formatC(
+  locations$state_fips[!is.na(locations$state_fips)],
+  width = 2, flag = 0, format = "d"
+)
+locations$county_fips[!is.na(locations$county_fips)] <- formatC(
+  locations$county_fips[!is.na(locations$county_fips)],
+  width = 5, flag = 0, format = "d"
+)
+
+# we can align this with our inventors data for inventor sex
+rownames(locations) <- locations$id
+located_inventors <- inventors[!is.na(inventors$location_id), ]
+locations <- locations[located_inventors$location_id, ]
+```
+
+Inventor location is recorded as part of each patent, which means
+inventors may have multiple locations over time. For an initial look,
+we can focus only on each inventors most recent location:
+```{r}
+# add date information to inventor data
+inventors$date <- structure(patents$date, names = patents$number)[inventors$patent_id]
+
+# sort inventors by date, then add location information
+inventors_last_seen <- inventors[order(inventors$date, decreasing = TRUE), ]
+inventors_last_seen <- inventors_last_seen[!duplicated(inventors_last_seen$inventor_id), ]
+inventors_last_seen <- inventors_last_seen[inventors_last_seen$location_id %in% locations$id, ]
+inventors_last_seen <- cbind(inventors_last_seen, locations[inventors_last_seen$location_id, ])
+```
+
+Now we can look at high-level summaries of locations, like we did with patent classes:
+```{r}
+# top countries
+breakdown_countries <- as.data.frame(t(vapply(
+  split(inventors_last_seen$pred_fem, inventors_last_seen$country),
+  function(d) c(Female = sum(d == 1), Male = sum(d == 0)),
+  c(0, 0)
+)))
+breakdown_countries$Proportion_Female <- breakdown_countries$Female / rowSums(breakdown_countries)
+breakdown_countries <- breakdown_countries[order(-breakdown_countries$Proportion_Female), ]
+kable(
+  breakdown_countries[rowSums(breakdown_countries[, 1:2]) > 1e4, ],
+  col.names = gsub("_", " ", colnames(breakdown_countries), fixed = TRUE),
+  caption = "Countries with at least 10,000 associated inventors"
+)
+# top states
+breakdown_states <- as.data.frame(t(vapply(
+  split(inventors_last_seen$pred_fem, inventors_last_seen$state_fips),
+  function(d) c(Female = sum(d == 1), Male = sum(d == 0)),
+  c(0, 0)
+)))
+breakdown_states$Proportion_Female <- breakdown_states$Female / rowSums(breakdown_states)
+breakdown_states <- breakdown_states[order(-breakdown_states$Proportion_Female), ]
+## install if needed: remotes::install_github("uva-bi-sdad/catchment")
+library(catchment)
+states <- download_census_shapes(paste0(dirname(outDir), "/maps"))
+state_names <- structure(states$NAME, names = states$STATEFP)
+breakdown_states <- breakdown_states[rownames(breakdown_states) %in% names(state_names), ]
+rownames(breakdown_states) <- state_names[rownames(breakdown_states)]
+kable(
+  breakdown_states[rowSums(breakdown_states[, 1:2]) > 1e4, ],
+  col.names = gsub("_", " ", colnames(breakdown_states), fixed = TRUE),
+  caption = "States with at least 10,000 associated inventors"
+)
+# map of counties
+library(leaflet)
+library(sf)
+counties <- st_transform(download_census_shapes(
+  paste0(dirname(outDir), "/maps"),
+  entity = "county"
+), "WGS84")
+counties$NAME <- paste0(counties$NAME, ", ", state_names[counties$STATEFP])
+
+breakdown_counties <- as.data.frame(t(vapply(
+  split(inventors_last_seen$pred_fem, inventors_last_seen$county_fips),
+  function(d) c(Female = sum(d == 1), Male = sum(d == 0)),
+  c(0, 0)
+)))
+breakdown_counties$Total <- rowSums(breakdown_counties)
+breakdown_counties$Proportion_Female <- breakdown_counties$Female / breakdown_counties$Total
+breakdown_counties$Capped_Total <- breakdown_counties$Total
+breakdown_counties$Capped_Total[breakdown_counties$Capped_Total > 5e4] <- 1e5
+breakdown_counties <- breakdown_counties[counties$GEOID, ]
+
+pal <- colorNumeric(
+  scico::scico(255, direction = -1, palette = "vik"), breakdown_counties$Proportion_Female
+)
+pal_total <- colorNumeric(
+  scico::scico(255, direction = -1, palette = "lajolla"), breakdown_counties$Capped_Total
+)
+leaflet(counties, options = leafletOptions(attributionControl = FALSE)) |>
+  addProviderTiles("CartoDB.Positron") |>
+  setView(-95.5810546875, 39.5040407055842, 4) |>
+  addControl("Proportion of Patents with Any Inventor Assigned Female", "topright") |>
+  addLayersControl(position = "topleft", overlayGroups = c("Total", "Proportion")) |>
+  addLegend(
+    "bottomright", pal_total, breakdown_counties$Capped_Total,
+    opacity = 1,
+    title = "Totals", group = "Total"
+  ) |>
+  addPolygons(
+    fillColor = pal_total(breakdown_counties$Capped_Total),
+    fillOpacity = .8, weight = 1, color = "#000", highlightOptions = highlightOptions(color = "#fff"),
+    group = "Total", label = paste0("County: ", counties$NAME, "; Total: ", breakdown_counties$Total)
+  ) |>
+  hideGroup("Total") |>
+  addLegend(
+    "bottomright", pal, breakdown_counties$Proportion_Female,
+    opacity = 1,
+    title = "Proportions", group = "Proportion"
+  ) |>
+  addPolygons(
+    fillColor = pal(breakdown_counties$Proportion_Female), fillOpacity = .8, weight = 1, color = "#000",
+    highlightOptions = highlightOptions(color = "#fff"),
+    group = "Proportion", label = paste0(
+      "County: ", counties$NAME,
+      "; Female: ", breakdown_counties$Female,
+      "; Male: ", breakdown_counties$Male,
+      "; Proportion Female: ", round(breakdown_counties$Proportion_Female, 3)
+    )
+  )
+```
+
+### How have inventors migrated?
+
+Instead of collapsing inventors to a single location, we could also look for instances
+of inventors moving between states, and see which moves are most common:
+```{r, fig.height=10}
+# start with all of located inventors
+inventor_states <- cbind(
+  located_inventors[, c("inventor_id", "pred_fem")],
+  date = all_dates[located_inventors$patent_id],
+  state = state_names[locations$state_fips]
+)
+inventor_states <- inventor_states[!is.na(inventor_states$state), ]
+inventor_states <- inventor_states[!is.na(inventor_states$date), ]
+
+# select only those that are associated with multiple patents
+inventor_states <- inventor_states[
+  inventor_states$inventor_id %in% inventor_states$inventor_id[duplicated(inventor_states$inventor_id)],
+]
+inventor_states <- inventor_states[order(inventor_states$date, decreasing = TRUE), ]
+
+# then look at each inventor to see if they have more than one state.
+# if they do, record their transition; previous state -> new state
+inventor_history <- lapply(split(inventor_states, inventor_states$inventor_id), function(d) {
+  if (!all(d$state == d$state[[1]])) {
+    res <- NULL
+    states <- d$state
+    for (i in seq_len(nrow(d) - 1)) {
+      if (states[[i]] != states[[i + 1]]) res <- c(paste(states[[i + 1]], "->", states[[i]]), res)
+    }
+    res
+  }
+})
+inventor_moves <- unlist(inventor_history)
+inventor_moves <- tapply(inventor_moves, inventor_moves, length)
+inventor_transitions <- data.frame(
+  do.call(rbind, strsplit(names(inventor_moves), " -> ", fixed = TRUE)),
+  inventor_moves
+)
+colnames(inventor_transitions) <- c("from", "to", "count")
+
+# use these transitions to make a origin x destination matrix
+states <- sort(unique(c(inventor_transitions$from, inventor_transitions$to)))
+migrations <- matrix(0, length(states), length(states), dimnames = list(states, states))
+for (r in seq_len(nrow(inventor_transitions))) {
+  move <- inventor_transitions[r, ]
+  migrations[move$from, move$to] <- move$count
+}
+migrations <- migrations[rowSums(migrations) > 1e4, rowSums(migrations) > 1e4]
+migrations <- migrations[order(-rowSums(migrations)), order(-rowSums(migrations))]
+
+# and make a chord diagram out of the most frequently involved states
+## devtools::install_github("mattflor/chorddiag")
+library(chorddiag)
+chorddiag(
+  migrations,
+  groupColors = scico::scico(nrow(migrations), palette = "vik")[
+    order(breakdown_states[rownames(migrations), "Proportion_Female"])
+  ], showTicks = FALSE, groupnamePadding = 5
 )
 ```

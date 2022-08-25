@@ -27,7 +27,7 @@ a column with the number of unique values closest to 20.}
 
 \item{return_table}{Logical; if \code{FALSE}, returns the path to the file, rather than the read-in table.}
 
-\item{...}{Passes assitional arguments to \code{\link[vrook]{vroom}} when reading in tables.}
+\item{...}{Passes additional arguments to \code{\link[vrook]{vroom}} when reading in tables.}
 
 \item{overwrite}{Logical; if \code{TRUE}, overwrites any existing files (raw and prepared).}
 }

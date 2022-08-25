@@ -14,7 +14,7 @@
 #' @param make_db Logical; if \code{TRUE}, will make an Arrow dataset out of the downloaded table.
 #' @param format Format of the dataset, if \code{make_db} is \code{TRUE}.
 #' @param return_table Logical; if \code{FALSE}, returns the path to the file, rather than the read-in table.
-#' @param ... Passes assitional arguments to \code{\link[vrook]{vroom}} when reading in tables.
+#' @param ... Passes additional arguments to \code{\link[vrook]{vroom}} when reading in tables.
 #' @param overwrite Logical; if \code{TRUE}, overwrites any existing files (raw and prepared).
 #' @return The original table (if \code{return_table} is \code{TRUE}; as a \code{tibble}), an opened dataset
 #' (if the path to the dataset exists), or the path to the downloaded file.
@@ -47,7 +47,7 @@ download_patentsview_bulk <- function(table, dir = tempdir(), pregrant = FALSE, 
   raw <- NULL
   if (missing(make_db) && (!missing(partition) || !missing(format))) make_db <- TRUE
   if (missing(return_table) && make_db) return_table <- FALSE
-  if (make_db) {
+  if (make_db && (overwrite || !dir.exists(dbd))) {
     raw <- vroom::vroom(file, delim = "\t", show_col_types = FALSE, ...)
     if (is.null(partition)) {
       partition <- names(which.min(abs(20 - vapply(raw, function(x) length(unique(x)), 0))))
