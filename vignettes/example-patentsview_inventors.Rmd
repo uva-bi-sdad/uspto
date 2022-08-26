@@ -35,7 +35,8 @@ if (!dir.exists(outDir)) outDir <- "../../patentsview/"
 td {white-space: nowrap}
 ```
 
-This example looks at a set of patent applications based on an initial seed set.
+This example explores the [PatentsView](https://patentsview.org) bulk tables, with a focus on
+assigned inventor sex.
 
 ## Setup
 
