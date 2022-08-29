@@ -18,7 +18,7 @@ editor_options:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.height = 5.5,
+  fig.height = 6,
   fig.width = 8.84,
   dev = "CairoSVG",
   fig.ext = "svg"
@@ -32,6 +32,7 @@ if (!dir.exists(outDir)) outDir <- "../../patentsview/"
 ```
 
 ```{css, echo = FALSE}
+.table {margin-bottom: 40px}
 td {white-space: nowrap}
 ```
 
@@ -62,62 +63,79 @@ inventors <- as.data.frame(download_patentsview_bulk("inventor", outDir))
 Now, we can add a few of our own prediction methods, including one based on
 the included USPTO flags:
 ```{r}
-# add a standardized version of given names
-inventors$name_first[is.na(inventors$name_first)] <- ""
-inventors$given <- sub(
-  "^(.)", "\\U\\1", gsub("^([a-z-]{,6}[.-])+ | +.*", "", tolower(inventors$name_first)),
-  perl = TRUE
-)
-
 # associate a sex with each unique given name
-## install if needed: remotes::install_github("miserman/lusilab")
-library(lusilab)
-inventor_sex <- predict_demographics(unique(inventors$given), dir = paste0(dirname(outDir), "/names"))
-inventor_sex <- inventor_sex[!duplicated(inventor_sex$given), ]
+inventor_sex_file <- paste0(outDir, "inventor_sex.csv.xz")
+if (file.exists(inventor_sex_file)) {
+  inventor_sex <- vroom::vroom(inventor_sex_file, show_col_types = FALSE)
+} else {
+  # add a standardized version of given names
+  inventors$name_first[is.na(inventors$name_first)] <- ""
+  inventors$given <- sub(
+    "^(.)", "\\U\\1", gsub("^([a-z-]{,6}[.-])+ | +.*", "", tolower(inventors$name_first)),
+    perl = TRUE
+  )
+  inventors$name_last[is.na(inventors$name_last)] <- ""
+  inventors$family <- sub(
+    "^(.)", "\\U\\1", gsub("^([a-z-]{,6}[.-])+ | +.*", "", tolower(inventors$name_last)),
+    perl = TRUE
+  )
+
+  # reverse male flag
+  inventors$pred_fem_patentsview <- inventors$male_flag
+  inventors$pred_fem_patentsview[is.na(inventors$pred_fem_patentsview)] <- .5
+  inventors$pred_fem_patentsview <- 1 - inventors$pred_fem_patentsview
+
+  ## install if needed: remotes::install_github("miserman/lusilab")
+  library(lusilab)
+  inventor_sex <- cbind(
+    inventors[, c("id", "given", "family", "pred_fem_patentsview")], predict_demographics(
+      inventors$given, inventors$name_last,
+      dir = paste0(dirname(outDir), "/names")
+    )[, -(1:3)]
+  )
+
+  ## make aggregate predictor
+  count_vars <- grep("count_", colnames(inventor_sex), fixed = TRUE, value = TRUE)
+  inventor_sex$prob_fem <- rowSums(
+    inventor_sex[, count_vars] * inventor_sex[, sub("count", "prob_fem", count_vars, fixed = TRUE)]
+  ) / rowSums(inventor_sex[, count_vars])
+
+  vroom::vroom_write(inventor_sex, inventor_sex_file, ",")
+}
 
 # get categorical predictions
 prob_cols <- grep("^prob_", colnames(inventor_sex), value = TRUE)
-inventor_sex_preds <- inventor_sex[, prob_cols]
+inventor_sex_preds <- as.data.frame(inventor_sex[, prob_cols])
 dimnames(inventor_sex_preds) <- list(
-  inventor_sex$given,
+  inventor_sex$id,
   sub("prob", "pred", prob_cols, fixed = TRUE)
 )
 inventor_sex_preds[inventor_sex_preds > .5] <- 1
 inventor_sex_preds[inventor_sex_preds < .5] <- 0
 ```
 
-Before adding this to the inventors data, we can compare these different methods with
-the USPTO assignments:
+First, we can compare these different methods with the USPTO assignments:
 ```{r}
-# start with unique, assignment-processed inventors
-unique_inventors <- inventors[inventors$attribution_status != 98, ]
-unique_inventors <- unique_inventors[
-  !duplicated(unique_inventors$id) & unique_inventors$given %in% rownames(inventor_sex_preds),
-  c("given", "male_flag")
-]
-
-# reverse the male flag, and add the other predictions
-unique_inventors$male_flag[is.na(unique_inventors$male_flag)] <- .5
-unique_inventors$pred_fem_patentsview <- 1 - unique_inventors$male_flag
-unique_inventors <- cbind(unique_inventors[, c(1, 3)], inventor_sex_preds[unique_inventors$given, ])
-
 kable(
   data.frame(
-    "Proportion Sexed" = colMeans(unique_inventors[, -1] != .5),
-    "Accuracy to PatentsView" = colMeans(unique_inventors[, -1] == unique_inventors[, 2]),
+    "Proportion Sexed" = colMeans(inventor_sex_preds != .5),
+    "Accuracy of Sexed to PatentsView" = colMeans(vapply(
+      inventor_sex_preds, function(x) x != .5 & x == inventor_sex$pred_fem_patentsview,
+      logical(nrow(inventor_sex))
+    )),
     check.names = FALSE
   ),
   caption = "Sex Predition Method Comparisons"
 )
 ```
 
-Now we can move forward with the method with most coverage:
+Now we can move forward with the method with the aggregate prediction:
 ```{r}
 # add assigned sex to inventors data
-inventors$pred_fem <- inventor_sex_preds[inventors$given, "pred_fem_uspto"]
+inventors$pred_fem <- inventor_sex_preds$pred_fem
 
 ## focus on just sexed inventors
-inventors <- inventors[!is.na(inventors$pred_fem) & inventors$pred_fem != .5, ]
+inventors <- inventors[inventors$pred_fem != .5, ]
 rownames(inventors) <- inventors$id
 
 # add patent IDs
@@ -150,8 +168,10 @@ wipo_summary <- data.frame(
   Any_Female = colSums(inventors_wipo[inventors_wipo[, 1] != 0, -1] != 0),
   No_Female = colSums(inventors_wipo[inventors_wipo[, 1] == 0, -1] != 0)
 )
-wipo_summary$Any_Female_Proportion <- wipo_summary$Any_Female / rowSums(wipo_summary)
-wipo_summary <- wipo_summary[order(-wipo_summary$Any_Female_Proportion), ]
+wipo_summary <- cbind(wipo_summary, sweep(wipo_summary, 2, colSums(wipo_summary), "/") * 100)
+colnames(wipo_summary)[3:4] <- c("Any_Female_Percent", "No_Female_Percent")
+wipo_summary$Difference <- wipo_summary$Any_Female_Percent - wipo_summary$No_Female_Percent
+wipo_summary <- wipo_summary[order(-wipo_summary$Difference), ]
 
 # add category titles
 wipo_field <- as.data.frame(download_patentsview_bulk("wipo_field", outDir))
@@ -160,6 +180,7 @@ wipo_summary$Title <- wipo_field[rownames(wipo_summary), "field_title"]
 
 kable(
   wipo_summary,
+  digits = 3,
   col.names = gsub("_", " ", colnames(wipo_summary), fixed = TRUE),
   caption = "World Intellectual Property Organization Categories"
 )
@@ -186,8 +207,10 @@ uspc_summary <- data.frame(
   Any_Female = colSums(inventors_uspc[inventors_uspc[, 1] != 0, -1] != 0),
   No_Female = colSums(inventors_uspc[inventors_uspc[, 1] == 0, -1] != 0)
 )
-uspc_summary$Any_Female_Proportion <- uspc_summary$Any_Female / rowSums(uspc_summary)
-uspc_summary <- uspc_summary[order(-uspc_summary$Any_Female_Proportion), ]
+uspc_summary <- cbind(uspc_summary, sweep(uspc_summary, 2, colSums(uspc_summary), "/") * 100)
+colnames(uspc_summary)[3:4] <- c("Any_Female_Percent", "No_Female_Percent")
+uspc_summary$Difference <- uspc_summary$Any_Female_Percent - uspc_summary$No_Female_Percent
+uspc_summary <- uspc_summary[order(-uspc_summary$Difference), ]
 
 # add category titles
 uspc_field <- as.data.frame(download_patentsview_bulk("mainclass_current", outDir))
@@ -196,6 +219,7 @@ uspc_summary$Title <- uspc_field[rownames(uspc_summary), "title"]
 
 kable(
   uspc_summary[c(1:20, 1:20 + nrow(uspc_summary) - 20), ],
+  digits = 3,
   col.names = gsub("_", " ", colnames(uspc_summary), fixed = TRUE),
   caption = paste(
     "U.S. Patent Classification categories with the highest and lowest",
@@ -216,7 +240,11 @@ all_dates <- structure(patents$date, names = patents$number)
 
 # get years, and focus on only those found in the USPC set
 uspc_year <- substr(all_dates[names(all_dates) %in% rownames(inventors_uspc)], 1, 4)
+```
 
+Now we could look at trends in differences in the percent of female versus male assigned
+inventors:
+```{r}
 # use this set of years to break down the overall summaries
 uspc_yearly_summaries <- do.call(rbind, lapply(sort(unique(uspc_year)), function(year) {
   d <- inventors_uspc[names(which(uspc_year == year)), ]
@@ -224,7 +252,9 @@ uspc_yearly_summaries <- do.call(rbind, lapply(sort(unique(uspc_year)), function
     Any_Female = colSums(d[d[, 1] != 0, -1] != 0, na.rm = TRUE),
     No_Female = colSums(d[d[, 1] == 0, -1] != 0, na.rm = TRUE)
   )
-  structure(c(as.numeric(year), r$Any_Female / rowSums(r)), names = c("Year", rownames(r)))
+  r <- sweep(r, 2, colSums(r), "/") * 100
+  r$Difference <- r$Any_Female - r$No_Female
+  c(Year = as.numeric(year), t(r[3])[1, ])
 }))
 uspc_yearly_summaries[is.na(uspc_yearly_summaries)] <- 0
 uspc_yearly_summaries <- uspc_yearly_summaries[, colSums(uspc_yearly_summaries) != 0]
@@ -233,11 +263,40 @@ uspc_yearly_summaries <- uspc_yearly_summaries[, colSums(uspc_yearly_summaries) 
 library(splot)
 trends <- sort(cor(uspc_yearly_summaries[, -1], uspc_yearly_summaries[, 1])[, 1], TRUE)
 splot(
-  uspc_yearly_summaries[, names(trends[c(1:6, 1:3 + length(trends) - 3)])] ~ uspc_yearly_summaries[, 1],
-  lines = "spline", levels = list(mv = uspc_field[names(trends[c(1:6, 1:3 + length(trends) - 3)]), "title"]),
-  title = "Proportion of Female-Assigned Inventors over Time",
-  laby = "Proportion of Patents With Any Female-Assigned Inventor",
-  labx = "Year", myl = c(0, .4), leg.title = "U.S. Patent Classification"
+  uspc_yearly_summaries[, names(trends[c(1:5, 1:4 + length(trends) - 4)])] ~ uspc_yearly_summaries[, 1],
+  lines = "spline", levels = list(mv = uspc_field[names(trends[c(1:5, 1:4 + length(trends) - 4)]), "title"]),
+  title = "Inventor Distribution by Assigned Sex Per USPC Class Over Time",
+  laby = "Percent Female-Assigned Inventors - Male-Assigned Inventors",
+  labx = "Year", leg.title = "U.S. Patent Classification", myl = c(-.6, .7)
+)
+```
+
+This highlights categories that are trending toward more similar allocations of inventors by sex,
+and suggests there are no categories showing a strong trend toward increasing difference in
+inventor allocation by sex.
+
+We might also look at categories that show some trend in the percent of female-assigned inventors
+alone -- where a greater or lesser percentage of the female-assigned inventor workforce has been allocated:
+
+```{r}
+uspc_yearly_female_summaries <- do.call(rbind, lapply(sort(unique(uspc_year)), function(year) {
+  d <- inventors_uspc[names(which(uspc_year == year)), ]
+  r <- colSums(d[d[, 1] != 0, -1] != 0, na.rm = TRUE)
+  r <- r / sum(r) * 100
+  c(Year = as.numeric(year), r)
+}))
+uspc_yearly_female_summaries <- uspc_yearly_female_summaries[, colSums(uspc_yearly_female_summaries) != 0]
+
+trends_female <- sort(cor(uspc_yearly_female_summaries[, -1], uspc_yearly_female_summaries[, 1])[, 1], TRUE)
+splot(
+  uspc_yearly_female_summaries[, names(trends_female[c(1:7, 1:2 + length(trends_female) - 6)])] ~
+    uspc_yearly_female_summaries[, 1],
+  lines = "spline", levels = list(
+    mv = uspc_field[names(trends_female[c(1:7, 1:2 + length(trends_female) - 6)]), "title"]
+  ),
+  labels.trim = FALSE,
+  title = "Share of Female-Assigned Inventors Per USPC Class Over Time", lpos = "topleft",
+  laby = "Percent Female-Assigned Inventors", labx = "Year", leg.title = "U.S. Patent Classification"
 )
 ```
 
@@ -262,8 +321,10 @@ cpc_summary <- data.frame(
   Any_Female = colSums(inventors_cpc[inventors_cpc[, 1] != 0, -1] != 0),
   No_Female = colSums(inventors_cpc[inventors_cpc[, 1] == 0, -1] != 0)
 )
-cpc_summary$Any_Female_Proportion <- cpc_summary$Any_Female / rowSums(cpc_summary)
-cpc_summary <- cpc_summary[order(-cpc_summary$Any_Female_Proportion), ]
+cpc_summary <- cbind(cpc_summary, sweep(cpc_summary, 2, colSums(cpc_summary), "/") * 100)
+colnames(cpc_summary)[3:4] <- c("Any_Female_Percent", "No_Female_Percent")
+cpc_summary$Difference <- cpc_summary$Any_Female_Percent - cpc_summary$No_Female_Percent
+cpc_summary <- cpc_summary[order(-cpc_summary$Difference), ]
 
 # add category titles
 cpc_group <- as.data.frame(download_patentsview_bulk("cpc_group", outDir))
@@ -275,6 +336,7 @@ cpc_selection <- names(which(rowSums(cpc_summary[, 1:2]) > 5))
 cpc_selection <- cpc_selection[c(1:20, 1:20 + length(cpc_selection) - 20)]
 kable(
   cpc_summary[cpc_selection, ],
+  digits = 3,
   col.names = gsub("_", " ", colnames(cpc_summary), fixed = TRUE),
   caption = paste(
     "Cooperative Patent Classifications: 20 categories with the highest and lowest",
@@ -325,8 +387,13 @@ breakdown_countries <- as.data.frame(t(vapply(
   function(d) c(Female = sum(d == 1), Male = sum(d == 0)),
   c(0, 0)
 )))
-breakdown_countries$Proportion_Female <- breakdown_countries$Female / rowSums(breakdown_countries)
-breakdown_countries <- breakdown_countries[order(-breakdown_countries$Proportion_Female), ]
+breakdown_countries <- cbind(
+  breakdown_countries,
+  sweep(breakdown_countries, 2, colSums(breakdown_countries), "/") * 100
+)
+colnames(breakdown_countries)[3:4] <- c("Female_Percent", "Male_Percent")
+breakdown_countries$Difference <- breakdown_countries$Female_Percent - breakdown_countries$Male_Percent
+breakdown_countries <- breakdown_countries[order(-breakdown_countries$Difference), ]
 kable(
   breakdown_countries[rowSums(breakdown_countries[, 1:2]) > 1e4, ],
   col.names = gsub("_", " ", colnames(breakdown_countries), fixed = TRUE),
@@ -338,8 +405,13 @@ breakdown_states <- as.data.frame(t(vapply(
   function(d) c(Female = sum(d == 1), Male = sum(d == 0)),
   c(0, 0)
 )))
-breakdown_states$Proportion_Female <- breakdown_states$Female / rowSums(breakdown_states)
-breakdown_states <- breakdown_states[order(-breakdown_states$Proportion_Female), ]
+breakdown_states <- cbind(
+  breakdown_states,
+  sweep(breakdown_states, 2, colSums(breakdown_states), "/") * 100
+)
+colnames(breakdown_states)[3:4] <- c("Female_Percent", "Male_Percent")
+breakdown_states$Difference <- breakdown_states$Female_Percent - breakdown_states$Male_Percent
+breakdown_states <- breakdown_states[order(-breakdown_states$Difference), ]
 ## install if needed: remotes::install_github("uva-bi-sdad/catchment")
 library(catchment)
 states <- download_census_shapes(paste0(dirname(outDir), "/maps"))
@@ -365,23 +437,29 @@ breakdown_counties <- as.data.frame(t(vapply(
   function(d) c(Female = sum(d == 1), Male = sum(d == 0)),
   c(0, 0)
 )))
-breakdown_counties$Total <- rowSums(breakdown_counties)
-breakdown_counties$Proportion_Female <- breakdown_counties$Female / breakdown_counties$Total
+breakdown_counties <- cbind(
+  breakdown_counties,
+  sweep(breakdown_counties, 2, colSums(breakdown_counties), "/") * 100
+)
+colnames(breakdown_counties)[3:4] <- c("Female_Percent", "Male_Percent")
+breakdown_counties$Difference <- breakdown_counties$Female_Percent - breakdown_counties$Male_Percent
+breakdown_counties$Total <- rowSums(breakdown_counties[, 1:2])
 breakdown_counties$Capped_Total <- breakdown_counties$Total
 breakdown_counties$Capped_Total[breakdown_counties$Capped_Total > 5e4] <- 1e5
 breakdown_counties <- breakdown_counties[counties$GEOID, ]
 
 pal <- colorNumeric(
-  scico::scico(255, direction = -1, palette = "vik"), breakdown_counties$Proportion_Female
+  scico::scico(255, direction = -1, palette = "vik"),
+  rep(max(abs(breakdown_counties$Difference), na.rm = TRUE), 2) * c(-1, 1)
 )
 pal_total <- colorNumeric(
   scico::scico(255, direction = -1, palette = "lajolla"), breakdown_counties$Capped_Total
 )
-leaflet(counties, options = leafletOptions(attributionControl = FALSE)) |>
+leaflet(counties[, 1], options = leafletOptions(attributionControl = FALSE)) |>
   addProviderTiles("CartoDB.Positron") |>
   setView(-95.5810546875, 39.5040407055842, 4) |>
-  addControl("Proportion of Patents with Any Inventor Assigned Female", "topright") |>
-  addLayersControl(position = "topleft", overlayGroups = c("Total", "Proportion")) |>
+  addControl("Percent Female-Assigned Inventors - Percent Male-Assigned Inventors", "topright") |>
+  addLayersControl(position = "topleft", overlayGroups = c("Total", "Difference")) |>
   addLegend(
     "bottomright", pal_total, breakdown_counties$Capped_Total,
     opacity = 1,
@@ -394,18 +472,18 @@ leaflet(counties, options = leafletOptions(attributionControl = FALSE)) |>
   ) |>
   hideGroup("Total") |>
   addLegend(
-    "bottomright", pal, breakdown_counties$Proportion_Female,
+    "bottomright", pal, breakdown_counties$Difference,
     opacity = 1,
-    title = "Proportions", group = "Proportion"
+    title = "Percent Difference", group = "Difference"
   ) |>
   addPolygons(
-    fillColor = pal(breakdown_counties$Proportion_Female), fillOpacity = .8, weight = 1, color = "#000",
+    fillColor = pal(breakdown_counties$Difference), fillOpacity = .8, weight = 1, color = "#000",
     highlightOptions = highlightOptions(color = "#fff"),
-    group = "Proportion", label = paste0(
+    group = "Difference", label = paste0(
       "County: ", counties$NAME,
       "; Female: ", breakdown_counties$Female,
       "; Male: ", breakdown_counties$Male,
-      "; Proportion Female: ", round(breakdown_counties$Proportion_Female, 3)
+      "; Percent Difference (Female - Male): ", round(breakdown_counties$Difference, 3)
     )
   )
 ```
@@ -430,6 +508,9 @@ inventor_states <- inventor_states[
 ]
 inventor_states <- inventor_states[order(inventor_states$date, decreasing = TRUE), ]
 
+## see how many unique inventors this leaves
+length(unique(inventor_states$inventor_id))
+
 # then look at each inventor to see if they have more than one state.
 # if they do, record their transition; previous state -> new state
 inventor_history <- lapply(split(inventor_states, inventor_states$inventor_id), function(d) {
@@ -442,6 +523,11 @@ inventor_history <- lapply(split(inventor_states, inventor_states$inventor_id), 
     res
   }
 })
+inventor_history <- Filter(length, inventor_history)
+
+## see how many inventors have associated moves
+length(inventor_history)
+
 inventor_moves <- unlist(inventor_history)
 inventor_moves <- tapply(inventor_moves, inventor_moves, length)
 inventor_transitions <- data.frame(
@@ -461,12 +547,13 @@ migrations <- migrations[rowSums(migrations) > 1e4, rowSums(migrations) > 1e4]
 migrations <- migrations[order(-rowSums(migrations)), order(-rowSums(migrations))]
 
 # and make a chord diagram out of the most frequently involved states
+# colored by percent difference (Female - Male; higher female percent = bluer)
 ## devtools::install_github("mattflor/chorddiag")
 library(chorddiag)
 chorddiag(
   migrations,
   groupColors = scico::scico(nrow(migrations), palette = "vik")[
-    order(breakdown_states[rownames(migrations), "Proportion_Female"])
+    order(order(-breakdown_states[rownames(migrations), "Difference"]))
   ], showTicks = FALSE, groupnamePadding = 5
 )
 ```
