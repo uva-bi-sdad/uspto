@@ -1,0 +1,251 @@
+---
+title: "Analyzing Inventor Sex Differences"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analyzing Inventor Sex Differences}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+*Built with R 
+`r getRversion()`*
+
+***
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 5.5,
+  fig.width = 8.84,
+  dev = "CairoSVG",
+  fig.ext = "svg"
+)
+library(uspto)
+library(knitr)
+library(lusilab)
+library(sf)
+outDir <- "../patentsview/"
+if (!dir.exists(outDir)) outDir <- "../../patentsview/"
+```
+
+In the [previous example](https://uva-bi-sdad.github.io/uspto/articles/example-patentsview_inventors.html)
+we assigned sex to inventors and took a high-level look at some differences between sex groups.
+
+This example focuses on inventors that were active in the last year, and tries to take a deeper
+look at group differences.
+
+```r
+library(uspto)
+outDir <- "../patentsview/"
+```
+
+We'll start by collecting a unified set of patents with inventors
+who were associated with a patent in 2021:
+```{r}
+latest_inventors_file <- paste0(outDir, "latest_inventors.csv.xz")
+if (file.exists(latest_inventors_file)) {
+  latest_inventors <- vroom::vroom(latest_inventors_file, show_col_types = FALSE)
+} else {
+  # 1. identify patents granted in the most recent year
+  patents <- download_patentsview_bulk("patent", outDir, make_db = TRUE)
+  latest_patents <- as.character(dplyr::collect(dplyr::select(
+    dplyr::filter(patents, date > as.Date("2020-12-31")), number
+  ))$number)
+
+  # 2. identify the inventors associated with those patents
+  patent_inventors <- download_patentsview_bulk(
+    "patent_inventor", outDir,
+    make_db = TRUE,
+    partition = list(series_code = function(d) substr(d$patent_id, 1, 2))
+  )
+  latest_inventors <- dplyr::collect(dplyr::select(dplyr::filter(
+    patent_inventors, patent_id %in% latest_patents
+  ), inventor_id))
+  latest_inventors <- dplyr::collect(dplyr::filter(
+    patent_inventors, inventor_id %in% latest_inventors$inventor_id
+  ))
+  latest_inventors$n_inventors <- as.numeric(tapply(
+    latest_inventors$inventor_id, latest_inventors$patent_id, length
+  )[latest_inventors$patent_id])
+
+  # 3. combine patent and inventor data
+  patents_target <- as.data.frame(dplyr::collect(dplyr::select(dplyr::filter(
+    patents, as.character(number) %in% latest_inventors$patent_id
+  ), number, type, date, num_claims, withdrawn, kind)))
+  rownames(patents_target) <- patents_target$number
+  latest_inventors <- cbind(latest_inventors, patents_target[latest_inventors$patent_id, -1])
+
+  ## add inventor-level patenting summaries
+  inventor_histories <- as.data.frame(do.call(rbind, lapply(
+    split(latest_inventors$date, latest_inventors$inventor_id),
+    function(d) {
+      r <- as.character(range(d))
+      if (r[2] >= "2020-12-31") {
+        c(n_patents = length(d), first_date = r[1], last_date = r[2])
+      }
+    }
+  )))
+  inventor_histories$n_patents <- as.numeric(inventor_histories$n_patents)
+  latest_inventors <- cbind(latest_inventors, inventor_histories[latest_inventors$inventor_id, ])
+
+  # 4. add location information
+  locations <- download_patentsview_bulk("location", outDir, make_db = TRUE)
+  locations_target <- as.data.frame(dplyr::collect(dplyr::filter(
+    locations, id %in% latest_inventors$location_id
+  )))
+  locations_target[is.na(locations_target$country), "country"] <- "US"
+  locations_target <- locations_target[, !colnames(locations_target) %in% c("state", "county")]
+  rownames(locations_target) <- locations_target$id
+  latest_inventors <- latest_inventors[latest_inventors$location_id %in% locations_target$id, -4]
+  latest_inventors <- cbind(latest_inventors, locations_target[latest_inventors$location_id, -1])
+  latest_inventors$n_countries <- as.numeric(tapply(
+    latest_inventors$country, latest_inventors$patent_id, function(cs) length(unique(cs))
+  )[latest_inventors$patent_id])
+
+  # 5. add sex predictions
+  inventor_sex <- vroom::vroom(
+    paste0(outDir, "inventor_sex.csv.xz"),
+    show_col_types = FALSE
+  )
+  latest_inventors$prob_fem <- structure(
+    inventor_sex$prob_fem,
+    names = inventor_sex$id
+  )[latest_inventors$inventor_id]
+
+  vroom::vroom_write(latest_inventors, latest_inventors_file, ",")
+}
+```
+
+And get a high-level feel for the set:
+```{r}
+unique_inventors <- latest_inventors[!duplicated(latest_inventors$inventor_id),]
+nrow(unique_inventors)
+
+kable(rbind(
+  Countries = round(summary(latest_inventors$n_countries), 3),
+  Inventors = round(summary(latest_inventors$n_inventors), 3),
+  "Inventor Patents" = round(summary(unique_inventors$n_patents), 3),
+  "First Patent" = as.character(summary(as.Date(latest_inventors$first_date))),
+  "Latest Patent" = as.character(summary(as.Date(latest_inventors$last_date)))
+))
+```
+
+Now we can get into exploring the relationships between location, category,
+and inventor sex.
+
+# How much do patent categories explain country proportion differences?
+
+We can start by identifying the set of most represented countries, and looking at their
+inventor sex proportions:
+```{r}
+breakdown_countries <- as.data.frame(t(vapply(
+  split(latest_inventors$prob_fem, latest_inventors$country),
+  function(d) c(Female = sum(d == 1), Male = sum(d == 0)),
+  c(0, 0)
+)))
+breakdown_countries <- breakdown_countries[rowSums(breakdown_countries) != 0, ]
+breakdown_countries$Proportion_Female <- breakdown_countries$Female / rowSums(breakdown_countries)
+breakdown_countries <- breakdown_countries[order(-breakdown_countries$Proportion_Female), ]
+top_countries <- names(which(table(latest_inventors$country) > 1e5))
+kable(
+  breakdown_countries[rownames(breakdown_countries) %in% top_countries, ],
+  col.names = gsub("_", " ", colnames(breakdown_countries), fixed = TRUE),
+  caption = "Countries with at least 10,000 associated intentors"
+)
+```
+
+The first step toward getting at how much categories account for country differences, we need to
+associate categories to our set of patents:
+```{r}
+cpc_matrix_file <- paste0(outDir, "latest_cpc_matrix.rds")
+if (file.exists(cpc_matrix_file)) {
+  cpc_matrix <- readRDS(cpc_matrix_file)
+} else {
+  cpc_current <- download_patentsview_bulk("cpc_current", outDir, make_db = TRUE)
+  cpc_matrix <- patentsview_class_matrix(dplyr::compute(dplyr::filter(
+    cpc_current, as.character(patent_id) %in% latest_inventors$patent_id
+  )))
+  saveRDS(cpc_matrix, cpc_matrix_file)
+}
+```
+
+Now, we might just look at sex proportions within classes and countries --
+if proportions are similar, it would indicate that differences in the distribution
+of classes might explain the difference in sex distributions:
+```{r}
+cpc_matrix <- cpc_matrix[rownames(cpc_matrix) %in% latest_inventors$patent_id, ]
+patent_any_fem <- tapply(latest_inventors$prob_fem > .5, latest_inventors$patent_id, any)[rownames(cpc_matrix)]
+
+class_country_matrix <- vapply(
+  split(latest_inventors[, c("patent_id", "prob_fem")], latest_inventors$country),
+  function(inventors) {
+    inventors <- inventors[inventors$patent_id %in% rownames(cpc_matrix), ]
+    m <- cpc_matrix[inventors$patent_id, , drop = FALSE] != 0
+    unlist(list(
+      female = colSums(m * (inventors$prob_fem > .5)),
+      male = colSums(m * (inventors$prob_fem < .5))
+    ))
+  },
+  rep(colSums(cpc_matrix), 2)
+)
+class_country_matrix <- list(
+  female = class_country_matrix[seq_len(nrow(class_country_matrix) / 2), ],
+  male = class_country_matrix[seq_len(nrow(class_country_matrix) / 2) + nrow(class_country_matrix) / 2, ]
+)
+class_country_matrix <- lapply(class_country_matrix, function(m) {
+  total <- colSums(m)
+  total[total == 0] <- 1
+  sweep(m, 2, total, "/") * 100
+})
+```
+
+We can start by focusing on a set of classes where
+there are most female-assigned inventors in average across the top countries:
+```{r}
+top_classes <- rownames(class_country_matrix$female)[
+  order(-rowMeans(class_country_matrix$female[, top_countries]))[1:20]
+]
+ccm_top_country <- as.data.frame(do.call(rbind, lapply(class_country_matrix, function(m) {
+  vapply(
+    top_countries, function(country) cumsum(m[top_classes, country]), m[top_classes, 1]
+  )
+})))
+cpc_group <- as.data.frame(download_patentsview_bulk("cpc_group", outDir))
+rownames(cpc_group) <- cpc_group$id
+kable(cpc_group[top_classes, ], row.names = FALSE, caption = "CPC Class Definitions")
+kable(cbind(
+  "Assigned Sex" = rep(c("Female", "Male"), each = length(top_classes)),
+  Class = rep(top_classes, 2), ccm_top_country
+), digits = 2, row.names = FALSE, caption = "Cumulative Percent of Inventors by Class and Country")
+```
+
+Looking at the last class in the table (G09G) gives a feel for how well represented each country is
+by this set of classes. For example, Japan (JP) is least well represented, with only 37% and 35%
+of Female- and Male-assigned inventors accounted for, whereas Taiwan (TW) is better represented, with
+55% of inventors from each group represented. Taiwan is, however, not represented by these classes as evenly,
+which can be seen in the large initial percent -- 23% and 28% of Taiwan's inventors are accounted for
+by just the semiconductor devices class (H01L).
+
+Plotting out profiles might give a better feel for how similar countries are in terms of their
+distribution of inventors:
+
+```{r}
+library(splot)
+splot(
+  (ccm_top_country[1:20, ] - ccm_top_country[21:40, ]) ~ top_classes,
+  title = "Inventor Sex Ballance within Classes between Countries",
+  laby = "Cumulative Percent of Inventor Sex Group (Female - Male)",
+  labx = "CPC Class", sort = FALSE, line.type = "b", xlas = 2, mar = c(3, 2, 0, 0)
+)
+```
+
+The magnitude on this plot indicates how skewed the distribution of female-assigned inventors
+is relative to that of male-assigned inventors within each country. The more relatively skewed
+this distribution is, the more differences in class frequency might explain differences in
+sex frequency. Here, the United Kingdom (GB) is a standout example where a particularly large
+percent of female- but not male- assigned inventors are accounted for by a few classes
+(here, A61K and A61P in particular). In contrast, Korea (KR) has well aligned distributions,
+despite arriving at a similar percent of the female-assigned inventor population to GB.
