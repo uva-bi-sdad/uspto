@@ -91,7 +91,34 @@ if (file.exists(latest_inventors_file)) {
   inventor_histories$n_patents <- as.numeric(inventor_histories$n_patents)
   latest_inventors <- cbind(latest_inventors, inventor_histories[latest_inventors$inventor_id, ])
 
-  # 4. add location information
+  # 4. add assignee data
+  patent_assignees <- download_patentsview_bulk(
+    "patent_assignee", outDir,
+    make_db = TRUE,
+    partition = list(series_code = function(d) substr(d$patent_id, 1, 2))
+  )
+  assignees <- dplyr::collect(dplyr::filter(
+    patent_assignees, patent_id %in% latest_inventors$patent_id
+  ))
+  assignees <- download_patentsview_bulk("rawassignee", outDir, make_db = TRUE)
+  assignees_target <- dplyr::collect(dplyr::filter(
+    assignees,
+    as.character(patent_id) %in% latest_inventors$patent_id & sequence == 0 & !is.na(organization)
+  ))
+  latest_inventors$assignee_id <- structure(
+    assignees_target$assignee_id,
+    names = assignees_target$patent_id
+  )[latest_inventors$patent_id]
+  latest_inventors$assignee_type <- structure(
+    assignees_target$type,
+    names = assignees_target$patent_id
+  )[latest_inventors$patent_id]
+  latest_inventors$assignee_organization <- structure(
+    assignees_target$organization,
+    names = assignees_target$patent_id
+  )[latest_inventors$patent_id]
+
+  # 5. add location information
   locations <- download_patentsview_bulk("location", outDir, make_db = TRUE)
   locations_target <- as.data.frame(dplyr::collect(dplyr::filter(
     locations, id %in% latest_inventors$location_id
@@ -105,13 +132,17 @@ if (file.exists(latest_inventors_file)) {
     latest_inventors$country, latest_inventors$patent_id, function(cs) length(unique(cs))
   )[latest_inventors$patent_id])
 
-  # 5. add sex predictions
+  # 6. add sex predictions
   inventor_sex <- vroom::vroom(
     paste0(outDir, "inventor_sex.csv.xz"),
     show_col_types = FALSE
   )
   latest_inventors$prob_fem <- structure(
     inventor_sex$prob_fem,
+    names = inventor_sex$id
+  )[latest_inventors$inventor_id]
+  latest_inventors$pred_fem_patentsview <- structure(
+    inventor_sex$pred_fem_patentsview,
     names = inventor_sex$id
   )[latest_inventors$inventor_id]
 
@@ -121,7 +152,7 @@ if (file.exists(latest_inventors_file)) {
 
 And get a high-level feel for the set:
 ```{r}
-unique_inventors <- latest_inventors[!duplicated(latest_inventors$inventor_id),]
+unique_inventors <- latest_inventors[!duplicated(latest_inventors$inventor_id), ]
 nrow(unique_inventors)
 
 kable(rbind(
@@ -177,16 +208,23 @@ if proportions are similar, it would indicate that differences in the distributi
 of classes might explain the difference in sex distributions:
 ```{r}
 cpc_matrix <- cpc_matrix[rownames(cpc_matrix) %in% latest_inventors$patent_id, ]
-patent_any_fem <- tapply(latest_inventors$prob_fem > .5, latest_inventors$patent_id, any)[rownames(cpc_matrix)]
+latest_inventors$pred_fem <- latest_inventors$pred_fem_patentsview == 1 |
+  latest_inventors$prob_fem > .5
+latest_inventors$pred_masc <- latest_inventors$pred_fem_patentsview == 0 |
+  latest_inventors$prob_fem < .5
+patent_any_fem <- tapply(
+  latest_inventors$pred_fem,
+  latest_inventors$patent_id, any
+)[rownames(cpc_matrix)]
 
 class_country_matrix <- vapply(
-  split(latest_inventors[, c("patent_id", "prob_fem")], latest_inventors$country),
+  split(latest_inventors[, c("patent_id", "pred_fem", "pred_masc")], latest_inventors$country),
   function(inventors) {
     inventors <- inventors[inventors$patent_id %in% rownames(cpc_matrix), ]
     m <- cpc_matrix[inventors$patent_id, , drop = FALSE] != 0
     unlist(list(
-      female = colSums(m * (inventors$prob_fem > .5)),
-      male = colSums(m * (inventors$prob_fem < .5))
+      female = colSums(m * inventors$pred_fem),
+      male = colSums(m * inventors$pred_masc)
     ))
   },
   rep(colSums(cpc_matrix), 2)

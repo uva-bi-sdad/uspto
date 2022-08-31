@@ -56,6 +56,9 @@
       <a href="../articles/example-patentsview_inventors.html">Analyze Inventor Features Using PatentsView Data</a>
     </li>
     <li>
+      <a href="../articles/example-patentsview_inventors_p2.html">Analyzing Inventor Sex Differences</a>
+    </li>
+    <li>
       <a href="../articles/example-seed_expand.html">Expand from a Seed Set</a>
     </li>
   </ul>
@@ -450,7 +453,7 @@ the seed set:</p>
 <span><span class="co">#&gt;         predicted_art_unit</span></span>
 <span><span class="co">#&gt; artunits   1734   2852   2857   2863   2864   2865   3623</span></span>
 <span><span class="co">#&gt;     1734 0.9962 0.0019 0.0000 0.0000 0.0000 0.0000 0.0019</span></span>
-<span><span class="co">#&gt;     2852 0.0062 0.6349 0.0594 0.0000 0.2438 0.0223 0.0334</span></span>
+<span><span class="co">#&gt;     2852 0.0062 0.6349 0.0594 0.0000 0.2450 0.0223 0.0322</span></span>
 <span><span class="co">#&gt;     2857 0.0060 0.0320 0.5680 0.0060 0.3540 0.0140 0.0200</span></span>
 <span><span class="co">#&gt;     2863 0.0000 0.0417 0.0417 0.7917 0.1250 0.0000 0.0000</span></span>
 <span><span class="co">#&gt;     2864 0.0213 0.0284 0.0249 0.0000 0.8993 0.0095 0.0166</span></span>
@@ -625,18 +628,18 @@ applications:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">loadings_km</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"km_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">loadings</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">scores_km</span> <span class="op">&lt;-</span> <span class="va">dtm</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">loadings_km</span></span>
 <span><span class="fu">get_top_terms</span><span class="op">(</span><span class="va">loadings_km</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
+<table style="width:100%;" class="table">
 <colgroup>
-<col width="9%">
 <col width="10%">
-<col width="10%">
+<col width="11%">
 <col width="14%">
-<col width="9%">
-<col width="13%">
-<col width="8%">
-<col width="10%">
 <col width="7%">
-<col width="6%">
+<col width="9%">
+<col width="9%">
+<col width="7%">
+<col width="10%">
+<col width="8%">
+<col width="9%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">km_1</th>
@@ -652,124 +655,124 @@ applications:</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">member</td>
-<td align="left">denuding</td>
+<td align="left">b</td>
 <td align="left">defect</td>
 <td align="left">renewable</td>
-<td align="left">seismic</td>
-<td align="left">steering</td>
-<td align="left">data</td>
-<td align="left">b</td>
 <td align="left">gas</td>
-<td align="left">mi</td>
-</tr>
-<tr class="even">
-<td align="left">image</td>
-<td align="left">surface</td>
-<td align="left">exercise</td>
-<td align="left">mi</td>
-<td align="left">data</td>
-<td align="left">torque</td>
-<td align="left">signal</td>
-<td align="left">orientation</td>
-<td align="left">stream</td>
-<td align="left">mrow</td>
-</tr>
-<tr class="odd">
-<td align="left">developer</td>
-<td align="left">species</td>
-<td align="left">positioning</td>
-<td align="left">vortex</td>
-<td align="left">wavefields</td>
-<td align="left">relay</td>
-<td align="left">sensor</td>
-<td align="left">absorption</td>
-<td align="left">dioxide</td>
-<td align="left">msub</td>
-</tr>
-<tr class="even">
-<td align="left">toner</td>
-<td align="left">gas</td>
-<td align="left">pst</td>
-<td align="left">location-unknown</td>
-<td align="left">receiver</td>
-<td align="left">unit</td>
-<td align="left">device</td>
-<td align="left">gas</td>
-<td align="left">carbon</td>
-<td align="left">math</td>
-</tr>
-<tr class="odd">
-<td align="left">developing</td>
-<td align="left">flow</td>
-<td align="left">insolation</td>
-<td align="left">longitude</td>
-<td align="left">wavefield</td>
-<td align="left">software</td>
-<td align="left">system</td>
-<td align="left">liquid</td>
-<td align="left">co.sub</td>
-<td align="left">mn</td>
-</tr>
-<tr class="even">
-<td align="left">portion</td>
-<td align="left">concentrate</td>
 <td align="left">r.sub</td>
-<td align="left">energy</td>
-<td align="left">subsurface</td>
-<td align="left">upload</td>
-<td align="left">plurality</td>
-<td align="left">means</td>
-<td align="left">catalyst</td>
-<td align="left">mstyle</td>
-</tr>
-<tr class="odd">
-<td align="left">unit</td>
-<td align="left">solid</td>
-<td align="left">failure-type</td>
-<td align="left">day</td>
-<td align="left">synthetic</td>
-<td align="left">microcontroller</td>
-<td align="left">value</td>
-<td align="left">co.sub</td>
-<td align="left">solution</td>
-<td align="left">mfrac</td>
-</tr>
-<tr class="even">
-<td align="left">forming</td>
-<td align="left">duct</td>
-<td align="left">model</td>
-<td align="left">mrow</td>
-<td align="left">volume</td>
-<td align="left">wheel</td>
-<td align="left">unit</td>
-<td align="left">core</td>
-<td align="left">fuel</td>
-<td align="left">g.sub</td>
-</tr>
-<tr class="odd">
-<td align="left">transfer</td>
-<td align="left">phase</td>
-<td align="left">features</td>
-<td align="left">production</td>
-<td align="left">domain</td>
-<td align="left">base</td>
-<td align="left">power</td>
-<td align="left">chamber</td>
-<td align="left">exhaust</td>
-<td align="left">mspace</td>
-</tr>
-<tr class="even">
-<td align="left">belt</td>
-<td align="left">continuing</td>
-<td align="left">pattern</td>
-<td align="left">mover</td>
-<td align="left">model</td>
-<td align="left">driver’s</td>
+<td align="left">member</td>
+<td align="left">mi</td>
+<td align="left">data</td>
+<td align="left">signal</td>
 <td align="left">battery</td>
+</tr>
+<tr class="even">
+<td align="left">orientation</td>
+<td align="left">exercise</td>
+<td align="left">positioning</td>
+<td align="left">stream</td>
+<td align="left">c.sub</td>
+<td align="left">image</td>
+<td align="left">mrow</td>
+<td align="left">system</td>
+<td align="left">sensor</td>
+<td align="left">charge</td>
+</tr>
+<tr class="odd">
+<td align="left">absorption</td>
+<td align="left">torque</td>
+<td align="left">mi</td>
+<td align="left">dioxide</td>
+<td align="left">radical</td>
+<td align="left">developer</td>
+<td align="left">msub</td>
+<td align="left">device</td>
+<td align="left">frequency</td>
+<td align="left">voltage</td>
+</tr>
+<tr class="even">
+<td align="left">gas</td>
+<td align="left">steering</td>
+<td align="left">features</td>
+<td align="left">carbon</td>
+<td align="left">t.sub</td>
+<td align="left">toner</td>
+<td align="left">math</td>
+<td align="left">plurality</td>
+<td align="left">output</td>
+<td align="left">capacity</td>
+</tr>
+<tr class="odd">
+<td align="left">liquid</td>
+<td align="left">insolation</td>
+<td align="left">vortex</td>
+<td align="left">co.sub</td>
+<td align="left">r.sup</td>
+<td align="left">developing</td>
+<td align="left">mn</td>
+<td align="left">method</td>
+<td align="left">signals</td>
+<td align="left">state</td>
+</tr>
+<tr class="even">
+<td align="left">means</td>
+<td align="left">sales</td>
+<td align="left">d</td>
+<td align="left">catalyst</td>
+<td align="left">constant</td>
+<td align="left">portion</td>
+<td align="left">mstyle</td>
+<td align="left">power</td>
+<td align="left">unit</td>
+<td align="left">current</td>
+</tr>
+<tr class="odd">
+<td align="left">co.sub</td>
+<td align="left">lead</td>
+<td align="left">location-unknown</td>
+<td align="left">solution</td>
+<td align="left">elastic</td>
+<td align="left">unit</td>
+<td align="left">mfrac</td>
+<td align="left">information</td>
+<td align="left">b</td>
+<td align="left">soc</td>
+</tr>
+<tr class="even">
+<td align="left">core</td>
+<td align="left">failure-type</td>
+<td align="left">longitude</td>
+<td align="left">fuel</td>
+<td align="left">m.sub</td>
+<td align="left">forming</td>
+<td align="left">g.sub</td>
+<td align="left">sensor</td>
+<td align="left">magnetic</td>
+<td align="left">energy</td>
+</tr>
+<tr class="odd">
+<td align="left">chamber</td>
+<td align="left">information</td>
+<td align="left">energy</td>
 <td align="left">exhaust</td>
+<td align="left">model</td>
+<td align="left">transfer</td>
+<td align="left">mspace</td>
+<td align="left">value</td>
+<td align="left">circuit</td>
+<td align="left">estimating</td>
+</tr>
+<tr class="even">
+<td align="left">exhaust</td>
+<td align="left">types</td>
+<td align="left">day</td>
 <td align="left">acid</td>
+<td align="left">parameters</td>
+<td align="left">belt</td>
 <td align="left">g.sub.n</td>
+<td align="left">time</td>
+<td align="left">phase</td>
+<td align="left">secondary</td>
 </tr>
 </tbody>
 </table>
@@ -781,17 +784,17 @@ applications:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">loadings_nmf</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dtm</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"nmf_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">loadings_nmf</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">topics_nmf</span><span class="op">$</span><span class="va">w</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">loadings_nmf</span><span class="op">)</span></span>
 <span><span class="fu">get_top_terms</span><span class="op">(</span><span class="va">loadings_nmf</span><span class="op">)</span></span></code></pre></div>
-<table style="width:100%;" class="table">
+<table class="table">
 <colgroup>
-<col width="10%">
-<col width="8%">
+<col width="11%">
 <col width="9%">
-<col width="7%">
 <col width="10%">
-<col width="16%">
-<col width="10%">
-<col width="8%">
 <col width="9%">
+<col width="10%">
+<col width="11%">
+<col width="11%">
+<col width="9%">
+<col width="10%">
 <col width="7%">
 </colgroup>
 <thead><tr class="header">
@@ -811,9 +814,9 @@ applications:</p>
 <td align="left">data</td>
 <td align="left">signal</td>
 <td align="left">gas</td>
-<td align="left">image</td>
+<td align="left">fixing</td>
+<td align="left">member</td>
 <td align="left">battery</td>
-<td align="left">developer</td>
 <td align="left">orientation</td>
 <td align="left">fuel</td>
 <td align="left">b</td>
@@ -823,108 +826,108 @@ applications:</p>
 <td align="left">seismic</td>
 <td align="left">sensor</td>
 <td align="left">stream</td>
-<td align="left">member</td>
+<td align="left">body</td>
+<td align="left">developer</td>
 <td align="left">voltage</td>
-<td align="left">member</td>
 <td align="left">core</td>
 <td align="left">tank</td>
 <td align="left">absorption</td>
 <td align="left">mrow</td>
 </tr>
 <tr class="odd">
-<td align="left">model</td>
-<td align="left">power</td>
+<td align="left">unit</td>
+<td align="left">frequency</td>
 <td align="left">co.sub</td>
-<td align="left">toner</td>
+<td align="left">portion</td>
+<td align="left">image</td>
 <td align="left">charge</td>
-<td align="left">developing</td>
 <td align="left">means</td>
 <td align="left">reactant</td>
 <td align="left">s</td>
 <td align="left">msub</td>
 </tr>
 <tr class="even">
-<td align="left">system</td>
+<td align="left">model</td>
 <td align="left">circuit</td>
 <td align="left">dioxide</td>
-<td align="left">transfer</td>
+<td align="left">belt</td>
+<td align="left">toner</td>
 <td align="left">capacity</td>
-<td align="left">electrode</td>
-<td align="left">physical</td>
+<td align="left">signals</td>
 <td align="left">source</td>
 <td align="left">liquid</td>
 <td align="left">math</td>
 </tr>
 <tr class="odd">
-<td align="left">plurality</td>
+<td align="left">system</td>
 <td align="left">output</td>
 <td align="left">carbon</td>
-<td align="left">unit</td>
+<td align="left">rotary</td>
+<td align="left">developing</td>
 <td align="left">state</td>
-<td align="left">supply</td>
-<td align="left">signals</td>
+<td align="left">physical</td>
 <td align="left">catalytic</td>
 <td align="left">chamber</td>
 <td align="left">mn</td>
 </tr>
 <tr class="even">
-<td align="left">set</td>
-<td align="left">frequency</td>
+<td align="left">plurality</td>
+<td align="left">power</td>
 <td align="left">solution</td>
-<td align="left">forming</td>
+<td align="left">roller</td>
+<td align="left">electrode</td>
 <td align="left">current</td>
-<td align="left">developer-carrying</td>
 <td align="left">processed</td>
 <td align="left">reactor</td>
 <td align="left">co.sub</td>
 <td align="left">mfrac</td>
 </tr>
 <tr class="odd">
-<td align="left">fluid</td>
-<td align="left">unit</td>
+<td align="left">information</td>
+<td align="left">current</td>
 <td align="left">absorbent</td>
-<td align="left">belt</td>
+<td align="left">surface</td>
+<td align="left">supply</td>
 <td align="left">soc</td>
-<td align="left">container</td>
-<td align="left">measure</td>
+<td align="left">master</td>
 <td align="left">arranged</td>
-<td align="left">discharge</td>
+<td align="left">processing</td>
 <td align="left">mstyle</td>
 </tr>
 <tr class="even">
-<td align="left">values</td>
-<td align="left">current</td>
+<td align="left">sensor</td>
+<td align="left">voltage</td>
 <td align="left">absorption</td>
-<td align="left">fixing</td>
-<td align="left">temperature</td>
-<td align="left">insulating</td>
-<td align="left">memory</td>
+<td align="left">member</td>
+<td align="left">transfer</td>
+<td align="left">unit</td>
+<td align="left">device</td>
 <td align="left">inert</td>
-<td align="left">exhaust</td>
+<td align="left">discharge</td>
 <td align="left">s</td>
 </tr>
 <tr class="odd">
-<td align="left">information</td>
-<td align="left">voltage</td>
+<td align="left">values</td>
+<td align="left">signals</td>
 <td align="left">liquid</td>
-<td align="left">portion</td>
-<td align="left">charging</td>
-<td align="left">carrier</td>
-<td align="left">device</td>
+<td align="left">main</td>
+<td align="left">unit</td>
+<td align="left">temperature</td>
+<td align="left">measure</td>
 <td align="left">aircraft</td>
-<td align="left">k</td>
+<td align="left">exhaust</td>
 <td align="left">g.sub</td>
 </tr>
 <tr class="even">
-<td align="left">method</td>
-<td align="left">signals</td>
+<td align="left">fluid</td>
+<td align="left">phase</td>
 <td align="left">acid</td>
-<td align="left">roller</td>
-<td align="left">pack</td>
-<td align="left">configured</td>
-<td align="left">master</td>
-<td align="left">heat</td>
-<td align="left">action</td>
+<td align="left">direction</td>
+<td align="left">carrier</td>
+<td align="left">charging</td>
+<td align="left">memory</td>
+<td align="left">inerting</td>
+<td align="left">k</td>
 <td align="left">coating</td>
 </tr>
 </tbody>
@@ -973,26 +976,26 @@ applications:</p>
 <tbody>
 <tr class="odd">
 <td align="left">km_1</td>
-<td align="right">.</td>
-<td align="right">0.667</td>
-<td align="right">-0.161</td>
+<td align="right">0.655</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">-0.179</td>
-<td align="right">0.677</td>
-<td align="right">-0.260</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
 </tr>
 <tr class="even">
 <td align="left">km_2</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.134</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
+<td align="right">0.219</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
@@ -1005,20 +1008,20 @@ applications:</p>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.179</td>
+<td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 </tr>
 <tr class="even">
 <td align="left">km_4</td>
+<td align="right">0.158</td>
 <td align="right">.</td>
+<td align="right">-0.206</td>
+<td align="right">0.699</td>
+<td align="right">-0.123</td>
 <td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
+<td align="right">-0.142</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
@@ -1027,63 +1030,63 @@ applications:</p>
 <td align="left">km_5</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.258</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.170</td>
+<td align="right">.</td>
+<td align="right">.</td>
 </tr>
 <tr class="even">
 <td align="left">km_6</td>
 <td align="right">.</td>
+<td align="right">0.668</td>
+<td align="right">-0.160</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
+<td align="right">-0.178</td>
+<td align="right">0.677</td>
+<td align="right">-0.259</td>
 </tr>
 <tr class="odd">
 <td align="left">km_7</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.301</td>
-<td align="right">-0.162</td>
-<td align="right">0.245</td>
-<td align="right">0.165</td>
-<td align="right">0.144</td>
 <td align="right">.</td>
-<td align="right">-0.128</td>
-<td align="right">0.162</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
 </tr>
 <tr class="even">
 <td align="left">km_8</td>
-<td align="right">0.655</td>
 <td align="right">.</td>
 <td align="right">.</td>
+<td align="right">0.343</td>
+<td align="right">-0.145</td>
+<td align="right">0.102</td>
 <td align="right">.</td>
+<td align="right">0.148</td>
 <td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
+<td align="right">-0.132</td>
+<td align="right">0.189</td>
 </tr>
 <tr class="odd">
 <td align="left">km_9</td>
-<td align="right">0.158</td>
 <td align="right">.</td>
-<td align="right">-0.203</td>
-<td align="right">0.696</td>
-<td align="right">-0.124</td>
 <td align="right">.</td>
-<td align="right">-0.142</td>
+<td align="right">0.146</td>
+<td align="right">-0.141</td>
+<td align="right">0.638</td>
+<td align="right">.</td>
+<td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
@@ -1095,7 +1098,7 @@ applications:</p>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">.</td>
+<td align="right">0.789</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
@@ -1136,23 +1139,23 @@ applications:</p>
 <tr class="odd">
 <td align="left">nmf_1</td>
 <td align="right">.</td>
-<td align="right">-0.137</td>
-<td align="right">0.563</td>
-<td align="right">-0.186</td>
+<td align="right">.</td>
+<td align="right">0.580</td>
+<td align="right">-0.190</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.190</td>
-<td align="right">0.115</td>
-<td align="right">-0.198</td>
-<td align="right">0.272</td>
+<td align="right">0.212</td>
+<td align="right">.</td>
+<td align="right">-0.193</td>
+<td align="right">0.239</td>
 </tr>
 <tr class="even">
 <td align="left">nmf_2</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">-0.143</td>
-<td align="right">0.656</td>
+<td align="right">-0.137</td>
+<td align="right">0.693</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
@@ -1163,9 +1166,9 @@ applications:</p>
 <td align="left">nmf_3</td>
 <td align="right">0.142</td>
 <td align="right">.</td>
-<td align="right">-0.194</td>
+<td align="right">-0.191</td>
 <td align="right">0.684</td>
-<td align="right">-0.124</td>
+<td align="right">-0.122</td>
 <td align="right">.</td>
 <td align="right">-0.135</td>
 <td align="right">.</td>
@@ -1175,45 +1178,45 @@ applications:</p>
 <tr class="even">
 <td align="left">nmf_4</td>
 <td align="right">.</td>
-<td align="right">0.729</td>
+<td align="right">0.368</td>
 <td align="right">-0.151</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">-0.169</td>
-<td align="right">0.568</td>
-<td align="right">-0.241</td>
+<td align="right">-0.155</td>
+<td align="right">0.382</td>
+<td align="right">-0.183</td>
 </tr>
 <tr class="odd">
 <td align="left">nmf_5</td>
 <td align="right">.</td>
+<td align="right">0.571</td>
+<td align="right">-0.139</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.802</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
+<td align="right">-0.142</td>
+<td align="right">0.660</td>
+<td align="right">-0.216</td>
 </tr>
 <tr class="even">
 <td align="left">nmf_6</td>
 <td align="right">.</td>
-<td align="right">0.212</td>
-<td align="right">-0.106</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
+<td align="right">0.798</td>
 <td align="right">.</td>
-<td align="right">0.521</td>
-<td align="right">-0.148</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
 </tr>
 <tr class="odd">
 <td align="left">nmf_7</td>
-<td align="right">0.269</td>
+<td align="right">0.250</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
@@ -1229,17 +1232,17 @@ applications:</p>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.191</td>
+<td align="right">0.189</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">.</td>
+<td align="right">0.102</td>
 <td align="right">.</td>
 <td align="right">.</td>
 </tr>
 <tr class="odd">
 <td align="left">nmf_9</td>
-<td align="right">0.625</td>
+<td align="right">0.627</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
@@ -1298,53 +1301,53 @@ applications:</p>
 <tr class="odd">
 <td align="left">nmf_1</td>
 <td align="right">.</td>
-<td align="right">.</td>
-<td align="right">0.329</td>
-<td align="right">.</td>
-<td align="right">0.494</td>
-<td align="right">.</td>
-<td align="right">0.785</td>
+<td align="right">0.234</td>
+<td align="right">0.142</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
+<td align="right">.</td>
+<td align="right">0.869</td>
+<td align="right">0.375</td>
+<td align="right">0.165</td>
 </tr>
 <tr class="even">
 <td align="left">nmf_2</td>
-<td align="right">0.103</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.193</td>
-<td align="right">0.640</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
+<td align="right">0.444</td>
+<td align="right">0.905</td>
+<td align="right">0.167</td>
 </tr>
 <tr class="odd">
 <td align="left">nmf_3</td>
 <td align="right">.</td>
-<td align="right">0.103</td>
 <td align="right">.</td>
 <td align="right">.</td>
+<td align="right">0.936</td>
+<td align="right">0.137</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.105</td>
+<td align="right">0.126</td>
 <td align="right">.</td>
-<td align="right">0.940</td>
 <td align="right">.</td>
 </tr>
 <tr class="even">
 <td align="left">nmf_4</td>
-<td align="right">0.892</td>
 <td align="right">.</td>
 <td align="right">.</td>
+<td align="right">0.186</td>
 <td align="right">.</td>
 <td align="right">.</td>
+<td align="right">0.587</td>
 <td align="right">.</td>
-<td align="right">0.170</td>
-<td align="right">.</td>
-<td align="right">.</td>
+<td align="right">0.232</td>
+<td align="right">0.109</td>
 <td align="right">.</td>
 </tr>
 <tr class="odd">
@@ -1354,15 +1357,14 @@ applications:</p>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
+<td align="right">0.913</td>
 <td align="right">.</td>
-<td align="right">0.337</td>
-<td align="right">.</td>
+<td align="right">0.104</td>
 <td align="right">.</td>
 <td align="right">.</td>
 </tr>
 <tr class="even">
 <td align="left">nmf_6</td>
-<td align="right">0.632</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
@@ -1370,8 +1372,9 @@ applications:</p>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
+<td align="right">0.208</td>
+<td align="right">0.139</td>
+<td align="right">0.979</td>
 </tr>
 <tr class="odd">
 <td align="left">nmf_7</td>
@@ -1381,9 +1384,9 @@ applications:</p>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.194</td>
 <td align="right">.</td>
-<td align="right">.</td>
+<td align="right">0.186</td>
+<td align="right">0.176</td>
 <td align="right">.</td>
 </tr>
 <tr class="even">
@@ -1391,16 +1394,17 @@ applications:</p>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
+<td align="right">0.352</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.344</td>
 <td align="right">.</td>
 </tr>
 <tr class="odd">
 <td align="left">nmf_9</td>
+<td align="right">0.996</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
@@ -1408,22 +1412,21 @@ applications:</p>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.995</td>
-<td align="right">.</td>
+<td align="right">0.124</td>
 <td align="right">.</td>
 </tr>
 <tr class="even">
 <td align="left">nmf_10</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">.</td>
-<td align="right">0.448</td>
-<td align="right">.</td>
-<td align="right">.</td>
+<td align="right">0.349</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">0.995</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
 </tr>
 </tbody>
 </table>
@@ -1436,7 +1439,7 @@ unit:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/lingmatch/man/lma_simets.html" class="external-link">lma_simets</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">scores_all</span><span class="op">[</span><span class="va">artunits</span> <span class="op">==</span> <span class="va">au</span>, <span class="op">]</span><span class="op">)</span>, <span class="va">applications</span><span class="op">[</span><span class="va">su</span>, <span class="st">"year"</span><span class="op">]</span>, metric <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span></span>
 <span><span class="op">}</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">scores_all</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">display_matrix</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">trends</span><span class="op">)</span>, <span class="fl">.1</span><span class="op">)</span></span></code></pre></div>
-<table style="width:100%;" class="table">
+<table class="table">
 <colgroup>
 <col width="2%">
 <col width="3%">
@@ -1458,9 +1461,9 @@ unit:</p>
 <col width="3%">
 <col width="3%">
 <col width="3%">
+<col width="2%">
 <col width="3%">
-<col width="3%">
-<col width="3%">
+<col width="2%">
 <col width="3%">
 <col width="3%">
 <col width="3%">
@@ -1516,25 +1519,25 @@ unit:</p>
 <td align="right">.</td>
 <td align="right">-0.153</td>
 <td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">0.106</td>
-<td align="right">.</td>
-<td align="right">0.197</td>
 <td align="right">0.113</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.117</td>
-<td align="right">0.172</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">0.130</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.112</td>
+<td align="right">.</td>
+<td align="right">0.148</td>
+<td align="right">0.204</td>
+<td align="right">0.146</td>
+<td align="right">0.119</td>
+<td align="right">0.177</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">0.129</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">0.111</td>
 <td align="right">.</td>
 </tr>
 <tr class="even">
@@ -1553,14 +1556,14 @@ unit:</p>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.183</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.134</td>
-<td align="right">-0.108</td>
+<td align="right">.</td>
+<td align="right">0.125</td>
+<td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
@@ -1582,24 +1585,24 @@ unit:</p>
 <td align="right">0.159</td>
 <td align="right">-0.217</td>
 <td align="right">0.113</td>
-<td align="right">.</td>
-<td align="right">-0.133</td>
-<td align="right">0.118</td>
-<td align="right">0.167</td>
-<td align="right">0.120</td>
-<td align="right">.</td>
-<td align="right">0.145</td>
 <td align="right">0.116</td>
+<td align="right">.</td>
 <td align="right">0.197</td>
+<td align="right">0.191</td>
+<td align="right">0.187</td>
+<td align="right">.</td>
 <td align="right">0.106</td>
-<td align="right">0.107</td>
-<td align="right">.</td>
-<td align="right">0.136</td>
-<td align="right">.</td>
+<td align="right">0.139</td>
+<td align="right">0.187</td>
 <td align="right">.</td>
 <td align="right">.</td>
+<td align="right">0.133</td>
+<td align="right">0.139</td>
 <td align="right">.</td>
-<td align="right">0.192</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">0.197</td>
 <td align="right">0.115</td>
 <td align="right">.</td>
 </tr>
@@ -1615,22 +1618,22 @@ unit:</p>
 <td align="right">0.420</td>
 <td align="right">-0.425</td>
 <td align="right">0.494</td>
+<td align="right">.</td>
+<td align="right">0.145</td>
+<td align="right">0.130</td>
+<td align="right">.</td>
+<td align="right">.</td>
 <td align="right">-0.478</td>
-<td align="right">-0.104</td>
-<td align="right">0.171</td>
-<td align="right">0.268</td>
-<td align="right">0.257</td>
-<td align="right">.</td>
-<td align="right">0.355</td>
-<td align="right">.</td>
-<td align="right">.</td>
 <td align="right">0.136</td>
-<td align="right">0.446</td>
-<td align="right">0.181</td>
+<td align="right">0.344</td>
+<td align="right">0.243</td>
+<td align="right">0.252</td>
+<td align="right">0.378</td>
+<td align="right">0.231</td>
 <td align="right">.</td>
-<td align="right">-0.495</td>
-<td align="right">0.216</td>
-<td align="right">-0.246</td>
+<td align="right">-0.399</td>
+<td align="right">-0.427</td>
+<td align="right">0.204</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
@@ -1648,24 +1651,24 @@ unit:</p>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">.</td>
-<td align="right">0.109</td>
 <td align="right">0.119</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.107</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">0.155</td>
+<td align="right">.</td>
+<td align="right">.</td>
+<td align="right">0.116</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.137</td>
+<td align="right">0.136</td>
 <td align="right">0.119</td>
 <td align="right">.</td>
 </tr>
@@ -1681,26 +1684,26 @@ unit:</p>
 <td align="right">0.213</td>
 <td align="right">-0.207</td>
 <td align="right">0.271</td>
-<td align="right">-0.289</td>
-<td align="right">-0.303</td>
-<td align="right">.</td>
-<td align="right">-0.258</td>
-<td align="right">-0.264</td>
-<td align="right">-0.168</td>
-<td align="right">-0.122</td>
 <td align="right">-0.124</td>
-<td align="right">-0.263</td>
-<td align="right">-0.363</td>
-<td align="right">-0.165</td>
+<td align="right">-0.162</td>
 <td align="right">.</td>
-<td align="right">-0.396</td>
-<td align="right">-0.246</td>
-<td align="right">-0.119</td>
-<td align="right">-0.246</td>
-<td align="right">0.208</td>
-<td align="right">0.127</td>
-<td align="right">-0.330</td>
-<td align="right">-0.311</td>
+<td align="right">-0.265</td>
+<td align="right">-0.116</td>
+<td align="right">-0.287</td>
+<td align="right">-0.363</td>
+<td align="right">-0.129</td>
+<td align="right">-0.144</td>
+<td align="right">.</td>
+<td align="right">-0.193</td>
+<td align="right">.</td>
+<td align="right">-0.386</td>
+<td align="right">-0.319</td>
+<td align="right">-0.256</td>
+<td align="right">-0.132</td>
+<td align="right">0.219</td>
+<td align="right">0.141</td>
+<td align="right">-0.301</td>
+<td align="right">-0.309</td>
 </tr>
 <tr class="odd">
 <td align="left">2864</td>
@@ -1718,13 +1721,13 @@ unit:</p>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
-<td align="right">0.246</td>
-<td align="right">.</td>
-<td align="right">0.147</td>
+<td align="right">0.115</td>
 <td align="right">.</td>
 <td align="right">.</td>
+<td align="right">0.179</td>
 <td align="right">.</td>
-<td align="right">0.235</td>
+<td align="right">.</td>
+<td align="right">0.209</td>
 <td align="right">.</td>
 <td align="right">.</td>
 <td align="right">.</td>
@@ -1743,14 +1746,13 @@ unit:</p>
 <span><span class="fu">get_top_terms</span><span class="op">(</span><span class="va">loadings_all</span><span class="op">[</span>, <span class="va">focal_topics</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="11%">
 <col width="13%">
-<col width="12%">
-<col width="16%">
+<col width="14%">
+<col width="14%">
 <col width="17%">
-<col width="9%">
+<col width="19%">
 <col width="10%">
-<col width="7%">
+<col width="10%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">taffy_2</th>
@@ -1758,9 +1760,8 @@ unit:</p>
 <th align="left">taffy_8</th>
 <th align="left">taffy_9</th>
 <th align="left">taffy_10</th>
-<th align="left">km_1</th>
-<th align="left">nmf_1</th>
-<th align="left">nmf_4</th>
+<th align="left">km_6</th>
+<th align="left">nmf_5</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -1770,8 +1771,7 @@ unit:</p>
 <td align="left">member</td>
 <td align="left">method</td>
 <td align="left">member</td>
-<td align="left">data</td>
-<td align="left">image</td>
+<td align="left">member</td>
 </tr>
 <tr class="even">
 <td align="left">forming</td>
@@ -1780,8 +1780,7 @@ unit:</p>
 <td align="left">developer-carrying</td>
 <td align="left">determining</td>
 <td align="left">image</td>
-<td align="left">seismic</td>
-<td align="left">member</td>
+<td align="left">developer</td>
 </tr>
 <tr class="odd">
 <td align="left">toner</td>
@@ -1790,8 +1789,7 @@ unit:</p>
 <td align="left">insulates</td>
 <td align="left">includes</td>
 <td align="left">developer</td>
-<td align="left">model</td>
-<td align="left">toner</td>
+<td align="left">image</td>
 </tr>
 <tr class="even">
 <td align="left">latent</td>
@@ -1800,8 +1798,7 @@ unit:</p>
 <td align="left">bearing</td>
 <td align="left">identifying</td>
 <td align="left">toner</td>
-<td align="left">system</td>
-<td align="left">transfer</td>
+<td align="left">toner</td>
 </tr>
 <tr class="odd">
 <td align="left">forms</td>
@@ -1810,8 +1807,7 @@ unit:</p>
 <td align="left">developer</td>
 <td align="left">using</td>
 <td align="left">developing</td>
-<td align="left">plurality</td>
-<td align="left">unit</td>
+<td align="left">developing</td>
 </tr>
 <tr class="even">
 <td align="left">carrier</td>
@@ -1820,8 +1816,7 @@ unit:</p>
 <td align="left">accommodate</td>
 <td align="left">comprises</td>
 <td align="left">portion</td>
-<td align="left">set</td>
-<td align="left">forming</td>
+<td align="left">electrode</td>
 </tr>
 <tr class="odd">
 <td align="left">electrostatic</td>
@@ -1830,8 +1825,7 @@ unit:</p>
 <td align="left">overlapped</td>
 <td align="left">drilling-performance</td>
 <td align="left">unit</td>
-<td align="left">fluid</td>
-<td align="left">belt</td>
+<td align="left">supply</td>
 </tr>
 <tr class="even">
 <td align="left">recording</td>
@@ -1840,8 +1834,7 @@ unit:</p>
 <td align="left">image</td>
 <td align="left">steps</td>
 <td align="left">forming</td>
-<td align="left">values</td>
-<td align="left">fixing</td>
+<td align="left">transfer</td>
 </tr>
 <tr class="odd">
 <td align="left">transfer</td>
@@ -1850,8 +1843,7 @@ unit:</p>
 <td align="left">developing</td>
 <td align="left">calculating</td>
 <td align="left">transfer</td>
-<td align="left">information</td>
-<td align="left">portion</td>
+<td align="left">unit</td>
 </tr>
 <tr class="even">
 <td align="left">member</td>
@@ -1860,8 +1852,7 @@ unit:</p>
 <td align="left">photosensitive</td>
 <td align="left">obtaining</td>
 <td align="left">belt</td>
-<td align="left">method</td>
-<td align="left">roller</td>
+<td align="left">carrier</td>
 </tr>
 </tbody>
 </table>
