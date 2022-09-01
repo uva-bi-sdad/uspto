@@ -146,6 +146,22 @@ if (file.exists(latest_inventors_file)) {
     names = inventor_sex$id
   )[latest_inventors$inventor_id]
 
+  # 7. add WIPO comparison category
+  wipo_fields <- download_patentsview_bulk("wipo_field", outDir)
+  wipo_fields <- c(
+    pharma = wipo_fields[wipo_fields$field_title == "Pharmaceuticals", "id", drop = TRUE],
+    civil = wipo_fields[wipo_fields$field_title == "Civil engineering", "id", drop = TRUE]
+  )
+  wipo_matrix <- patentsview_class_matrix("wipo", paste0(outDir, "wipo_matrix.rds"), dir = outDir)
+  wipo_matrix <- wipo_matrix[rownames(wipo_matrix) %in% latest_inventors$patent_id, wipo_fields]
+  wipo_pharma <- names(which(wipo_matrix[, wipo_fields[["pharma"]]] != 0))
+  wipo_civil <- names(which(wipo_matrix[, wipo_fields[["civil"]]] != 0))
+  wipo_both <- intersect(wipo_pharma, wipo_civil)
+  latest_inventors$wipo_comp <- NA_character_
+  latest_inventors$wipo_comp[latest_inventors$patent_id %in% wipo_pharma] <- "pharma"
+  latest_inventors$wipo_comp[latest_inventors$patent_id %in% wipo_civil] <- "civil"
+  latest_inventors$wipo_comp[latest_inventors$patent_id %in% wipo_both] <- "both"
+
   vroom::vroom_write(latest_inventors, latest_inventors_file, ",")
 }
 ```
@@ -209,9 +225,9 @@ of classes might explain the difference in sex distributions:
 ```{r}
 cpc_matrix <- cpc_matrix[rownames(cpc_matrix) %in% latest_inventors$patent_id, ]
 latest_inventors$pred_fem <- latest_inventors$pred_fem_patentsview == 1 |
-  latest_inventors$prob_fem > .5
+  (latest_inventors$pred_fem_patentsview == .5 & latest_inventors$prob_fem > .5)
 latest_inventors$pred_masc <- latest_inventors$pred_fem_patentsview == 0 |
-  latest_inventors$prob_fem < .5
+  (latest_inventors$pred_fem_patentsview == .5 & latest_inventors$prob_fem < .5)
 patent_any_fem <- tapply(
   latest_inventors$pred_fem,
   latest_inventors$patent_id, any
@@ -261,11 +277,11 @@ kable(cbind(
 ```
 
 Looking at the last class in the table (G09G) gives a feel for how well represented each country is
-by this set of classes. For example, Japan (JP) is least well represented, with only 37% and 35%
+by this set of classes. For example, Japan (JP) is least well represented, with only 36% and 35%
 of Female- and Male-assigned inventors accounted for, whereas Taiwan (TW) is better represented, with
-55% of inventors from each group represented. Taiwan is, however, not represented by these classes as evenly,
-which can be seen in the large initial percent -- 23% and 28% of Taiwan's inventors are accounted for
-by just the semiconductor devices class (H01L).
+52% and 55% of Female- and Male-assigned inventors represented. Taiwan is, however, not represented by
+these classes as evenly, which can be seen in the large initial percent -- 23% and 28% of Taiwan's
+inventors are accounted for by just the semiconductor devices class (H01L).
 
 Plotting out profiles might give a better feel for how similar countries are in terms of their
 distribution of inventors:
@@ -285,5 +301,233 @@ is relative to that of male-assigned inventors within each country. The more rel
 this distribution is, the more differences in class frequency might explain differences in
 sex frequency. Here, the United Kingdom (GB) is a standout example where a particularly large
 percent of female- but not male- assigned inventors are accounted for by a few classes
-(here, A61K and A61P in particular). In contrast, Korea (KR) has well aligned distributions,
+(here, A61P and A61K in particular). In contrast, China (CN) has well aligned distributions,
 despite arriving at a similar percent of the female-assigned inventor population to GB.
+
+# How much do patent categories explain organization proportion differences?
+
+One approach to this question could be similar to what we did with countries --
+identify the top organizations, then compare the top categories between them:
+
+We'll start by counting up patents by each organization between inventor sex summaries:
+```{r}
+# make a patent-level summary of inventor sex
+latest_inventors$n_female_inventors <- tapply(
+  latest_inventors$pred_fem, latest_inventors$patent_id, sum
+)[latest_inventors$patent_id]
+patents <- latest_inventors[!duplicated(latest_inventors$patent_id), ]
+
+# extract all unique organizations
+organizations <- as.data.frame(latest_inventors[
+  !is.na(latest_inventors$assignee_id) & !duplicated(latest_inventors$assignee_id),
+  c("assignee_id", "assignee_organization")
+])
+rownames(organizations) <- organizations$assignee_id
+
+# break those down by patents
+breakdown_organizations <- table(patents$assignee_id, patents$n_female_inventors != 0)
+breakdown_organizations <- as.data.frame(cbind(
+  breakdown_organizations,
+  sweep(breakdown_organizations, 2, colSums(breakdown_organizations), "/") * 100
+))
+colnames(breakdown_organizations) <- c(
+  "No Female", "Any Female", "No Female Percent", "Any Female Percent"
+)
+breakdown_organizations$Difference <- breakdown_organizations[, 4] - breakdown_organizations[, 3]
+breakdown_organizations$Organization <- organizations[
+  rownames(breakdown_organizations), "assignee_organization"
+]
+kable(
+  rbind(
+    breakdown_organizations[order(-breakdown_organizations$Difference)[1:20], ],
+    breakdown_organizations[order(breakdown_organizations$Difference)[20:1], ]
+  ),
+  digits = 3, row.names = FALSE,
+  caption = "20 Organizations with Biggest Positive and Negative Sex Percent Difference"
+)
+```
+
+Now we can calculate a class-organization matrix, and look at the same sort of percent differences:
+
+```{r}
+top_organizations <- names(sort(-rowSums(breakdown_organizations[, 1:2]))[1:9])
+su_top_organization <- latest_inventors$assignee_id %in% top_organizations
+class_organization_matrix <- vapply(
+  split(
+    latest_inventors[su_top_organization, c("patent_id", "pred_fem", "pred_masc")],
+    latest_inventors[su_top_organization, "assignee_id", drop = TRUE]
+  ),
+  function(inventors) {
+    inventors <- inventors[inventors$patent_id %in% rownames(cpc_matrix), ]
+    m <- cpc_matrix[inventors$patent_id, , drop = FALSE] != 0
+    unlist(list(
+      female = colSums(m * inventors$pred_fem), male = colSums(m * inventors$pred_masc)
+    ))
+  },
+  rep(colSums(cpc_matrix), 2)
+)
+class_organization_matrix <- list(
+  female = class_organization_matrix[seq_len(nrow(class_organization_matrix) / 2), ],
+  male = class_organization_matrix[
+    seq_len(nrow(class_organization_matrix) / 2) + nrow(class_organization_matrix) / 2,
+  ]
+)
+class_organization_matrix <- lapply(class_organization_matrix, function(m) {
+  total <- colSums(m)
+  total[total == 0] <- 1
+  sweep(m, 2, total, "/") * 100
+})
+
+top_classes_org <- rownames(class_organization_matrix$female)[
+  order(-rowMeans(class_organization_matrix$female))[1:20]
+]
+com_top_org <- as.data.frame(do.call(rbind, lapply(class_organization_matrix, function(m) {
+  vapply(top_organizations, function(id) cumsum(m[top_classes_org, id]), m[top_classes_org, 1])
+})))
+colnames(com_top_org) <- sub("International", "IBM", sub(
+  "[^a-z].*$", "", organizations[colnames(com_top_org), "assignee_organization"], TRUE
+), fixed = TRUE)
+kable(cpc_group[top_classes_org, ], row.names = FALSE, caption = "CPC Class Definitions")
+kable(
+  cbind(
+    "Assigned Sex" = rep(c("Female", "Male"), each = length(top_classes_org)),
+    Class = rep(top_classes_org, 2), com_top_org
+  ),
+  digits = 2, row.names = FALSE,
+  caption = "Cumulative Percent of Inventors by Class and Organization"
+)
+splot(
+  (com_top_org[1:20, ] - com_top_org[21:40, ]) ~ top_classes_org,
+  title = "Inventor Sex Ballance within Classes between Organizations",
+  laby = "Cumulative Percent of Inventor Sex Group (Female - Male)",
+  labx = "CPC Class", sort = FALSE, line.type = "b", xlas = 2, mar = c(3, 2, 0, 0)
+)
+```
+
+# How have inventors migrated over time?
+
+We previously took a quick look at dominant migrations over the full PatentsView history,
+but in this more current subset, we might take a close look to see if there are coherent
+migration patterns over time.
+
+As before, the first step is to extract migrations:
+```{r}
+# remove records without a county or sex
+inventor_counties <- latest_inventors[
+  , c("inventor_id", "pred_fem", "pred_masc", "county_fips", "date", "patent_id", "assignee_id")
+]
+inventor_counties <- inventor_counties[
+  !is.na(inventor_counties$county_fips) & (inventor_counties$pred_fem + inventor_counties$pred_masc) != 0,
+]
+nrow(inventor_counties)
+
+# select only those that are associated with multiple patents
+inventor_counties <- inventor_counties[
+  inventor_counties$inventor_id %in% inventor_counties$inventor_id[duplicated(inventor_counties$inventor_id)],
+  -3
+]
+inventor_counties <- inventor_counties[order(inventor_counties$date, decreasing = TRUE), ]
+nrow(inventor_counties)
+
+## see how many unique inventors this leaves
+length(unique(inventor_counties$inventor_id))
+
+# then look at each inventor to see if they have more than one county
+# if they do, record their transition; previous county -> new county
+inventor_moves_file <- paste0(outDir, "inventor_moves.csv.xz")
+if (file.exists(inventor_moves_file)) {
+  inventor_moves <- vroom::vroom(inventor_moves_file, show_col_types = FALSE)
+} else {
+  inventor_moves <- do.call(rbind, lapply(split(
+    as.data.frame(inventor_counties), inventor_counties$inventor_id
+  ), function(d) {
+    if (!all(d$county_fips == d$county_fips[[1]])) {
+      res <- NULL
+      county <- d$county_fips
+      for (i in seq_len(nrow(d) - 1)) {
+        if (county[[i]] != county[[i + 1]]) {
+          res <- rbind(
+            res,
+            as.data.frame(cbind(
+              d[i, c("inventor_id", "patent_id", "assignee_id", "date")],
+              from = county[[i + 1]],
+              from_patent = d[i + 1, "patent_id"],
+              from_assignee = d[i + 1, "assignee_id"],
+              to = county[[i]]
+            )),
+            make.row.names = FALSE
+          )
+        }
+      }
+      res
+    }
+  }))
+  vroom::vroom_write(inventor_moves, inventor_moves_file, ",")
+}
+unique_inventors <- as.data.frame(latest_inventors[!duplicated(latest_inventors$inventor_id), ])
+rownames(unique_inventors) <- unique_inventors$inventor_id
+inventor_moves$female <- unique_inventors[inventor_moves$inventor_id, "pred_fem"]
+
+## see how many inventors have associated moves
+length(unique(inventor_moves$inventor_id))
+```
+
+First, we might look at origin and destination state of moves in the latest 3 years for each sex group:
+```{r}
+moves <- inventor_moves[inventor_moves$date > "2018-12-31", c("from", "to", "female")]
+moves$from <- substr(formatC(moves$from, width = 5, flag = 0, mode = "integer"), 1, 2)
+moves$to <- substr(formatC(moves$to, width = 5, flag = 0, mode = "integer"), 1, 2)
+moves <- do.call(paste, moves)
+moves <- tapply(moves, moves, length)
+moves <- data.frame(
+  do.call(rbind, strsplit(names(moves), " ", fixed = TRUE)),
+  moves
+)
+colnames(moves) <- c("from", "to", "female", "count")
+moves$female <- as.logical(moves$female)
+
+# use these transitions to make an origin x destination matrix
+## devtools::install_github("uva-bi-sdad/catchment")
+library(catchment)
+states <- download_census_shapes(paste0(dirname(outDir), "/maps"))
+state_names <- structure(states$NAME, names = states$STATEFP)
+observed_states <- sort(unique(c(moves$from, moves$to)))
+migrations_female <- migrations_male <- matrix(
+  0, length(observed_states), length(observed_states),
+  dimnames = list(observed_states, observed_states)
+)
+for (r in seq_len(nrow(moves))) {
+  move <- moves[r, ]
+  if (move$female) {
+    migrations_female[move$from, move$to] <- move$count
+  } else {
+    migrations_male[move$from, move$to] <- move$count
+  }
+}
+migrations <- (migrations_female / sum(migrations_female) * 100) -
+  (migrations_male / sum(migrations_male) * 100)
+su <- rowSums(abs(migrations)) > 1 & colnames(migrations) %in% names(state_names)
+migrations <- migrations[su, su]
+migrations <- migrations[order(-rowSums(migrations)), order(-rowSums(migrations))]
+migrations_female <- migrations_female[rownames(migrations), colnames(migrations)]
+migrations_male <- migrations_male[rownames(migrations), colnames(migrations)]
+dimnames(migrations_female) <- dimnames(migrations_male) <- rep(list(unname(state_names[colnames(migrations)])), 2)
+diag(migrations_female) <- diag(migrations_male) <- 0
+migrations_female <- migrations_female / sum(migrations_female) * 100
+migrations_male <- migrations_male / sum(migrations_male) * 100
+
+# and make a chord diagram out of the most frequently involved states
+## devtools::install_github("mattflor/chorddiag")
+library(chorddiag)
+palette <- scico::scico(nrow(migrations), palette = "vik")
+```
+
+Percent of female-assigned inventor moves between 2018 and 2021:
+```{r}
+chorddiag(migrations_female, groupColors = palette, showTicks = FALSE, groupnamePadding = 5)
+```
+
+Percent of male-assigned inventor moves between 2018 and 2021:
+```{r}
+chorddiag(migrations_male, groupColors = palette, showTicks = FALSE, groupnamePadding = 5)
+```

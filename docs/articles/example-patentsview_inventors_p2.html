@@ -74,7 +74,8 @@
 
       
 
-      </header><div class="row">
+      </header><script src="example-patentsview_inventors_p2_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><script src="example-patentsview_inventors_p2_files/d3-4.13.0/d3.min.js"></script><script src="example-patentsview_inventors_p2_files/d3-tip-0.8.1/index.js"></script><link href="example-patentsview_inventors_p2_files/chorddiag-0.1.2.9000/chorddiag.css" rel="stylesheet">
+<script src="example-patentsview_inventors_p2_files/chorddiag-0.1.2.9000/chorddiag.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Analyzing Inventor Sex Differences</h1>
@@ -201,6 +202,22 @@ were associated with a patent in 2021:</p>
 <span>    names <span class="op">=</span> <span class="va">inventor_sex</span><span class="op">$</span><span class="va">id</span></span>
 <span>  <span class="op">)</span><span class="op">[</span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">inventor_id</span><span class="op">]</span></span>
 <span></span>
+<span>  <span class="co"># 7. add WIPO comparison category</span></span>
+<span>  <span class="va">wipo_fields</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_patentsview_bulk.html">download_patentsview_bulk</a></span><span class="op">(</span><span class="st">"wipo_field"</span>, <span class="va">outDir</span><span class="op">)</span></span>
+<span>  <span class="va">wipo_fields</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    pharma <span class="op">=</span> <span class="va">wipo_fields</span><span class="op">[</span><span class="va">wipo_fields</span><span class="op">$</span><span class="va">field_title</span> <span class="op">==</span> <span class="st">"Pharmaceuticals"</span>, <span class="st">"id"</span>, drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span>,</span>
+<span>    civil <span class="op">=</span> <span class="va">wipo_fields</span><span class="op">[</span><span class="va">wipo_fields</span><span class="op">$</span><span class="va">field_title</span> <span class="op">==</span> <span class="st">"Civil engineering"</span>, <span class="st">"id"</span>, drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="va">wipo_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/patentsview_class_matrix.html">patentsview_class_matrix</a></span><span class="op">(</span><span class="st">"wipo"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">outDir</span>, <span class="st">"wipo_matrix.rds"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="va">outDir</span><span class="op">)</span></span>
+<span>  <span class="va">wipo_matrix</span> <span class="op">&lt;-</span> <span class="va">wipo_matrix</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">wipo_matrix</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">latest_inventors</span><span class="op">$</span><span class="va">patent_id</span>, <span class="va">wipo_fields</span><span class="op">]</span></span>
+<span>  <span class="va">wipo_pharma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">wipo_matrix</span><span class="op">[</span>, <span class="va">wipo_fields</span><span class="op">[[</span><span class="st">"pharma"</span><span class="op">]</span><span class="op">]</span><span class="op">]</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">wipo_civil</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">wipo_matrix</span><span class="op">[</span>, <span class="va">wipo_fields</span><span class="op">[[</span><span class="st">"civil"</span><span class="op">]</span><span class="op">]</span><span class="op">]</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">wipo_both</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="va">wipo_pharma</span>, <span class="va">wipo_civil</span><span class="op">)</span></span>
+<span>  <span class="va">latest_inventors</span><span class="op">$</span><span class="va">wipo_comp</span> <span class="op">&lt;-</span> <span class="cn">NA_character_</span></span>
+<span>  <span class="va">latest_inventors</span><span class="op">$</span><span class="va">wipo_comp</span><span class="op">[</span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">patent_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">wipo_pharma</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"pharma"</span></span>
+<span>  <span class="va">latest_inventors</span><span class="op">$</span><span class="va">wipo_comp</span><span class="op">[</span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">patent_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">wipo_civil</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"civil"</span></span>
+<span>  <span class="va">latest_inventors</span><span class="op">$</span><span class="va">wipo_comp</span><span class="op">[</span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">patent_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">wipo_both</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"both"</span></span>
+<span></span>
 <span>  <span class="fu">vroom</span><span class="fu">::</span><span class="fu"><a href="https://vroom.r-lib.org/reference/vroom_write.html" class="external-link">vroom_write</a></span><span class="op">(</span><span class="va">latest_inventors</span>, <span class="va">latest_inventors_file</span>, <span class="st">","</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>And get a high-level feel for the set:</p>
@@ -297,8 +314,8 @@ and looking at their inventor sex proportions:</p>
 <span>  <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Female <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">d</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>, Male <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">d</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">breakdown_countries</span> <span class="op">&lt;-</span> <span class="va">breakdown_countries</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">breakdown_countries</span><span class="op">)</span> <span class="op">!=</span> <span class="fl">0</span>, <span class="op">]</span></span>
-<span><span class="va">breakdown_countries</span><span class="op">$</span><span class="va">Proportion_Female</span> <span class="op">&lt;-</span> <span class="va">breakdown_countries</span><span class="op">$</span><span class="va">Female</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">breakdown_countries</span><span class="op">)</span></span>
+<span><span class="va">breakdown_countries</span> <span class="op">&lt;-</span> <span class="va">breakdown_countries</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">breakdown_countries</span><span class="op">)</span> <span class="op">!=</span> <span class="fl">0</span>, <span class="op">]</span></span>
+<span><span class="va">breakdown_countries</span><span class="op">$</span><span class="va">Proportion_Female</span> <span class="op">&lt;-</span> <span class="va">breakdown_countries</span><span class="op">$</span><span class="va">Female</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">breakdown_countries</span><span class="op">)</span></span>
 <span><span class="va">breakdown_countries</span> <span class="op">&lt;-</span> <span class="va">breakdown_countries</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="va">breakdown_countries</span><span class="op">$</span><span class="va">Proportion_Female</span><span class="op">)</span>, <span class="op">]</span></span>
 <span><span class="va">top_countries</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">country</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1e5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">kable</span><span class="op">(</span></span>
@@ -386,9 +403,9 @@ in sex distributions:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cpc_matrix</span> <span class="op">&lt;-</span> <span class="va">cpc_matrix</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">cpc_matrix</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">latest_inventors</span><span class="op">$</span><span class="va">patent_id</span>, <span class="op">]</span></span>
 <span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">pred_fem</span> <span class="op">&lt;-</span> <span class="va">latest_inventors</span><span class="op">$</span><span class="va">pred_fem_patentsview</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">|</span></span>
-<span>  <span class="va">latest_inventors</span><span class="op">$</span><span class="va">prob_fem</span> <span class="op">&gt;</span> <span class="fl">.5</span></span>
+<span>  <span class="op">(</span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">pred_fem_patentsview</span> <span class="op">==</span> <span class="fl">.5</span> <span class="op">&amp;</span> <span class="va">latest_inventors</span><span class="op">$</span><span class="va">prob_fem</span> <span class="op">&gt;</span> <span class="fl">.5</span><span class="op">)</span></span>
 <span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">pred_masc</span> <span class="op">&lt;-</span> <span class="va">latest_inventors</span><span class="op">$</span><span class="va">pred_fem_patentsview</span> <span class="op">==</span> <span class="fl">0</span> <span class="op">|</span></span>
-<span>  <span class="va">latest_inventors</span><span class="op">$</span><span class="va">prob_fem</span> <span class="op">&lt;</span> <span class="fl">.5</span></span>
+<span>  <span class="op">(</span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">pred_fem_patentsview</span> <span class="op">==</span> <span class="fl">.5</span> <span class="op">&amp;</span> <span class="va">latest_inventors</span><span class="op">$</span><span class="va">prob_fem</span> <span class="op">&lt;</span> <span class="fl">.5</span><span class="op">)</span></span>
 <span><span class="va">patent_any_fem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span></span>
 <span>  <span class="va">latest_inventors</span><span class="op">$</span><span class="va">pred_fem</span>,</span>
 <span>  <span class="va">latest_inventors</span><span class="op">$</span><span class="va">patent_id</span>, <span class="va">any</span></span>
@@ -400,18 +417,18 @@ in sex distributions:</p>
 <span>    <span class="va">inventors</span> <span class="op">&lt;-</span> <span class="va">inventors</span><span class="op">[</span><span class="va">inventors</span><span class="op">$</span><span class="va">patent_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">cpc_matrix</span><span class="op">)</span>, <span class="op">]</span></span>
 <span>    <span class="va">m</span> <span class="op">&lt;-</span> <span class="va">cpc_matrix</span><span class="op">[</span><span class="va">inventors</span><span class="op">$</span><span class="va">patent_id</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span> <span class="op">!=</span> <span class="fl">0</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      female <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">m</span> <span class="op">*</span> <span class="va">inventors</span><span class="op">$</span><span class="va">pred_fem</span><span class="op">)</span>,</span>
-<span>      male <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">m</span> <span class="op">*</span> <span class="va">inventors</span><span class="op">$</span><span class="va">pred_masc</span><span class="op">)</span></span>
+<span>      female <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">m</span> <span class="op">*</span> <span class="va">inventors</span><span class="op">$</span><span class="va">pred_fem</span><span class="op">)</span>,</span>
+<span>      male <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">m</span> <span class="op">*</span> <span class="va">inventors</span><span class="op">$</span><span class="va">pred_masc</span><span class="op">)</span></span>
 <span>    <span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">cpc_matrix</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">cpc_matrix</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">class_country_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  female <span class="op">=</span> <span class="va">class_country_matrix</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">class_country_matrix</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>, <span class="op">]</span>,</span>
 <span>  male <span class="op">=</span> <span class="va">class_country_matrix</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">class_country_matrix</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">class_country_matrix</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>, <span class="op">]</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">class_country_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">class_country_matrix</span>, <span class="kw">function</span><span class="op">(</span><span class="va">m</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">total</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span>  <span class="va">total</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
 <span>  <span class="va">total</span><span class="op">[</span><span class="va">total</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">2</span>, <span class="va">total</span>, <span class="st">"/"</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
@@ -419,7 +436,7 @@ in sex distributions:</p>
 female-assigned inventors in average across the top countries:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">top_classes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">class_country_matrix</span><span class="op">$</span><span class="va">female</span><span class="op">)</span><span class="op">[</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">class_country_matrix</span><span class="op">$</span><span class="va">female</span><span class="op">[</span>, <span class="va">top_countries</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">class_country_matrix</span><span class="op">$</span><span class="va">female</span><span class="op">[</span>, <span class="va">top_countries</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span></span>
 <span><span class="op">]</span></span>
 <span><span class="va">ccm_top_country</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">class_country_matrix</span>, <span class="kw">function</span><span class="op">(</span><span class="va">m</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span></span>
@@ -455,26 +472,26 @@ OTHERWISE PROVIDED FOR</td>
 COMMUNICATION</td>
 </tr>
 <tr class="even">
-<td align="left">H04W</td>
-<td align="left">WIRELESS COMMUNICATION NETWORKS</td>
-</tr>
-<tr class="odd">
 <td align="left">A61P</td>
 <td align="left">SPECIFIC THERAPEUTIC ACTIVITY OF CHEMICAL COMPOUNDS OR
 MEDICINAL PREPARATIONS</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">A61K</td>
 <td align="left">PREPARATIONS FOR MEDICAL, DENTAL, OR TOILET
 PURPOSES</td>
 </tr>
-<tr class="odd">
-<td align="left">H04N</td>
-<td align="left">PICTORIAL COMMUNICATION, e.g. TELEVISION</td>
-</tr>
 <tr class="even">
+<td align="left">H04W</td>
+<td align="left">WIRELESS COMMUNICATION NETWORKS</td>
+</tr>
+<tr class="odd">
 <td align="left">C07D</td>
 <td align="left">HETEROCYCLIC COMPOUNDS</td>
+</tr>
+<tr class="even">
+<td align="left">H04N</td>
+<td align="left">PICTORIAL COMMUNICATION, e.g. TELEVISION</td>
 </tr>
 <tr class="odd">
 <td align="left">G01N</td>
@@ -482,13 +499,14 @@ PURPOSES</td>
 THEIR CHEMICAL OR PHYSICAL PROPERTIES</td>
 </tr>
 <tr class="even">
-<td align="left">H04B</td>
-<td align="left">TRANSMISSION</td>
-</tr>
-<tr class="odd">
 <td align="left">Y10T</td>
 <td align="left">TECHNICAL SUBJECTS COVERED BY FORMER US
 CLASSIFICATION</td>
+</tr>
+<tr class="odd">
+<td align="left">Y02E</td>
+<td align="left">REDUCTION OF GREENHOUSE GAS [GHG] EMISSIONS, RELATED TO
+ENERGY GENERATION, TRANSMISSION OR DISTRIBUTION</td>
 </tr>
 <tr class="even">
 <td align="left">C12N</td>
@@ -501,13 +519,23 @@ GENETIC ENGINEERING; CULTURE MEDIA</td>
 <td align="left">OPTICAL ELEMENTS, SYSTEMS OR APPARATUS</td>
 </tr>
 <tr class="even">
-<td align="left">Y02E</td>
-<td align="left">REDUCTION OF GREENHOUSE GAS [GHG] EMISSIONS, RELATED TO
-ENERGY GENERATION, TRANSMISSION OR DISTRIBUTION</td>
-</tr>
-<tr class="odd">
 <td align="left">C07K</td>
 <td align="left">PEPTIDES</td>
+</tr>
+<tr class="odd">
+<td align="left">H04B</td>
+<td align="left">TRANSMISSION</td>
+</tr>
+<tr class="even">
+<td align="left">A61B</td>
+<td align="left">DIAGNOSIS; SURGERY; IDENTIFICATION</td>
+</tr>
+<tr class="odd">
+<td align="left">G02F</td>
+<td align="left">OPTICAL DEVICES OR ARRANGEMENTS FOR THE CONTROL OF
+LIGHT BY MODIFICATION OF THE OPTICAL PROPERTIES OF THE MEDIA OF THE
+ELEMENTS INVOLVED THEREIN; NON-LINEAR OPTICS; FREQUENCY-CHANGING OF
+LIGHT; OPTICAL LOGIC ELEMENTS; OPTICAL ANALOGUE/DIGITAL CONVERTERS</td>
 </tr>
 <tr class="even">
 <td align="left">G06T</td>
@@ -517,17 +545,6 @@ ENERGY GENERATION, TRANSMISSION OR DISTRIBUTION</td>
 <td align="left">G06K</td>
 <td align="left">GRAPHICAL DATA READING ; PRESENTATION OF DATA; RECORD
 CARRIERS; HANDLING RECORD CARRIERS</td>
-</tr>
-<tr class="even">
-<td align="left">G02F</td>
-<td align="left">OPTICAL DEVICES OR ARRANGEMENTS FOR THE CONTROL OF
-LIGHT BY MODIFICATION OF THE OPTICAL PROPERTIES OF THE MEDIA OF THE
-ELEMENTS INVOLVED THEREIN; NON-LINEAR OPTICS; FREQUENCY-CHANGING OF
-LIGHT; OPTICAL LOGIC ELEMENTS; OPTICAL ANALOGUE/DIGITAL CONVERTERS</td>
-</tr>
-<tr class="odd">
-<td align="left">A61B</td>
-<td align="left">DIAGNOSIS; SURGERY; IDENTIFICATION</td>
 </tr>
 <tr class="even">
 <td align="left">G09G</td>
@@ -571,493 +588,494 @@ DEVICES USING STATIC MEANS TO PRESENT VARIABLE INFORMATION</td>
 <tr class="odd">
 <td align="left">Female</td>
 <td align="left">H01L</td>
-<td align="right">1.02</td>
-<td align="right">4.89</td>
-<td align="right">2.57</td>
-<td align="right">1.14</td>
-<td align="right">6.79</td>
-<td align="right">10.05</td>
-<td align="right">23.64</td>
-<td align="right">3.23</td>
+<td align="right">1.11</td>
+<td align="right">4.63</td>
+<td align="right">3.01</td>
+<td align="right">1.19</td>
+<td align="right">7.02</td>
+<td align="right">10.06</td>
+<td align="right">23.49</td>
+<td align="right">3.07</td>
 </tr>
 <tr class="even">
 <td align="left">Female</td>
 <td align="left">G06F</td>
-<td align="right">7.69</td>
-<td align="right">12.87</td>
-<td align="right">4.79</td>
-<td align="right">6.43</td>
-<td align="right">10.67</td>
-<td align="right">15.35</td>
-<td align="right">31.41</td>
-<td align="right">10.73</td>
+<td align="right">7.64</td>
+<td align="right">12.34</td>
+<td align="right">5.06</td>
+<td align="right">5.88</td>
+<td align="right">10.99</td>
+<td align="right">15.40</td>
+<td align="right">30.75</td>
+<td align="right">10.47</td>
 </tr>
 <tr class="odd">
 <td align="left">Female</td>
 <td align="left">H04L</td>
-<td align="right">17.43</td>
-<td align="right">20.77</td>
-<td align="right">6.47</td>
-<td align="right">9.96</td>
-<td align="right">12.42</td>
-<td align="right">20.75</td>
-<td align="right">33.12</td>
-<td align="right">16.24</td>
+<td align="right">16.16</td>
+<td align="right">20.25</td>
+<td align="right">6.61</td>
+<td align="right">8.77</td>
+<td align="right">12.63</td>
+<td align="right">20.49</td>
+<td align="right">32.47</td>
+<td align="right">15.60</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">A61P</td>
+<td align="right">19.63</td>
+<td align="right">22.53</td>
+<td align="right">13.25</td>
+<td align="right">19.00</td>
+<td align="right">13.50</td>
+<td align="right">21.56</td>
+<td align="right">33.22</td>
+<td align="right">20.06</td>
+</tr>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="left">A61K</td>
+<td align="right">23.21</td>
+<td align="right">24.62</td>
+<td align="right">19.84</td>
+<td align="right">27.99</td>
+<td align="right">14.56</td>
+<td align="right">22.66</td>
+<td align="right">34.20</td>
+<td align="right">24.63</td>
 </tr>
 <tr class="even">
 <td align="left">Female</td>
 <td align="left">H04W</td>
-<td align="right">25.60</td>
-<td align="right">27.94</td>
-<td align="right">7.59</td>
-<td align="right">12.61</td>
-<td align="right">13.56</td>
-<td align="right">26.29</td>
-<td align="right">34.49</td>
-<td align="right">19.57</td>
+<td align="right">30.21</td>
+<td align="right">31.59</td>
+<td align="right">20.95</td>
+<td align="right">30.39</td>
+<td align="right">15.56</td>
+<td align="right">27.77</td>
+<td align="right">35.59</td>
+<td align="right">27.60</td>
 </tr>
 <tr class="odd">
-<td align="left">Female</td>
-<td align="left">A61P</td>
-<td align="right">28.67</td>
-<td align="right">30.15</td>
-<td align="right">14.29</td>
-<td align="right">21.89</td>
-<td align="right">14.34</td>
-<td align="right">27.41</td>
-<td align="right">35.21</td>
-<td align="right">23.71</td>
-</tr>
-<tr class="even">
-<td align="left">Female</td>
-<td align="left">A61K</td>
-<td align="right">31.76</td>
-<td align="right">32.16</td>
-<td align="right">21.10</td>
-<td align="right">30.27</td>
-<td align="right">15.32</td>
-<td align="right">28.55</td>
-<td align="right">36.16</td>
-<td align="right">27.99</td>
-</tr>
-<tr class="odd">
-<td align="left">Female</td>
-<td align="left">H04N</td>
-<td align="right">33.68</td>
-<td align="right">34.33</td>
-<td align="right">21.86</td>
-<td align="right">31.65</td>
-<td align="right">19.24</td>
-<td align="right">32.53</td>
-<td align="right">38.46</td>
-<td align="right">29.98</td>
-</tr>
-<tr class="even">
 <td align="left">Female</td>
 <td align="left">C07D</td>
-<td align="right">35.13</td>
-<td align="right">35.93</td>
-<td align="right">26.28</td>
-<td align="right">37.30</td>
-<td align="right">20.22</td>
-<td align="right">33.53</td>
-<td align="right">38.74</td>
-<td align="right">32.25</td>
+<td align="right">31.88</td>
+<td align="right">33.21</td>
+<td align="right">26.44</td>
+<td align="right">36.73</td>
+<td align="right">16.53</td>
+<td align="right">28.78</td>
+<td align="right">35.87</td>
+<td align="right">30.04</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">H04N</td>
+<td align="right">33.83</td>
+<td align="right">35.27</td>
+<td align="right">27.20</td>
+<td align="right">37.67</td>
+<td align="right">20.29</td>
+<td align="right">32.69</td>
+<td align="right">38.12</td>
+<td align="right">31.99</td>
 </tr>
 <tr class="odd">
 <td align="left">Female</td>
 <td align="left">G01N</td>
-<td align="right">36.50</td>
-<td align="right">37.32</td>
-<td align="right">29.40</td>
-<td align="right">39.44</td>
-<td align="right">21.52</td>
-<td align="right">34.20</td>
-<td align="right">39.63</td>
-<td align="right">34.17</td>
+<td align="right">35.29</td>
+<td align="right">36.74</td>
+<td align="right">29.87</td>
+<td align="right">39.88</td>
+<td align="right">21.70</td>
+<td align="right">33.39</td>
+<td align="right">39.01</td>
+<td align="right">33.98</td>
 </tr>
 <tr class="even">
 <td align="left">Female</td>
-<td align="left">H04B</td>
-<td align="right">39.87</td>
-<td align="right">39.62</td>
-<td align="right">29.87</td>
-<td align="right">40.62</td>
-<td align="right">22.18</td>
+<td align="left">Y10T</td>
 <td align="right">36.68</td>
-<td align="right">40.55</td>
-<td align="right">35.55</td>
+<td align="right">37.46</td>
+<td align="right">31.35</td>
+<td align="right">40.96</td>
+<td align="right">24.32</td>
+<td align="right">34.70</td>
+<td align="right">41.12</td>
+<td align="right">35.73</td>
 </tr>
 <tr class="odd">
 <td align="left">Female</td>
-<td align="left">Y10T</td>
-<td align="right">41.09</td>
-<td align="right">40.34</td>
-<td align="right">31.30</td>
-<td align="right">41.64</td>
-<td align="right">24.98</td>
-<td align="right">37.96</td>
-<td align="right">42.73</td>
-<td align="right">37.26</td>
+<td align="left">Y02E</td>
+<td align="right">37.31</td>
+<td align="right">38.92</td>
+<td align="right">33.14</td>
+<td align="right">41.94</td>
+<td align="right">26.16</td>
+<td align="right">37.99</td>
+<td align="right">42.14</td>
+<td align="right">36.69</td>
 </tr>
 <tr class="even">
 <td align="left">Female</td>
 <td align="left">C12N</td>
-<td align="right">42.17</td>
-<td align="right">41.13</td>
-<td align="right">35.57</td>
-<td align="right">44.12</td>
-<td align="right">25.54</td>
-<td align="right">38.55</td>
-<td align="right">42.99</td>
-<td align="right">39.24</td>
+<td align="right">38.50</td>
+<td align="right">39.76</td>
+<td align="right">36.54</td>
+<td align="right">44.77</td>
+<td align="right">26.84</td>
+<td align="right">38.58</td>
+<td align="right">42.40</td>
+<td align="right">38.77</td>
 </tr>
 <tr class="odd">
 <td align="left">Female</td>
 <td align="left">G02B</td>
-<td align="right">43.12</td>
-<td align="right">43.09</td>
-<td align="right">36.19</td>
-<td align="right">45.00</td>
-<td align="right">27.90</td>
-<td align="right">40.61</td>
-<td align="right">45.18</td>
-<td align="right">40.23</td>
+<td align="right">39.36</td>
+<td align="right">41.44</td>
+<td align="right">37.18</td>
+<td align="right">45.66</td>
+<td align="right">29.22</td>
+<td align="right">40.78</td>
+<td align="right">44.57</td>
+<td align="right">39.73</td>
 </tr>
 <tr class="even">
 <td align="left">Female</td>
-<td align="left">Y02E</td>
-<td align="right">43.74</td>
-<td align="right">44.66</td>
-<td align="right">37.76</td>
-<td align="right">45.88</td>
-<td align="right">29.81</td>
-<td align="right">43.93</td>
-<td align="right">46.19</td>
+<td align="left">C07K</td>
+<td align="right">40.64</td>
+<td align="right">42.14</td>
+<td align="right">40.93</td>
+<td align="right">48.27</td>
+<td align="right">29.61</td>
 <td align="right">41.19</td>
+<td align="right">44.83</td>
+<td align="right">41.91</td>
 </tr>
 <tr class="odd">
 <td align="left">Female</td>
-<td align="left">C07K</td>
-<td align="right">44.85</td>
-<td align="right">45.32</td>
-<td align="right">42.25</td>
-<td align="right">48.23</td>
-<td align="right">30.14</td>
-<td align="right">44.38</td>
-<td align="right">46.45</td>
-<td align="right">43.24</td>
+<td align="left">H04B</td>
+<td align="right">42.57</td>
+<td align="right">44.34</td>
+<td align="right">41.40</td>
+<td align="right">49.23</td>
+<td align="right">30.24</td>
+<td align="right">43.41</td>
+<td align="right">45.78</td>
+<td align="right">43.15</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">A61B</td>
+<td align="right">44.76</td>
+<td align="right">45.06</td>
+<td align="right">42.42</td>
+<td align="right">50.82</td>
+<td align="right">31.24</td>
+<td align="right">44.10</td>
+<td align="right">46.32</td>
+<td align="right">45.61</td>
+</tr>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="left">G02F</td>
+<td align="right">45.15</td>
+<td align="right">47.65</td>
+<td align="right">42.70</td>
+<td align="right">51.18</td>
+<td align="right">32.54</td>
+<td align="right">47.11</td>
+<td align="right">48.19</td>
+<td align="right">45.92</td>
 </tr>
 <tr class="even">
 <td align="left">Female</td>
 <td align="left">G06T</td>
-<td align="right">46.53</td>
-<td align="right">46.98</td>
-<td align="right">42.90</td>
-<td align="right">49.51</td>
-<td align="right">31.51</td>
-<td align="right">45.61</td>
-<td align="right">47.45</td>
-<td align="right">44.67</td>
+<td align="right">46.90</td>
+<td align="right">49.25</td>
+<td align="right">43.30</td>
+<td align="right">52.22</td>
+<td align="right">33.94</td>
+<td align="right">48.40</td>
+<td align="right">49.10</td>
+<td align="right">47.28</td>
 </tr>
 <tr class="odd">
 <td align="left">Female</td>
 <td align="left">G06K</td>
-<td align="right">47.70</td>
-<td align="right">49.05</td>
-<td align="right">43.39</td>
-<td align="right">50.81</td>
-<td align="right">32.80</td>
-<td align="right">46.75</td>
-<td align="right">48.54</td>
-<td align="right">46.15</td>
-</tr>
-<tr class="even">
-<td align="left">Female</td>
-<td align="left">G02F</td>
-<td align="right">48.02</td>
-<td align="right">51.70</td>
-<td align="right">43.64</td>
-<td align="right">51.13</td>
-<td align="right">34.10</td>
-<td align="right">49.76</td>
-<td align="right">50.37</td>
-<td align="right">46.48</td>
-</tr>
-<tr class="odd">
-<td align="left">Female</td>
-<td align="left">A61B</td>
-<td align="right">50.02</td>
-<td align="right">52.43</td>
-<td align="right">44.74</td>
-<td align="right">52.56</td>
-<td align="right">35.17</td>
-<td align="right">50.41</td>
-<td align="right">50.92</td>
-<td align="right">48.86</td>
+<td align="right">48.04</td>
+<td align="right">51.26</td>
+<td align="right">43.71</td>
+<td align="right">53.18</td>
+<td align="right">35.21</td>
+<td align="right">49.60</td>
+<td align="right">50.18</td>
+<td align="right">48.67</td>
 </tr>
 <tr class="even">
 <td align="left">Female</td>
 <td align="left">G09G</td>
-<td align="right">50.45</td>
-<td align="right">55.20</td>
-<td align="right">44.80</td>
-<td align="right">52.75</td>
-<td align="right">36.20</td>
-<td align="right">52.86</td>
-<td align="right">52.74</td>
-<td align="right">49.18</td>
+<td align="right">48.40</td>
+<td align="right">54.08</td>
+<td align="right">43.76</td>
+<td align="right">53.35</td>
+<td align="right">36.19</td>
+<td align="right">52.08</td>
+<td align="right">52.00</td>
+<td align="right">48.97</td>
 </tr>
 <tr class="odd">
 <td align="left">Male</td>
 <td align="left">H01L</td>
 <td align="right">0.89</td>
-<td align="right">5.03</td>
-<td align="right">3.28</td>
+<td align="right">5.04</td>
+<td align="right">3.29</td>
 <td align="right">1.22</td>
-<td align="right">7.01</td>
-<td align="right">9.90</td>
-<td align="right">27.51</td>
-<td align="right">3.35</td>
+<td align="right">7.02</td>
+<td align="right">9.80</td>
+<td align="right">28.13</td>
+<td align="right">3.33</td>
 </tr>
 <tr class="even">
 <td align="left">Male</td>
 <td align="left">G06F</td>
-<td align="right">8.56</td>
-<td align="right">13.23</td>
-<td align="right">6.30</td>
-<td align="right">8.38</td>
-<td align="right">10.36</td>
-<td align="right">15.14</td>
-<td align="right">34.27</td>
-<td align="right">11.16</td>
+<td align="right">8.57</td>
+<td align="right">13.24</td>
+<td align="right">6.31</td>
+<td align="right">8.39</td>
+<td align="right">10.37</td>
+<td align="right">15.07</td>
+<td align="right">34.81</td>
+<td align="right">11.13</td>
 </tr>
 <tr class="odd">
 <td align="left">Male</td>
 <td align="left">H04L</td>
-<td align="right">16.93</td>
-<td align="right">20.78</td>
-<td align="right">8.49</td>
-<td align="right">13.09</td>
-<td align="right">12.26</td>
-<td align="right">21.78</td>
-<td align="right">36.00</td>
-<td align="right">16.48</td>
+<td align="right">16.87</td>
+<td align="right">20.83</td>
+<td align="right">8.51</td>
+<td align="right">13.12</td>
+<td align="right">12.28</td>
+<td align="right">21.99</td>
+<td align="right">36.56</td>
+<td align="right">16.43</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">A61P</td>
+<td align="right">18.77</td>
+<td align="right">22.58</td>
+<td align="right">11.10</td>
+<td align="right">17.79</td>
+<td align="right">12.80</td>
+<td align="right">22.75</td>
+<td align="right">37.08</td>
+<td align="right">18.66</td>
+</tr>
+<tr class="odd">
+<td align="left">Male</td>
+<td align="left">A61K</td>
+<td align="right">20.54</td>
+<td align="right">24.11</td>
+<td align="right">13.39</td>
+<td align="right">21.39</td>
+<td align="right">13.38</td>
+<td align="right">23.56</td>
+<td align="right">37.70</td>
+<td align="right">20.95</td>
 </tr>
 <tr class="even">
 <td align="left">Male</td>
 <td align="left">H04W</td>
-<td align="right">22.76</td>
-<td align="right">27.09</td>
-<td align="right">9.92</td>
-<td align="right">16.21</td>
-<td align="right">13.53</td>
-<td align="right">28.36</td>
-<td align="right">37.37</td>
-<td align="right">19.32</td>
+<td align="right">26.31</td>
+<td align="right">30.52</td>
+<td align="right">14.83</td>
+<td align="right">24.54</td>
+<td align="right">14.66</td>
+<td align="right">30.40</td>
+<td align="right">39.09</td>
+<td align="right">23.79</td>
 </tr>
 <tr class="odd">
-<td align="left">Male</td>
-<td align="left">A61P</td>
-<td align="right">24.66</td>
-<td align="right">28.88</td>
-<td align="right">12.49</td>
-<td align="right">20.87</td>
-<td align="right">14.05</td>
-<td align="right">29.16</td>
-<td align="right">37.92</td>
-<td align="right">21.56</td>
-</tr>
-<tr class="even">
-<td align="left">Male</td>
-<td align="left">A61K</td>
-<td align="right">26.44</td>
-<td align="right">30.45</td>
-<td align="right">14.78</td>
-<td align="right">24.46</td>
-<td align="right">14.63</td>
-<td align="right">30.00</td>
-<td align="right">38.58</td>
-<td align="right">23.87</td>
-</tr>
-<tr class="odd">
-<td align="left">Male</td>
-<td align="left">H04N</td>
-<td align="right">28.23</td>
-<td align="right">32.81</td>
-<td align="right">15.76</td>
-<td align="right">26.21</td>
-<td align="right">18.76</td>
-<td align="right">33.99</td>
-<td align="right">40.81</td>
-<td align="right">25.77</td>
-</tr>
-<tr class="even">
 <td align="left">Male</td>
 <td align="left">C07D</td>
-<td align="right">29.30</td>
-<td align="right">34.15</td>
-<td align="right">18.36</td>
-<td align="right">29.94</td>
-<td align="right">19.42</td>
-<td align="right">34.77</td>
-<td align="right">41.08</td>
-<td align="right">27.15</td>
+<td align="right">27.37</td>
+<td align="right">31.85</td>
+<td align="right">17.44</td>
+<td align="right">28.30</td>
+<td align="right">15.33</td>
+<td align="right">31.18</td>
+<td align="right">39.36</td>
+<td align="right">25.15</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">H04N</td>
+<td align="right">29.17</td>
+<td align="right">34.26</td>
+<td align="right">18.42</td>
+<td align="right">30.05</td>
+<td align="right">19.46</td>
+<td align="right">35.27</td>
+<td align="right">41.63</td>
+<td align="right">27.04</td>
 </tr>
 <tr class="odd">
 <td align="left">Male</td>
 <td align="left">G01N</td>
-<td align="right">30.58</td>
-<td align="right">35.36</td>
-<td align="right">20.04</td>
-<td align="right">31.95</td>
-<td align="right">20.46</td>
-<td align="right">35.37</td>
-<td align="right">41.90</td>
-<td align="right">28.64</td>
+<td align="right">30.46</td>
+<td align="right">35.44</td>
+<td align="right">20.10</td>
+<td align="right">32.05</td>
+<td align="right">20.49</td>
+<td align="right">35.85</td>
+<td align="right">42.45</td>
+<td align="right">28.52</td>
 </tr>
 <tr class="even">
 <td align="left">Male</td>
-<td align="left">H04B</td>
-<td align="right">33.13</td>
-<td align="right">37.64</td>
-<td align="right">20.87</td>
-<td align="right">33.06</td>
-<td align="right">21.41</td>
-<td align="right">38.24</td>
-<td align="right">42.78</td>
-<td align="right">30.00</td>
+<td align="left">Y10T</td>
+<td align="right">32.18</td>
+<td align="right">36.24</td>
+<td align="right">22.93</td>
+<td align="right">33.98</td>
+<td align="right">23.66</td>
+<td align="right">37.09</td>
+<td align="right">44.26</td>
+<td align="right">30.90</td>
 </tr>
 <tr class="odd">
 <td align="left">Male</td>
-<td align="left">Y10T</td>
-<td align="right">34.84</td>
-<td align="right">38.45</td>
-<td align="right">23.69</td>
-<td align="right">34.99</td>
-<td align="right">24.57</td>
-<td align="right">39.52</td>
-<td align="right">44.65</td>
-<td align="right">32.38</td>
+<td align="left">Y02E</td>
+<td align="right">33.23</td>
+<td align="right">37.89</td>
+<td align="right">24.32</td>
+<td align="right">34.93</td>
+<td align="right">25.64</td>
+<td align="right">40.19</td>
+<td align="right">45.07</td>
+<td align="right">31.84</td>
 </tr>
 <tr class="even">
 <td align="left">Male</td>
 <td align="left">C12N</td>
-<td align="right">35.63</td>
-<td align="right">39.03</td>
-<td align="right">24.65</td>
-<td align="right">35.91</td>
-<td align="right">24.86</td>
-<td align="right">39.95</td>
-<td align="right">44.83</td>
-<td align="right">33.38</td>
+<td align="right">34.02</td>
+<td align="right">38.45</td>
+<td align="right">25.28</td>
+<td align="right">35.82</td>
+<td align="right">25.92</td>
+<td align="right">40.60</td>
+<td align="right">45.24</td>
+<td align="right">32.84</td>
 </tr>
 <tr class="odd">
 <td align="left">Male</td>
 <td align="left">G02B</td>
-<td align="right">36.81</td>
-<td align="right">41.08</td>
-<td align="right">25.84</td>
-<td align="right">37.10</td>
-<td align="right">27.08</td>
-<td align="right">41.80</td>
-<td align="right">47.76</td>
-<td align="right">34.55</td>
+<td align="right">35.21</td>
+<td align="right">40.54</td>
+<td align="right">26.47</td>
+<td align="right">37.01</td>
+<td align="right">28.14</td>
+<td align="right">42.40</td>
+<td align="right">48.31</td>
+<td align="right">34.01</td>
 </tr>
 <tr class="even">
 <td align="left">Male</td>
-<td align="left">Y02E</td>
-<td align="right">37.85</td>
-<td align="right">42.74</td>
-<td align="right">27.23</td>
-<td align="right">38.05</td>
-<td align="right">29.05</td>
-<td align="right">44.90</td>
-<td align="right">48.61</td>
-<td align="right">35.48</td>
+<td align="left">C07K</td>
+<td align="right">36.02</td>
+<td align="right">41.00</td>
+<td align="right">27.61</td>
+<td align="right">38.21</td>
+<td align="right">28.35</td>
+<td align="right">42.72</td>
+<td align="right">48.49</td>
+<td align="right">35.00</td>
 </tr>
 <tr class="odd">
 <td align="left">Male</td>
-<td align="left">C07K</td>
-<td align="right">38.66</td>
-<td align="right">43.22</td>
-<td align="right">28.38</td>
-<td align="right">39.25</td>
-<td align="right">29.26</td>
-<td align="right">45.23</td>
-<td align="right">48.80</td>
-<td align="right">36.48</td>
+<td align="left">H04B</td>
+<td align="right">38.57</td>
+<td align="right">43.32</td>
+<td align="right">28.43</td>
+<td align="right">39.31</td>
+<td align="right">29.30</td>
+<td align="right">45.70</td>
+<td align="right">49.36</td>
+<td align="right">36.35</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">A61B</td>
+<td align="right">40.49</td>
+<td align="right">43.98</td>
+<td align="right">30.33</td>
+<td align="right">40.73</td>
+<td align="right">30.28</td>
+<td align="right">46.36</td>
+<td align="right">49.85</td>
+<td align="right">39.47</td>
+</tr>
+<tr class="odd">
+<td align="left">Male</td>
+<td align="left">G02F</td>
+<td align="right">40.86</td>
+<td align="right">46.71</td>
+<td align="right">30.51</td>
+<td align="right">41.20</td>
+<td align="right">31.80</td>
+<td align="right">49.11</td>
+<td align="right">51.49</td>
+<td align="right">39.78</td>
 </tr>
 <tr class="even">
 <td align="left">Male</td>
 <td align="left">G06T</td>
-<td align="right">40.23</td>
-<td align="right">45.00</td>
-<td align="right">29.29</td>
-<td align="right">40.76</td>
-<td align="right">30.45</td>
-<td align="right">46.41</td>
-<td align="right">49.74</td>
-<td align="right">37.84</td>
+<td align="right">42.43</td>
+<td align="right">48.51</td>
+<td align="right">31.42</td>
+<td align="right">42.70</td>
+<td align="right">32.98</td>
+<td align="right">50.29</td>
+<td align="right">52.43</td>
+<td align="right">41.14</td>
 </tr>
 <tr class="odd">
 <td align="left">Male</td>
 <td align="left">G06K</td>
-<td align="right">41.20</td>
-<td align="right">47.05</td>
-<td align="right">29.92</td>
-<td align="right">42.03</td>
-<td align="right">31.64</td>
-<td align="right">47.60</td>
-<td align="right">50.73</td>
-<td align="right">39.18</td>
-</tr>
-<tr class="even">
-<td align="left">Male</td>
-<td align="left">G02F</td>
-<td align="right">41.56</td>
-<td align="right">49.74</td>
-<td align="right">30.10</td>
-<td align="right">42.50</td>
-<td align="right">33.15</td>
-<td align="right">50.41</td>
-<td align="right">52.37</td>
-<td align="right">39.49</td>
-</tr>
-<tr class="odd">
-<td align="left">Male</td>
-<td align="left">A61B</td>
-<td align="right">43.50</td>
-<td align="right">50.41</td>
-<td align="right">31.99</td>
-<td align="right">43.95</td>
-<td align="right">34.14</td>
-<td align="right">51.08</td>
-<td align="right">52.87</td>
-<td align="right">42.59</td>
+<td align="right">43.40</td>
+<td align="right">50.56</td>
+<td align="right">32.05</td>
+<td align="right">43.96</td>
+<td align="right">34.17</td>
+<td align="right">51.49</td>
+<td align="right">53.41</td>
+<td align="right">42.49</td>
 </tr>
 <tr class="even">
 <td align="left">Male</td>
 <td align="left">G09G</td>
-<td align="right">44.31</td>
-<td align="right">53.03</td>
-<td align="right">32.11</td>
-<td align="right">44.42</td>
-<td align="right">35.24</td>
-<td align="right">53.56</td>
-<td align="right">54.57</td>
-<td align="right">42.94</td>
+<td align="right">44.22</td>
+<td align="right">53.18</td>
+<td align="right">32.17</td>
+<td align="right">44.44</td>
+<td align="right">35.28</td>
+<td align="right">53.96</td>
+<td align="right">55.09</td>
+<td align="right">42.84</td>
 </tr>
 </tbody>
 </table>
 <p>Looking at the last class in the table (G09G) gives a feel for how
 well represented each country is by this set of classes. For example,
-Japan (JP) is least well represented, with only 37% and 35% of Female-
+Japan (JP) is least well represented, with only 36% and 35% of Female-
 and Male-assigned inventors accounted for, whereas Taiwan (TW) is better
-represented, with 55% of inventors from each group represented. Taiwan
-is, however, not represented by these classes as evenly, which can be
-seen in the large initial percent – 23% and 28% of Taiwan’s inventors
-are accounted for by just the semiconductor devices class (H01L).</p>
+represented, with 52% and 55% of Female- and Male-assigned inventors
+represented. Taiwan is, however, not represented by these classes as
+evenly, which can be seen in the large initial percent – 23% and 28% of
+Taiwan’s inventors are accounted for by just the semiconductor devices
+class (H01L).</p>
 <p>Plotting out profiles might give a better feel for how similar
 countries are in terms of their distribution of inventors:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -1075,10 +1093,1246 @@ within each country. The more relatively skewed this distribution is,
 the more differences in class frequency might explain differences in sex
 frequency. Here, the United Kingdom (GB) is a standout example where a
 particularly large percent of female- but not male- assigned inventors
-are accounted for by a few classes (here, A61K and A61P in particular).
-In contrast, Korea (KR) has well aligned distributions, despite arriving
+are accounted for by a few classes (here, A61P and A61K in particular).
+In contrast, China (CN) has well aligned distributions, despite arriving
 at a similar percent of the female-assigned inventor population to
 GB.</p>
+</div>
+<div class="section level2">
+<h2 id="how-much-do-patent-categories-explain-organization-proportion-differences">How much do patent categories explain organization proportion
+differences?<a class="anchor" aria-label="anchor" href="#how-much-do-patent-categories-explain-organization-proportion-differences"></a>
+</h2>
+<p>One approach to this question could be similar to what we did with
+countries – identify the top organizations, then compare the top
+categories between them:</p>
+<p>We’ll start by counting up patents by each organization between
+inventor sex summaries:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># make a patent-level summary of inventor sex</span></span>
+<span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">n_female_inventors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span></span>
+<span>  <span class="va">latest_inventors</span><span class="op">$</span><span class="va">pred_fem</span>, <span class="va">latest_inventors</span><span class="op">$</span><span class="va">patent_id</span>, <span class="va">sum</span></span>
+<span><span class="op">)</span><span class="op">[</span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">patent_id</span><span class="op">]</span></span>
+<span><span class="va">patents</span> <span class="op">&lt;-</span> <span class="va">latest_inventors</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">patent_id</span><span class="op">)</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># extract all unique organizations</span></span>
+<span><span class="va">organizations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">latest_inventors</span><span class="op">[</span></span>
+<span>  <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">assignee_id</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">assignee_id</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"assignee_id"</span>, <span class="st">"assignee_organization"</span><span class="op">)</span></span>
+<span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">organizations</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">organizations</span><span class="op">$</span><span class="va">assignee_id</span></span>
+<span></span>
+<span><span class="co"># break those down by patents</span></span>
+<span><span class="va">breakdown_organizations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">patents</span><span class="op">$</span><span class="va">assignee_id</span>, <span class="va">patents</span><span class="op">$</span><span class="va">n_female_inventors</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">breakdown_organizations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span>
+<span>  <span class="va">breakdown_organizations</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">breakdown_organizations</span>, <span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">breakdown_organizations</span><span class="op">)</span>, <span class="st">"/"</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">breakdown_organizations</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"No Female"</span>, <span class="st">"Any Female"</span>, <span class="st">"No Female Percent"</span>, <span class="st">"Any Female Percent"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">breakdown_organizations</span><span class="op">$</span><span class="va">Difference</span> <span class="op">&lt;-</span> <span class="va">breakdown_organizations</span><span class="op">[</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">-</span> <span class="va">breakdown_organizations</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span></span>
+<span><span class="va">breakdown_organizations</span><span class="op">$</span><span class="va">Organization</span> <span class="op">&lt;-</span> <span class="va">organizations</span><span class="op">[</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">breakdown_organizations</span><span class="op">)</span>, <span class="st">"assignee_organization"</span></span>
+<span><span class="op">]</span></span>
+<span><span class="fu">kable</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>    <span class="va">breakdown_organizations</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="va">breakdown_organizations</span><span class="op">$</span><span class="va">Difference</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>, <span class="op">]</span>,</span>
+<span>    <span class="va">breakdown_organizations</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">breakdown_organizations</span><span class="op">$</span><span class="va">Difference</span><span class="op">)</span><span class="op">[</span><span class="fl">20</span><span class="op">:</span><span class="fl">1</span><span class="op">]</span>, <span class="op">]</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fl">3</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  caption <span class="op">=</span> <span class="st">"20 Organizations with Biggest Positive and Negative Sex Percent Difference"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<caption>20 Organizations with Biggest Positive and Negative Sex Percent
+Difference</caption>
+<colgroup>
+<col width="8%">
+<col width="8%">
+<col width="14%">
+<col width="15%">
+<col width="8%">
+<col width="43%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">No Female</th>
+<th align="right">Any Female</th>
+<th align="right">No Female Percent</th>
+<th align="right">Any Female Percent</th>
+<th align="right">Difference</th>
+<th align="left">Organization</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">49121</td>
+<td align="right">28938</td>
+<td align="right">1.694</td>
+<td align="right">5.656</td>
+<td align="right">3.961</td>
+<td align="left">Samsung Electronics Co., Ltd.</td>
+</tr>
+<tr class="even">
+<td align="right">84239</td>
+<td align="right">22789</td>
+<td align="right">2.906</td>
+<td align="right">4.454</td>
+<td align="right">1.548</td>
+<td align="left">International Business Machines Corporation</td>
+</tr>
+<tr class="odd">
+<td align="right">19006</td>
+<td align="right">10700</td>
+<td align="right">0.656</td>
+<td align="right">2.091</td>
+<td align="right">1.436</td>
+<td align="left">LG ELECTRONICS INC.</td>
+</tr>
+<tr class="even">
+<td align="right">14116</td>
+<td align="right">9125</td>
+<td align="right">0.487</td>
+<td align="right">1.783</td>
+<td align="right">1.297</td>
+<td align="left">TAIWAN SEMICONDUCTOR MANUFACTURING CO., LTD.</td>
+</tr>
+<tr class="odd">
+<td align="right">9321</td>
+<td align="right">6224</td>
+<td align="right">0.322</td>
+<td align="right">1.216</td>
+<td align="right">0.895</td>
+<td align="left">Samsung Display Co., Ltd.</td>
+</tr>
+<tr class="even">
+<td align="right">8168</td>
+<td align="right">5954</td>
+<td align="right">0.282</td>
+<td align="right">1.164</td>
+<td align="right">0.882</td>
+<td align="left">HUAWEI TECHNOLOGIES CO., LTD.</td>
+</tr>
+<tr class="odd">
+<td align="right">4990</td>
+<td align="right">3767</td>
+<td align="right">0.172</td>
+<td align="right">0.736</td>
+<td align="right">0.564</td>
+<td align="left">BOE Technology Group Co., Ltd.</td>
+</tr>
+<tr class="even">
+<td align="right">17649</td>
+<td align="right">5658</td>
+<td align="right">0.609</td>
+<td align="right">1.106</td>
+<td align="right">0.497</td>
+<td align="left">Apple Inc.</td>
+</tr>
+<tr class="odd">
+<td align="right">4553</td>
+<td align="right">3341</td>
+<td align="right">0.157</td>
+<td align="right">0.653</td>
+<td align="right">0.496</td>
+<td align="left">Electronics and Telecommunications Research
+Institute</td>
+</tr>
+<tr class="even">
+<td align="right">3181</td>
+<td align="right">2908</td>
+<td align="right">0.110</td>
+<td align="right">0.568</td>
+<td align="right">0.459</td>
+<td align="left">LG Chem, Ltd.</td>
+</tr>
+<tr class="odd">
+<td align="right">17348</td>
+<td align="right">5255</td>
+<td align="right">0.598</td>
+<td align="right">1.027</td>
+<td align="right">0.429</td>
+<td align="left">QUALCOMM Incorporated</td>
+</tr>
+<tr class="even">
+<td align="right">26283</td>
+<td align="right">6467</td>
+<td align="right">0.907</td>
+<td align="right">1.264</td>
+<td align="right">0.357</td>
+<td align="left">Intel Corporation</td>
+</tr>
+<tr class="odd">
+<td align="right">6220</td>
+<td align="right">2810</td>
+<td align="right">0.215</td>
+<td align="right">0.549</td>
+<td align="right">0.335</td>
+<td align="left">HYUNDAI MOTOR COMPANY</td>
+</tr>
+<tr class="even">
+<td align="right">25497</td>
+<td align="right">5979</td>
+<td align="right">0.880</td>
+<td align="right">1.169</td>
+<td align="right">0.289</td>
+<td align="left">Microsoft Technology Licensing, LLC</td>
+</tr>
+<tr class="odd">
+<td align="right">4438</td>
+<td align="right">2261</td>
+<td align="right">0.153</td>
+<td align="right">0.442</td>
+<td align="right">0.289</td>
+<td align="left">LG DISPLAY CO., LTD.</td>
+</tr>
+<tr class="even">
+<td align="right">2972</td>
+<td align="right">1739</td>
+<td align="right">0.103</td>
+<td align="right">0.340</td>
+<td align="right">0.237</td>
+<td align="left">Samsung Electro-Mechanics Co., Ltd.</td>
+</tr>
+<tr class="odd">
+<td align="right">2582</td>
+<td align="right">1528</td>
+<td align="right">0.089</td>
+<td align="right">0.299</td>
+<td align="right">0.210</td>
+<td align="left">Samsung SDI Co., Ltd.</td>
+</tr>
+<tr class="even">
+<td align="right">1052</td>
+<td align="right">1070</td>
+<td align="right">0.036</td>
+<td align="right">0.209</td>
+<td align="right">0.173</td>
+<td align="left">Genentech, Inc.</td>
+</tr>
+<tr class="odd">
+<td align="right">2391</td>
+<td align="right">1298</td>
+<td align="right">0.082</td>
+<td align="right">0.254</td>
+<td align="right">0.171</td>
+<td align="left">UNITED MICROELECTRONICS CORP.</td>
+</tr>
+<tr class="even">
+<td align="right">3240</td>
+<td align="right">1444</td>
+<td align="right">0.112</td>
+<td align="right">0.282</td>
+<td align="right">0.170</td>
+<td align="left">INDUSTRIAL TECHNOLOGY RESEARCH INSTITUTE</td>
+</tr>
+<tr class="odd">
+<td align="right">9018</td>
+<td align="right">616</td>
+<td align="right">0.311</td>
+<td align="right">0.120</td>
+<td align="right">-0.191</td>
+<td align="left">DENSO CORPORATION</td>
+</tr>
+<tr class="even">
+<td align="right">8802</td>
+<td align="right">539</td>
+<td align="right">0.304</td>
+<td align="right">0.105</td>
+<td align="right">-0.198</td>
+<td align="left">Robert Bosch GmbH</td>
+</tr>
+<tr class="odd">
+<td align="right">9244</td>
+<td align="right">601</td>
+<td align="right">0.319</td>
+<td align="right">0.117</td>
+<td align="right">-0.201</td>
+<td align="left">Siemens Aktiengesellschaft</td>
+</tr>
+<tr class="even">
+<td align="right">19597</td>
+<td align="right">2410</td>
+<td align="right">0.676</td>
+<td align="right">0.471</td>
+<td align="right">-0.205</td>
+<td align="left">General Electric Company</td>
+</tr>
+<tr class="odd">
+<td align="right">14237</td>
+<td align="right">1365</td>
+<td align="right">0.491</td>
+<td align="right">0.267</td>
+<td align="right">-0.224</td>
+<td align="left">Ricoh Co., Ltd.</td>
+</tr>
+<tr class="even">
+<td align="right">10113</td>
+<td align="right">614</td>
+<td align="right">0.349</td>
+<td align="right">0.120</td>
+<td align="right">-0.229</td>
+<td align="left">PANASONIC CORPORATION</td>
+</tr>
+<tr class="odd">
+<td align="right">9347</td>
+<td align="right">478</td>
+<td align="right">0.322</td>
+<td align="right">0.093</td>
+<td align="right">-0.229</td>
+<td align="left">BROTHER KOGYO KABUSHIKI KAISHA</td>
+</tr>
+<tr class="even">
+<td align="right">12376</td>
+<td align="right">959</td>
+<td align="right">0.427</td>
+<td align="right">0.187</td>
+<td align="right">-0.239</td>
+<td align="left">NEC CORPORATION</td>
+</tr>
+<tr class="odd">
+<td align="right">9079</td>
+<td align="right">354</td>
+<td align="right">0.313</td>
+<td align="right">0.069</td>
+<td align="right">-0.244</td>
+<td align="left">Mitsubishi Denki Kabushiki Kaisha</td>
+</tr>
+<tr class="even">
+<td align="right">12869</td>
+<td align="right">970</td>
+<td align="right">0.444</td>
+<td align="right">0.190</td>
+<td align="right">-0.254</td>
+<td align="left">Semiconductor Energy Laboratory Co., Ltd.</td>
+</tr>
+<tr class="odd">
+<td align="right">12716</td>
+<td align="right">748</td>
+<td align="right">0.439</td>
+<td align="right">0.146</td>
+<td align="right">-0.292</td>
+<td align="left">Sharp Kabushiki Kaisha</td>
+</tr>
+<tr class="even">
+<td align="right">13272</td>
+<td align="right">681</td>
+<td align="right">0.458</td>
+<td align="right">0.133</td>
+<td align="right">-0.325</td>
+<td align="left">Matsushita Electric Industrial Co., Ltd.</td>
+</tr>
+<tr class="odd">
+<td align="right">18786</td>
+<td align="right">1632</td>
+<td align="right">0.648</td>
+<td align="right">0.319</td>
+<td align="right">-0.329</td>
+<td align="left">Micron Technology, Inc.</td>
+</tr>
+<tr class="even">
+<td align="right">19092</td>
+<td align="right">1447</td>
+<td align="right">0.659</td>
+<td align="right">0.283</td>
+<td align="right">-0.376</td>
+<td align="left">Fujitsu Ltd.</td>
+</tr>
+<tr class="odd">
+<td align="right">17111</td>
+<td align="right">1075</td>
+<td align="right">0.590</td>
+<td align="right">0.210</td>
+<td align="right">-0.380</td>
+<td align="left">Toyota Jidosha Kogyo Kabushiki Kaisha</td>
+</tr>
+<tr class="even">
+<td align="right">17425</td>
+<td align="right">992</td>
+<td align="right">0.601</td>
+<td align="right">0.194</td>
+<td align="right">-0.407</td>
+<td align="left">Seiko Epson Corporation</td>
+</tr>
+<tr class="odd">
+<td align="right">24185</td>
+<td align="right">1840</td>
+<td align="right">0.834</td>
+<td align="right">0.360</td>
+<td align="right">-0.475</td>
+<td align="left">Hitachi, Ltd.</td>
+</tr>
+<tr class="even">
+<td align="right">29263</td>
+<td align="right">2331</td>
+<td align="right">1.009</td>
+<td align="right">0.456</td>
+<td align="right">-0.554</td>
+<td align="left">Toshiba Seiki Kabushiki Kaisha</td>
+</tr>
+<tr class="odd">
+<td align="right">33246</td>
+<td align="right">2150</td>
+<td align="right">1.147</td>
+<td align="right">0.420</td>
+<td align="right">-0.727</td>
+<td align="left">Sony Corporation</td>
+</tr>
+<tr class="even">
+<td align="right">46441</td>
+<td align="right">2900</td>
+<td align="right">1.602</td>
+<td align="right">0.567</td>
+<td align="right">-1.035</td>
+<td align="left">Canon Kabushiki Kaisha</td>
+</tr>
+</tbody>
+</table>
+<p>Now we can calculate a class-organization matrix, and look at the
+same sort of percent differences:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">top_organizations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">breakdown_organizations</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">su_top_organization</span> <span class="op">&lt;-</span> <span class="va">latest_inventors</span><span class="op">$</span><span class="va">assignee_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">top_organizations</span></span>
+<span><span class="va">class_organization_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span></span>
+<span>    <span class="va">latest_inventors</span><span class="op">[</span><span class="va">su_top_organization</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"patent_id"</span>, <span class="st">"pred_fem"</span>, <span class="st">"pred_masc"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>    <span class="va">latest_inventors</span><span class="op">[</span><span class="va">su_top_organization</span>, <span class="st">"assignee_id"</span>, drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="kw">function</span><span class="op">(</span><span class="va">inventors</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">inventors</span> <span class="op">&lt;-</span> <span class="va">inventors</span><span class="op">[</span><span class="va">inventors</span><span class="op">$</span><span class="va">patent_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">cpc_matrix</span><span class="op">)</span>, <span class="op">]</span></span>
+<span>    <span class="va">m</span> <span class="op">&lt;-</span> <span class="va">cpc_matrix</span><span class="op">[</span><span class="va">inventors</span><span class="op">$</span><span class="va">patent_id</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span> <span class="op">!=</span> <span class="fl">0</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      female <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">m</span> <span class="op">*</span> <span class="va">inventors</span><span class="op">$</span><span class="va">pred_fem</span><span class="op">)</span>, male <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">m</span> <span class="op">*</span> <span class="va">inventors</span><span class="op">$</span><span class="va">pred_masc</span><span class="op">)</span></span>
+<span>    <span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">cpc_matrix</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">class_organization_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  female <span class="op">=</span> <span class="va">class_organization_matrix</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">class_organization_matrix</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span>, <span class="op">]</span>,</span>
+<span>  male <span class="op">=</span> <span class="va">class_organization_matrix</span><span class="op">[</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">class_organization_matrix</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">class_organization_matrix</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>,</span>
+<span>  <span class="op">]</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">class_organization_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">class_organization_matrix</span>, <span class="kw">function</span><span class="op">(</span><span class="va">m</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">total</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colSums</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span>  <span class="va">total</span><span class="op">[</span><span class="va">total</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">2</span>, <span class="va">total</span>, <span class="st">"/"</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">top_classes_org</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">class_organization_matrix</span><span class="op">$</span><span class="va">female</span><span class="op">)</span><span class="op">[</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">class_organization_matrix</span><span class="op">$</span><span class="va">female</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span></span>
+<span><span class="op">]</span></span>
+<span><span class="va">com_top_org</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">class_organization_matrix</span>, <span class="kw">function</span><span class="op">(</span><span class="va">m</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="va">top_organizations</span>, <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span><span class="va">top_classes_org</span>, <span class="va">id</span><span class="op">]</span><span class="op">)</span>, <span class="va">m</span><span class="op">[</span><span class="va">top_classes_org</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">com_top_org</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"International"</span>, <span class="st">"IBM"</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span></span>
+<span>  <span class="st">"[^a-z].*$"</span>, <span class="st">""</span>, <span class="va">organizations</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">com_top_org</span><span class="op">)</span>, <span class="st">"assignee_organization"</span><span class="op">]</span>, <span class="cn">TRUE</span></span>
+<span><span class="op">)</span>, fixed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">kable</span><span class="op">(</span><span class="va">cpc_group</span><span class="op">[</span><span class="va">top_classes_org</span>, <span class="op">]</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span>, caption <span class="op">=</span> <span class="st">"CPC Class Definitions"</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<caption>CPC Class Definitions</caption>
+<colgroup>
+<col width="1%">
+<col width="98%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">id</th>
+<th align="left">title</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">G06F</td>
+<td align="left">ELECTRIC DIGITAL DATA PROCESSING</td>
+</tr>
+<tr class="even">
+<td align="left">H04L</td>
+<td align="left">TRANSMISSION OF DIGITAL INFORMATION, e.g. TELEGRAPHIC
+COMMUNICATION</td>
+</tr>
+<tr class="odd">
+<td align="left">H01L</td>
+<td align="left">SEMICONDUCTOR DEVICES; ELECTRIC SOLID STATE DEVICES NOT
+OTHERWISE PROVIDED FOR</td>
+</tr>
+<tr class="even">
+<td align="left">H04N</td>
+<td align="left">PICTORIAL COMMUNICATION, e.g. TELEVISION</td>
+</tr>
+<tr class="odd">
+<td align="left">H04W</td>
+<td align="left">WIRELESS COMMUNICATION NETWORKS</td>
+</tr>
+<tr class="even">
+<td align="left">G06T</td>
+<td align="left">IMAGE DATA PROCESSING OR GENERATION, IN GENERAL</td>
+</tr>
+<tr class="odd">
+<td align="left">G06Q</td>
+<td align="left">DATA PROCESSING SYSTEMS OR METHODS, SPECIALLY ADAPTED
+FOR ADMINISTRATIVE, COMMERCIAL, FINANCIAL, MANAGERIAL, SUPERVISORY OR
+FORECASTING PURPOSES; SYSTEMS OR METHODS SPECIALLY ADAPTED FOR
+ADMINISTRATIVE, COMMERCIAL, FINANCIAL, MANAGERIAL, SUPERVISORY OR
+FORECASTING PURPOSES, NOT OTHERWISE PROVIDED FOR</td>
+</tr>
+<tr class="even">
+<td align="left">G06K</td>
+<td align="left">GRAPHICAL DATA READING ; PRESENTATION OF DATA; RECORD
+CARRIERS; HANDLING RECORD CARRIERS</td>
+</tr>
+<tr class="odd">
+<td align="left">H04B</td>
+<td align="left">TRANSMISSION</td>
+</tr>
+<tr class="even">
+<td align="left">G02B</td>
+<td align="left">OPTICAL ELEMENTS, SYSTEMS OR APPARATUS</td>
+</tr>
+<tr class="odd">
+<td align="left">G03G</td>
+<td align="left">ELECTROGRAPHY; ELECTROPHOTOGRAPHY; MAGNETOGRAPHY</td>
+</tr>
+<tr class="even">
+<td align="left">Y02D</td>
+<td align="left">CLIMATE CHANGE MITIGATION TECHNOLOGIES IN INFORMATION
+AND COMMUNICATION TECHNOLOGIES [ICT], I.E. INFORMATION AND COMMUNICATION
+TECHNOLOGIES AIMING AT THE REDUCTION OF THEIR OWN ENERGY USE</td>
+</tr>
+<tr class="odd">
+<td align="left">G11C</td>
+<td align="left">STATIC STORES</td>
+</tr>
+<tr class="even">
+<td align="left">B41J</td>
+<td align="left">TYPEWRITERS; SELECTIVE PRINTING MECHANISMS, ;
+e.g. INK-JET PRINTERS, THERMAL PRINTERS; , i.e. MECHANISMS PRINTING
+OTHERWISE THAN FROM A FORME; CORRECTION OF TYPOGRAPHICAL ERRORS</td>
+</tr>
+<tr class="odd">
+<td align="left">G06N</td>
+<td align="left">COMPUTING ARRANGEMENTS BASED ON SPECIFIC COMPUTATIONAL
+MODELS</td>
+</tr>
+<tr class="even">
+<td align="left">G11B</td>
+<td align="left">INFORMATION STORAGE BASED ON RELATIVE MOVEMENT BETWEEN
+RECORD CARRIER AND TRANSDUCER</td>
+</tr>
+<tr class="odd">
+<td align="left">Y10S</td>
+<td align="left">TECHNICAL SUBJECTS COVERED BY FORMER USPC
+CROSS-REFERENCE ART COLLECTIONS [XRACs] AND DIGESTS</td>
+</tr>
+<tr class="even">
+<td align="left">H04M</td>
+<td align="left">TELEPHONIC COMMUNICATION</td>
+</tr>
+<tr class="odd">
+<td align="left">A61B</td>
+<td align="left">DIAGNOSIS; SURGERY; IDENTIFICATION</td>
+</tr>
+<tr class="even">
+<td align="left">G09G</td>
+<td align="left">ARRANGEMENTS OR CIRCUITS FOR CONTROL OF INDICATING
+DEVICES USING STATIC MEANS TO PRESENT VARIABLE INFORMATION</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">kable</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Assigned Sex"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Female"</span>, <span class="st">"Male"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">top_classes_org</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    Class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">top_classes_org</span>, <span class="fl">2</span><span class="op">)</span>, <span class="va">com_top_org</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fl">2</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  caption <span class="op">=</span> <span class="st">"Cumulative Percent of Inventors by Class and Organization"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<table style="width:100%;" class="table">
+<caption>Cumulative Percent of Inventors by Class and
+Organization</caption>
+<colgroup>
+<col width="15%">
+<col width="7%">
+<col width="7%">
+<col width="9%">
+<col width="7%">
+<col width="7%">
+<col width="7%">
+<col width="9%">
+<col width="12%">
+<col width="7%">
+<col width="9%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Assigned Sex</th>
+<th align="left">Class</th>
+<th align="right">IBM</th>
+<th align="right">Samsung</th>
+<th align="right">Canon</th>
+<th align="right">Sony</th>
+<th align="right">Intel</th>
+<th align="right">Toshiba</th>
+<th align="right">Microsoft</th>
+<th align="right">LG</th>
+<th align="right">Hitachi</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="left">G06F</td>
+<td align="right">31.19</td>
+<td align="right">9.25</td>
+<td align="right">6.29</td>
+<td align="right">8.90</td>
+<td align="right">16.41</td>
+<td align="right">4.60</td>
+<td align="right">32.41</td>
+<td align="right">4.79</td>
+<td align="right">16.67</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">H04L</td>
+<td align="right">43.12</td>
+<td align="right">17.53</td>
+<td align="right">7.49</td>
+<td align="right">14.76</td>
+<td align="right">27.54</td>
+<td align="right">6.89</td>
+<td align="right">46.69</td>
+<td align="right">19.07</td>
+<td align="right">21.50</td>
+</tr>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="left">H01L</td>
+<td align="right">51.41</td>
+<td align="right">29.31</td>
+<td align="right">10.86</td>
+<td align="right">20.62</td>
+<td align="right">38.84</td>
+<td align="right">26.70</td>
+<td align="right">46.91</td>
+<td align="right">20.45</td>
+<td align="right">25.86</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">H04N</td>
+<td align="right">52.53</td>
+<td align="right">34.55</td>
+<td align="right">25.86</td>
+<td align="right">32.59</td>
+<td align="right">42.05</td>
+<td align="right">30.36</td>
+<td align="right">52.41</td>
+<td align="right">29.96</td>
+<td align="right">27.95</td>
+</tr>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="left">H04W</td>
+<td align="right">55.28</td>
+<td align="right">43.41</td>
+<td align="right">26.42</td>
+<td align="right">39.55</td>
+<td align="right">52.64</td>
+<td align="right">32.92</td>
+<td align="right">56.07</td>
+<td align="right">46.45</td>
+<td align="right">28.81</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">G06T</td>
+<td align="right">56.88</td>
+<td align="right">45.80</td>
+<td align="right">30.66</td>
+<td align="right">45.41</td>
+<td align="right">56.34</td>
+<td align="right">35.15</td>
+<td align="right">60.49</td>
+<td align="right">47.34</td>
+<td align="right">30.24</td>
+</tr>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="left">G06Q</td>
+<td align="right">63.44</td>
+<td align="right">46.37</td>
+<td align="right">31.06</td>
+<td align="right">46.69</td>
+<td align="right">57.14</td>
+<td align="right">36.13</td>
+<td align="right">68.47</td>
+<td align="right">47.88</td>
+<td align="right">31.43</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">G06K</td>
+<td align="right">65.93</td>
+<td align="right">48.05</td>
+<td align="right">34.73</td>
+<td align="right">49.87</td>
+<td align="right">58.98</td>
+<td align="right">37.40</td>
+<td align="right">72.61</td>
+<td align="right">48.77</td>
+<td align="right">32.40</td>
+</tr>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="left">H04B</td>
+<td align="right">66.23</td>
+<td align="right">51.73</td>
+<td align="right">34.97</td>
+<td align="right">53.57</td>
+<td align="right">63.40</td>
+<td align="right">38.80</td>
+<td align="right">72.95</td>
+<td align="right">54.14</td>
+<td align="right">32.64</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">G02B</td>
+<td align="right">66.55</td>
+<td align="right">53.90</td>
+<td align="right">38.27</td>
+<td align="right">57.64</td>
+<td align="right">64.28</td>
+<td align="right">40.71</td>
+<td align="right">74.36</td>
+<td align="right">55.01</td>
+<td align="right">33.53</td>
+</tr>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="left">G03G</td>
+<td align="right">66.55</td>
+<td align="right">54.43</td>
+<td align="right">51.69</td>
+<td align="right">57.66</td>
+<td align="right">64.28</td>
+<td align="right">42.33</td>
+<td align="right">74.36</td>
+<td align="right">55.01</td>
+<td align="right">33.69</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">Y02D</td>
+<td align="right">67.55</td>
+<td align="right">56.13</td>
+<td align="right">51.99</td>
+<td align="right">58.54</td>
+<td align="right">70.15</td>
+<td align="right">43.23</td>
+<td align="right">75.33</td>
+<td align="right">56.65</td>
+<td align="right">34.49</td>
+</tr>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="left">G11C</td>
+<td align="right">68.42</td>
+<td align="right">59.41</td>
+<td align="right">52.03</td>
+<td align="right">58.77</td>
+<td align="right">72.63</td>
+<td align="right">47.87</td>
+<td align="right">75.58</td>
+<td align="right">56.66</td>
+<td align="right">36.07</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">B41J</td>
+<td align="right">68.44</td>
+<td align="right">59.65</td>
+<td align="right">63.45</td>
+<td align="right">59.04</td>
+<td align="right">72.65</td>
+<td align="right">48.74</td>
+<td align="right">75.59</td>
+<td align="right">56.66</td>
+<td align="right">36.20</td>
+</tr>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="left">G06N</td>
+<td align="right">72.63</td>
+<td align="right">60.08</td>
+<td align="right">63.67</td>
+<td align="right">59.19</td>
+<td align="right">74.74</td>
+<td align="right">48.96</td>
+<td align="right">79.76</td>
+<td align="right">56.80</td>
+<td align="right">37.39</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">G11B</td>
+<td align="right">73.45</td>
+<td align="right">61.45</td>
+<td align="right">64.37</td>
+<td align="right">63.01</td>
+<td align="right">75.05</td>
+<td align="right">51.30</td>
+<td align="right">80.17</td>
+<td align="right">57.57</td>
+<td align="right">39.62</td>
+</tr>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="left">Y10S</td>
+<td align="right">75.00</td>
+<td align="right">62.35</td>
+<td align="right">65.81</td>
+<td align="right">64.10</td>
+<td align="right">75.88</td>
+<td align="right">52.81</td>
+<td align="right">81.57</td>
+<td align="right">58.22</td>
+<td align="right">42.91</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">H04M</td>
+<td align="right">76.11</td>
+<td align="right">64.58</td>
+<td align="right">66.23</td>
+<td align="right">65.39</td>
+<td align="right">76.45</td>
+<td align="right">53.08</td>
+<td align="right">83.89</td>
+<td align="right">60.72</td>
+<td align="right">43.24</td>
+</tr>
+<tr class="odd">
+<td align="left">Female</td>
+<td align="left">A61B</td>
+<td align="right">76.76</td>
+<td align="right">65.65</td>
+<td align="right">68.80</td>
+<td align="right">66.14</td>
+<td align="right">76.81</td>
+<td align="right">57.30</td>
+<td align="right">84.32</td>
+<td align="right">60.85</td>
+<td align="right">43.98</td>
+</tr>
+<tr class="even">
+<td align="left">Female</td>
+<td align="left">G09G</td>
+<td align="right">77.01</td>
+<td align="right">67.49</td>
+<td align="right">69.46</td>
+<td align="right">69.00</td>
+<td align="right">77.83</td>
+<td align="right">57.67</td>
+<td align="right">85.36</td>
+<td align="right">61.84</td>
+<td align="right">45.50</td>
+</tr>
+<tr class="odd">
+<td align="left">Male</td>
+<td align="left">G06F</td>
+<td align="right">30.46</td>
+<td align="right">9.08</td>
+<td align="right">4.28</td>
+<td align="right">8.12</td>
+<td align="right">23.30</td>
+<td align="right">5.15</td>
+<td align="right">35.83</td>
+<td align="right">3.05</td>
+<td align="right">11.43</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">H04L</td>
+<td align="right">41.06</td>
+<td align="right">17.20</td>
+<td align="right">5.66</td>
+<td align="right">14.18</td>
+<td align="right">34.56</td>
+<td align="right">7.50</td>
+<td align="right">50.86</td>
+<td align="right">25.26</td>
+<td align="right">14.86</td>
+</tr>
+<tr class="odd">
+<td align="left">Male</td>
+<td align="left">H01L</td>
+<td align="right">53.20</td>
+<td align="right">29.42</td>
+<td align="right">10.82</td>
+<td align="right">21.15</td>
+<td align="right">44.52</td>
+<td align="right">22.77</td>
+<td align="right">51.15</td>
+<td align="right">26.13</td>
+<td align="right">21.87</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">H04N</td>
+<td align="right">54.34</td>
+<td align="right">35.23</td>
+<td align="right">25.66</td>
+<td align="right">36.40</td>
+<td align="right">46.98</td>
+<td align="right">27.06</td>
+<td align="right">55.87</td>
+<td align="right">33.00</td>
+<td align="right">24.71</td>
+</tr>
+<tr class="odd">
+<td align="left">Male</td>
+<td align="left">H04W</td>
+<td align="right">56.29</td>
+<td align="right">43.75</td>
+<td align="right">26.38</td>
+<td align="right">41.33</td>
+<td align="right">54.61</td>
+<td align="right">28.16</td>
+<td align="right">59.54</td>
+<td align="right">56.24</td>
+<td align="right">25.55</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">G06T</td>
+<td align="right">57.57</td>
+<td align="right">46.10</td>
+<td align="right">29.71</td>
+<td align="right">45.47</td>
+<td align="right">58.79</td>
+<td align="right">30.20</td>
+<td align="right">64.47</td>
+<td align="right">56.82</td>
+<td align="right">27.11</td>
+</tr>
+<tr class="odd">
+<td align="left">Male</td>
+<td align="left">G06Q</td>
+<td align="right">61.85</td>
+<td align="right">46.67</td>
+<td align="right">29.93</td>
+<td align="right">46.90</td>
+<td align="right">59.38</td>
+<td align="right">30.98</td>
+<td align="right">70.67</td>
+<td align="right">57.09</td>
+<td align="right">28.21</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">G06K</td>
+<td align="right">63.66</td>
+<td align="right">48.56</td>
+<td align="right">33.50</td>
+<td align="right">49.44</td>
+<td align="right">60.55</td>
+<td align="right">32.60</td>
+<td align="right">73.87</td>
+<td align="right">57.67</td>
+<td align="right">29.27</td>
+</tr>
+<tr class="odd">
+<td align="left">Male</td>
+<td align="left">H04B</td>
+<td align="right">64.05</td>
+<td align="right">52.34</td>
+<td align="right">33.72</td>
+<td align="right">52.01</td>
+<td align="right">64.33</td>
+<td align="right">33.59</td>
+<td align="right">74.42</td>
+<td align="right">66.34</td>
+<td align="right">30.09</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">G02B</td>
+<td align="right">64.55</td>
+<td align="right">54.08</td>
+<td align="right">37.46</td>
+<td align="right">54.81</td>
+<td align="right">65.24</td>
+<td align="right">34.44</td>
+<td align="right">76.44</td>
+<td align="right">66.95</td>
+<td align="right">31.01</td>
+</tr>
+<tr class="odd">
+<td align="left">Male</td>
+<td align="left">G03G</td>
+<td align="right">64.56</td>
+<td align="right">54.51</td>
+<td align="right">52.75</td>
+<td align="right">54.82</td>
+<td align="right">65.25</td>
+<td align="right">37.13</td>
+<td align="right">76.44</td>
+<td align="right">66.95</td>
+<td align="right">31.30</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">Y02D</td>
+<td align="right">65.57</td>
+<td align="right">56.16</td>
+<td align="right">53.05</td>
+<td align="right">55.48</td>
+<td align="right">71.76</td>
+<td align="right">37.65</td>
+<td align="right">77.88</td>
+<td align="right">68.58</td>
+<td align="right">31.94</td>
+</tr>
+<tr class="odd">
+<td align="left">Male</td>
+<td align="left">G11C</td>
+<td align="right">67.18</td>
+<td align="right">59.86</td>
+<td align="right">53.14</td>
+<td align="right">56.80</td>
+<td align="right">75.20</td>
+<td align="right">45.22</td>
+<td align="right">78.07</td>
+<td align="right">68.59</td>
+<td align="right">34.70</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">B41J</td>
+<td align="right">67.22</td>
+<td align="right">60.13</td>
+<td align="right">63.56</td>
+<td align="right">57.06</td>
+<td align="right">75.22</td>
+<td align="right">46.52</td>
+<td align="right">78.08</td>
+<td align="right">68.59</td>
+<td align="right">35.14</td>
+</tr>
+<tr class="odd">
+<td align="left">Male</td>
+<td align="left">G06N</td>
+<td align="right">70.22</td>
+<td align="right">60.55</td>
+<td align="right">63.71</td>
+<td align="right">57.41</td>
+<td align="right">76.67</td>
+<td align="right">46.73</td>
+<td align="right">81.11</td>
+<td align="right">68.69</td>
+<td align="right">35.54</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">G11B</td>
+<td align="right">72.01</td>
+<td align="right">61.45</td>
+<td align="right">64.67</td>
+<td align="right">63.35</td>
+<td align="right">76.90</td>
+<td align="right">51.50</td>
+<td align="right">81.67</td>
+<td align="right">69.21</td>
+<td align="right">39.90</td>
+</tr>
+<tr class="odd">
+<td align="left">Male</td>
+<td align="left">Y10S</td>
+<td align="right">74.00</td>
+<td align="right">62.22</td>
+<td align="right">66.28</td>
+<td align="right">64.70</td>
+<td align="right">77.75</td>
+<td align="right">53.15</td>
+<td align="right">84.10</td>
+<td align="right">69.53</td>
+<td align="right">43.84</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">H04M</td>
+<td align="right">74.80</td>
+<td align="right">64.57</td>
+<td align="right">66.47</td>
+<td align="right">65.89</td>
+<td align="right">78.31</td>
+<td align="right">53.47</td>
+<td align="right">85.91</td>
+<td align="right">71.22</td>
+<td align="right">44.06</td>
+</tr>
+<tr class="odd">
+<td align="left">Male</td>
+<td align="left">A61B</td>
+<td align="right">75.18</td>
+<td align="right">65.65</td>
+<td align="right">68.36</td>
+<td align="right">66.77</td>
+<td align="right">78.49</td>
+<td align="right">55.97</td>
+<td align="right">86.10</td>
+<td align="right">71.35</td>
+<td align="right">45.96</td>
+</tr>
+<tr class="even">
+<td align="left">Male</td>
+<td align="left">G09G</td>
+<td align="right">75.50</td>
+<td align="right">67.67</td>
+<td align="right">69.36</td>
+<td align="right">69.84</td>
+<td align="right">79.66</td>
+<td align="right">56.51</td>
+<td align="right">87.12</td>
+<td align="right">72.01</td>
+<td align="right">47.24</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/splot/man/splot.html" class="external-link">splot</a></span><span class="op">(</span></span>
+<span>  <span class="op">(</span><span class="va">com_top_org</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span>, <span class="op">]</span> <span class="op">-</span> <span class="va">com_top_org</span><span class="op">[</span><span class="fl">21</span><span class="op">:</span><span class="fl">40</span>, <span class="op">]</span><span class="op">)</span> <span class="op">~</span> <span class="va">top_classes_org</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"Inventor Sex Ballance within Classes between Organizations"</span>,</span>
+<span>  laby <span class="op">=</span> <span class="st">"Cumulative Percent of Inventor Sex Group (Female - Male)"</span>,</span>
+<span>  labx <span class="op">=</span> <span class="st">"CPC Class"</span>, sort <span class="op">=</span> <span class="cn">FALSE</span>, line.type <span class="op">=</span> <span class="st">"b"</span>, xlas <span class="op">=</span> <span class="fl">2</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="example-patentsview_inventors_p2_files/figure-html/unnamed-chunk-10-1.svg" width="848.64"></p>
+</div>
+<div class="section level2">
+<h2 id="how-have-inventors-migrated-over-time">How have inventors migrated over time?<a class="anchor" aria-label="anchor" href="#how-have-inventors-migrated-over-time"></a>
+</h2>
+<p>We previously took a quick look at dominant migrations over the full
+PatentsView history, but in this more current subset, we might take a
+close look to see if there are coherent migration patterns over
+time.</p>
+<p>As before, the first step is to extract migrations:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># remove records without a county or sex</span></span>
+<span><span class="va">inventor_counties</span> <span class="op">&lt;-</span> <span class="va">latest_inventors</span><span class="op">[</span></span>
+<span>  , <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"inventor_id"</span>, <span class="st">"pred_fem"</span>, <span class="st">"pred_masc"</span>, <span class="st">"county_fips"</span>, <span class="st">"date"</span>, <span class="st">"patent_id"</span>, <span class="st">"assignee_id"</span><span class="op">)</span></span>
+<span><span class="op">]</span></span>
+<span><span class="va">inventor_counties</span> <span class="op">&lt;-</span> <span class="va">inventor_counties</span><span class="op">[</span></span>
+<span>  <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">inventor_counties</span><span class="op">$</span><span class="va">county_fips</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">inventor_counties</span><span class="op">$</span><span class="va">pred_fem</span> <span class="op">+</span> <span class="va">inventor_counties</span><span class="op">$</span><span class="va">pred_masc</span><span class="op">)</span> <span class="op">!=</span> <span class="fl">0</span>,</span>
+<span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">inventor_counties</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 2997399</span></span>
+<span></span>
+<span><span class="co"># select only those that are associated with multiple patents</span></span>
+<span><span class="va">inventor_counties</span> <span class="op">&lt;-</span> <span class="va">inventor_counties</span><span class="op">[</span></span>
+<span>  <span class="va">inventor_counties</span><span class="op">$</span><span class="va">inventor_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">inventor_counties</span><span class="op">$</span><span class="va">inventor_id</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">inventor_counties</span><span class="op">$</span><span class="va">inventor_id</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  <span class="op">-</span><span class="fl">3</span></span>
+<span><span class="op">]</span></span>
+<span><span class="va">inventor_counties</span> <span class="op">&lt;-</span> <span class="va">inventor_counties</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">inventor_counties</span><span class="op">$</span><span class="va">date</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">inventor_counties</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 2901084</span></span>
+<span></span>
+<span><span class="co">## see how many unique inventors this leaves</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">inventor_counties</span><span class="op">$</span><span class="va">inventor_id</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 195489</span></span>
+<span></span>
+<span><span class="co"># then look at each inventor to see if they have more than one county</span></span>
+<span><span class="co"># if they do, record their transition; previous county -&gt; new county</span></span>
+<span><span class="va">inventor_moves_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">outDir</span>, <span class="st">"inventor_moves.csv.xz"</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">inventor_moves_file</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">inventor_moves</span> <span class="op">&lt;-</span> <span class="fu">vroom</span><span class="fu">::</span><span class="fu"><a href="https://vroom.r-lib.org/reference/vroom.html" class="external-link">vroom</a></span><span class="op">(</span><span class="va">inventor_moves_file</span>, show_col_types <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>  <span class="va">inventor_moves</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">inventor_counties</span><span class="op">)</span>, <span class="va">inventor_counties</span><span class="op">$</span><span class="va">inventor_id</span></span>
+<span>  <span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">county_fips</span> <span class="op">==</span> <span class="va">d</span><span class="op">$</span><span class="va">county_fips</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="va">res</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
+<span>      <span class="va">county</span> <span class="op">&lt;-</span> <span class="va">d</span><span class="op">$</span><span class="va">county_fips</span></span>
+<span>      <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="kw">if</span> <span class="op">(</span><span class="va">county</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">!=</span> <span class="va">county</span><span class="op">[[</span><span class="va">i</span> <span class="op">+</span> <span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
+<span>          <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>            <span class="va">res</span>,</span>
+<span>            <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span>
+<span>              <span class="va">d</span><span class="op">[</span><span class="va">i</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"inventor_id"</span>, <span class="st">"patent_id"</span>, <span class="st">"assignee_id"</span>, <span class="st">"date"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>              from <span class="op">=</span> <span class="va">county</span><span class="op">[[</span><span class="va">i</span> <span class="op">+</span> <span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>              from_patent <span class="op">=</span> <span class="va">d</span><span class="op">[</span><span class="va">i</span> <span class="op">+</span> <span class="fl">1</span>, <span class="st">"patent_id"</span><span class="op">]</span>,</span>
+<span>              from_assignee <span class="op">=</span> <span class="va">d</span><span class="op">[</span><span class="va">i</span> <span class="op">+</span> <span class="fl">1</span>, <span class="st">"assignee_id"</span><span class="op">]</span>,</span>
+<span>              to <span class="op">=</span> <span class="va">county</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span></span>
+<span>            <span class="op">)</span><span class="op">)</span>,</span>
+<span>            make.row.names <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>          <span class="op">)</span></span>
+<span>        <span class="op">}</span></span>
+<span>      <span class="op">}</span></span>
+<span>      <span class="va">res</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">vroom</span><span class="fu">::</span><span class="fu"><a href="https://vroom.r-lib.org/reference/vroom_write.html" class="external-link">vroom_write</a></span><span class="op">(</span><span class="va">inventor_moves</span>, <span class="va">inventor_moves_file</span>, <span class="st">","</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">unique_inventors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">latest_inventors</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">latest_inventors</span><span class="op">$</span><span class="va">inventor_id</span><span class="op">)</span>, <span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">unique_inventors</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">unique_inventors</span><span class="op">$</span><span class="va">inventor_id</span></span>
+<span><span class="va">inventor_moves</span><span class="op">$</span><span class="va">female</span> <span class="op">&lt;-</span> <span class="va">unique_inventors</span><span class="op">[</span><span class="va">inventor_moves</span><span class="op">$</span><span class="va">inventor_id</span>, <span class="st">"pred_fem"</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co">## see how many inventors have associated moves</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">inventor_moves</span><span class="op">$</span><span class="va">inventor_id</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 80159</span></span></code></pre></div>
+<p>First, we might look at origin and destination state of moves in the
+latest 3 years for each sex group:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">moves</span> <span class="op">&lt;-</span> <span class="va">inventor_moves</span><span class="op">[</span><span class="va">inventor_moves</span><span class="op">$</span><span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2018-12-31"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"from"</span>, <span class="st">"to"</span>, <span class="st">"female"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">moves</span><span class="op">$</span><span class="va">from</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/formatc.html" class="external-link">formatC</a></span><span class="op">(</span><span class="va">moves</span><span class="op">$</span><span class="va">from</span>, width <span class="op">=</span> <span class="fl">5</span>, flag <span class="op">=</span> <span class="fl">0</span>, mode <span class="op">=</span> <span class="st">"integer"</span><span class="op">)</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">moves</span><span class="op">$</span><span class="va">to</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/formatc.html" class="external-link">formatC</a></span><span class="op">(</span><span class="va">moves</span><span class="op">$</span><span class="va">to</span>, width <span class="op">=</span> <span class="fl">5</span>, flag <span class="op">=</span> <span class="fl">0</span>, mode <span class="op">=</span> <span class="st">"integer"</span><span class="op">)</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">moves</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">paste</span>, <span class="va">moves</span><span class="op">)</span></span>
+<span><span class="va">moves</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span><span class="va">moves</span>, <span class="va">moves</span>, <span class="va">length</span><span class="op">)</span></span>
+<span><span class="va">moves</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html" class="external-link">strsplit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">moves</span><span class="op">)</span>, <span class="st">" "</span>, fixed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="va">moves</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">moves</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"from"</span>, <span class="st">"to"</span>, <span class="st">"female"</span>, <span class="st">"count"</span><span class="op">)</span></span>
+<span><span class="va">moves</span><span class="op">$</span><span class="va">female</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/logical.html" class="external-link">as.logical</a></span><span class="op">(</span><span class="va">moves</span><span class="op">$</span><span class="va">female</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># use these transitions to make an origin x destination matrix</span></span>
+<span><span class="co">## devtools::install_github("uva-bi-sdad/catchment")</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">catchment</span><span class="op">)</span></span>
+<span><span class="va">states</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/catchment/man/download_census_shapes.html" class="external-link">download_census_shapes</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">dirname</a></span><span class="op">(</span><span class="va">outDir</span><span class="op">)</span>, <span class="st">"/maps"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">state_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="va">states</span><span class="op">$</span><span class="va">NAME</span>, names <span class="op">=</span> <span class="va">states</span><span class="op">$</span><span class="va">STATEFP</span><span class="op">)</span></span>
+<span><span class="va">observed_states</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">moves</span><span class="op">$</span><span class="va">from</span>, <span class="va">moves</span><span class="op">$</span><span class="va">to</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">migrations_female</span> <span class="op">&lt;-</span> <span class="va">migrations_male</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span></span>
+<span>  <span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">observed_states</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">observed_states</span><span class="op">)</span>,</span>
+<span>  dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">observed_states</span>, <span class="va">observed_states</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">r</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">moves</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">move</span> <span class="op">&lt;-</span> <span class="va">moves</span><span class="op">[</span><span class="va">r</span>, <span class="op">]</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">move</span><span class="op">$</span><span class="va">female</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">migrations_female</span><span class="op">[</span><span class="va">move</span><span class="op">$</span><span class="va">from</span>, <span class="va">move</span><span class="op">$</span><span class="va">to</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">move</span><span class="op">$</span><span class="va">count</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="va">migrations_male</span><span class="op">[</span><span class="va">move</span><span class="op">$</span><span class="va">from</span>, <span class="va">move</span><span class="op">$</span><span class="va">to</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">move</span><span class="op">$</span><span class="va">count</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">migrations</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">migrations_female</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">migrations_female</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span><span class="op">)</span> <span class="op">-</span></span>
+<span>  <span class="op">(</span><span class="va">migrations_male</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">migrations_male</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span><span class="op">)</span></span>
+<span><span class="va">su</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">migrations</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">migrations</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">state_names</span><span class="op">)</span></span>
+<span><span class="va">migrations</span> <span class="op">&lt;-</span> <span class="va">migrations</span><span class="op">[</span><span class="va">su</span>, <span class="va">su</span><span class="op">]</span></span>
+<span><span class="va">migrations</span> <span class="op">&lt;-</span> <span class="va">migrations</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">migrations</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">migrations</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">migrations_female</span> <span class="op">&lt;-</span> <span class="va">migrations_female</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">migrations</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">migrations</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">migrations_male</span> <span class="op">&lt;-</span> <span class="va">migrations_male</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">migrations</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">migrations</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">migrations_female</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">migrations_male</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="va">state_names</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">migrations</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">migrations_female</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">migrations_male</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span><span class="va">migrations_female</span> <span class="op">&lt;-</span> <span class="va">migrations_female</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">migrations_female</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span>
+<span><span class="va">migrations_male</span> <span class="op">&lt;-</span> <span class="va">migrations_male</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">migrations_male</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span>
+<span></span>
+<span><span class="co"># and make a chord diagram out of the most frequently involved states</span></span>
+<span><span class="co">## devtools::install_github("mattflor/chorddiag")</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mattflor/chorddiag/" class="external-link">chorddiag</a></span><span class="op">)</span></span>
+<span><span class="va">palette</span> <span class="op">&lt;-</span> <span class="fu">scico</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/scico/man/scico.html" class="external-link">scico</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">migrations</span><span class="op">)</span>, palette <span class="op">=</span> <span class="st">"vik"</span><span class="op">)</span></span></code></pre></div>
+<p>Percent of female-assigned inventor moves between 2018 and 2021:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/chorddiag/man/chorddiag.html" class="external-link">chorddiag</a></span><span class="op">(</span><span class="va">migrations_female</span>, groupColors <span class="op">=</span> <span class="va">palette</span>, showTicks <span class="op">=</span> <span class="cn">FALSE</span>, groupnamePadding <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<div id="htmlwidget-b6c49ab703517ca26c54" style="width:848.64px;height:528px;" class="chorddiag html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b6c49ab703517ca26c54">{"x":{"matrix":[[0,4.53905700211119,4.60942997888811,2.77973258268825,6.19282195636875,1.7945109078114,2.00562983814215,0.809289232934553,0.738916256157635,2.14637579169599,4.99648135116115],[4.85573539760732,0,1.05559465165376,0.387051372273047,0.879662209711471,0.387051372273047,0.281491907107671,0.387051372273047,0.211118930330753,0.387051372273047,0.668543279380718],[5.45390570021112,1.44264602392681,0,1.7945109078114,0.668543279380718,0.5981703026038,0.492610837438424,0.422237860661506,0.246305418719212,0.844475721323012,1.16115411681914],[2.53342716396904,0.457424349049965,1.47783251231527,0,0.175932441942294,0.703729767769177,0.105559465165376,0.211118930330753,0.140745953553835,0.140745953553835,0.527797325826882],[5.91133004926108,0.492610837438424,0.422237860661506,0.281491907107671,0,0.387051372273047,0.0703729767769177,0.175932441942294,0.175932441942294,0.211118930330753,0.950035186488388],[2.25193525686137,0.633356790992259,0.457424349049965,0.5981703026038,0.246305418719212,0,0.211118930330753,0.140745953553835,0.211118930330753,0.246305418719212,0.527797325826882],[1.93525686136524,0.246305418719212,0.387051372273047,0.0703729767769177,0.105559465165376,0.211118930330753,0,0.211118930330753,0.0351864883884588,0.175932441942294,0.246305418719212],[1.23152709359606,0.246305418719212,0.316678395496129,0.140745953553835,0.175932441942294,0.0351864883884588,0.175932441942294,0,0.140745953553835,0.0703729767769177,0.281491907107671],[1.23152709359606,0.140745953553835,0.0703729767769177,0.0703729767769177,0.387051372273047,0.175932441942294,0.0703729767769177,0.140745953553835,0,0.105559465165376,0.387051372273047],[2.00562983814215,0.387051372273047,0.5981703026038,0.316678395496129,0.281491907107671,0.246305418719212,0.0703729767769177,0.140745953553835,0.0703729767769177,0,0.985221674876847],[5.31315974665728,0.91484869809993,1.1963406052076,0.422237860661506,1.30190007037298,0.703729767769177,0.211118930330753,0.211118930330753,0.422237860661506,0.668543279380718,0]],"options":{"type":"directional","width":null,"height":null,"margin":100,"showGroupnames":true,"groupNames":["California","Massachusetts","New York","New Jersey","Washington","Pennsylvania","Ohio","North Carolina","Florida","Illinois","Texas"],"groupColors":["#001260","#023A7A","#106496","#5496B7","#A5C9D9","#EAEDE9","#DCCBA7","#BE9F60","#9F711B","#7E3F00","#601200"],"groupThickness":0.1,"groupPadding":0.0349065850398866,"groupnamePadding":[5,5,5,5,5,5,5,5,5,5,5],"groupnameFontsize":18,"groupedgeColor":null,"chordedgeColor":"#808080","categoryNames":null,"categorynamePadding":100,"categorynameFontsize":28,"showTicks":false,"tickInterval":0.1,"ticklabelFontsize":10,"fadeLevel":0.1,"showTooltips":true,"showZeroTooltips":true,"tooltipNames":["California","Massachusetts","New York","New Jersey","Washington","Pennsylvania","Ohio","North Carolina","Florida","Illinois","Texas"],"tooltipFontsize":12,"tooltipUnit":"","tooltipGroupConnector":" &#x25B6; ","precision":"null","clickAction":null,"clickGroupAction":null}},"evals":[],"jsHooks":[]}</script><p>Percent of male-assigned inventor moves between 2018 and 2021:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/chorddiag/man/chorddiag.html" class="external-link">chorddiag</a></span><span class="op">(</span><span class="va">migrations_male</span>, groupColors <span class="op">=</span> <span class="va">palette</span>, showTicks <span class="op">=</span> <span class="cn">FALSE</span>, groupnamePadding <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<div id="htmlwidget-04724925b69451cac29d" style="width:848.64px;height:528px;" class="chorddiag html-widget"></div>
+<script type="application/json" data-for="htmlwidget-04724925b69451cac29d">{"x":{"matrix":[[0,3.80987382089918,4.01813058924415,2.01723222671403,6.19053452570542,1.96006370207032,1.38021152354118,1.71913920535751,1.46188084446078,2.4704969578178,5.31258932581976],[4.17738576503736,0,0.975948384989179,0.330760749724366,0.514516721793458,0.387929274368084,0.24500796275879,0.334844215770346,0.285842623218588,0.326677283678386,0.649271101310793],[4.43464412593409,1.02086651149496,0,0.984115317081138,0.690105761770591,0.457348197149741,0.436930866919842,0.367511944138184,0.436930866919842,0.432847400873862,0.967781452897219],[2.40516150108212,0.412430070643963,0.959614520805259,0,0.261341826942709,0.657438033402752,0.163338641839193,0.151088243701254,0.322593817632406,0.196006370207032,0.47368206133366],[6.1129486708318,0.47368206133366,0.534934052023357,0.265425292988689,0,0.216423700436931,0.22867409857487,0.306259953448487,0.265425292988689,0.600269508759035,0.898362530115562],[2.18873780064519,0.47368206133366,0.47368206133366,0.551267916207277,0.24909142880477,0,0.220507166482911,0.289926089264568,0.294009555310548,0.24909142880477,0.457348197149741],[1.49454857282862,0.220507166482911,0.343011147862306,0.147004777655274,0.285842623218588,0.289926089264568,0,0.277675691126628,0.273592225080648,0.359345012046225,0.47368206133366],[1.71505573931153,0.257258360896729,0.281759157172608,0.130670913471354,0.334844215770346,0.306259953448487,0.23684103066683,0,0.281759157172608,0.208256768344971,0.530850585977378],[1.69463840908163,0.285842623218588,0.387929274368084,0.281759157172608,0.294009555310548,0.175589039977133,0.216423700436931,0.265425292988689,0,0.310343419494467,0.608436440850994],[2.90334435869166,0.326677283678386,0.387929274368084,0.179672506023112,0.694189227816571,0.261341826942709,0.261341826942709,0.24909142880477,0.359345012046225,0,0.649271101310793],[5.39425864673935,0.612519906896974,0.849360937563804,0.383845808322104,0.971864918943199,0.318510351586427,0.4655151292417,0.518600187839438,0.518600187839438,0.575768712483156,0]],"options":{"type":"directional","width":null,"height":null,"margin":100,"showGroupnames":true,"groupNames":["California","Massachusetts","New York","New Jersey","Washington","Pennsylvania","Ohio","North Carolina","Florida","Illinois","Texas"],"groupColors":["#001260","#023A7A","#106496","#5496B7","#A5C9D9","#EAEDE9","#DCCBA7","#BE9F60","#9F711B","#7E3F00","#601200"],"groupThickness":0.1,"groupPadding":0.0349065850398866,"groupnamePadding":[5,5,5,5,5,5,5,5,5,5,5],"groupnameFontsize":18,"groupedgeColor":null,"chordedgeColor":"#808080","categoryNames":null,"categorynamePadding":100,"categorynameFontsize":28,"showTicks":false,"tickInterval":0.1,"ticklabelFontsize":10,"fadeLevel":0.1,"showTooltips":true,"showZeroTooltips":true,"tooltipNames":["California","Massachusetts","New York","New Jersey","Washington","Pennsylvania","Ohio","North Carolina","Florida","Illinois","Texas"],"tooltipFontsize":12,"tooltipUnit":"","tooltipGroupConnector":" &#x25B6; ","precision":"null","clickAction":null,"clickGroupAction":null}},"evals":[],"jsHooks":[]}</script>
 </div>
   </div>
 
