@@ -516,7 +516,6 @@ migrations_male <- migrations_male[rownames(migrations), colnames(migrations)]
 dimnames(migrations_female) <- dimnames(migrations_male) <- rep(
   list(unname(state_names[colnames(migrations)])), 2
 )
-# diag(migrations_female) <- diag(migrations_male) <- 0
 migrations_female <- migrations_female / sum(migrations_female) * 100
 migrations_male <- migrations_male / sum(migrations_male) * 100
 

@@ -1,0 +1,304 @@
+---
+title: "WIPO Contrast"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{WIPO Contrast}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+*Built with R 
+`r getRversion()`*
+
+***
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 5,
+  fig.width = 8.84,
+  dev = "CairoSVG",
+  fig.ext = "svg"
+)
+library(uspto)
+library(knitr)
+library(Matrix)
+library(splot)
+outDir <- "../patentsview/"
+if (!dir.exists(outDir)) outDir <- "../../patentsview/"
+```
+
+```{css, echo = FALSE}
+.table {margin-bottom: 40px}
+td {white-space: nowrap}
+```
+
+From the [previous example](https://uva-bi-sdad.github.io/uspto/articles/example-patentsview_inventors.html)
+we can see that inventors of different sex groups seem to be represented differently by classes of
+patents. Here, we'll focus on two of the World Intellectual Property Organization (WIPO)
+classes: Pharmaceuticals, which has a particularly high allocation of female-assigned inventors,
+and Civil Engineering, which has a particularly high allocation of male-assigned inventors.
+
+```r
+library(uspto)
+outDir <- "../patentsview/"
+```
+
+We'll start by collecting a unified set of patents that have either of the focal WIPO classes:
+```{r}
+contrast_inventors_file <- paste0(outDir, "contrast_inventors.csv.xz")
+if (file.exists(contrast_inventors_file)) {
+  contrast_inventors <- vroom::vroom(contrast_inventors_file, show_col_types = FALSE)
+} else {
+  # 1. identify patents that fall exclusively into one of the two focal WIPO classes
+  wipo_fields <- download_patentsview_bulk("wipo_field", outDir)
+  wipo_fields <- c(
+    pharma = wipo_fields[wipo_fields$field_title == "Pharmaceuticals", "id", drop = TRUE],
+    civil = wipo_fields[wipo_fields$field_title == "Civil engineering", "id", drop = TRUE]
+  )
+  wipo_matrix <- patentsview_class_matrix("wipo", paste0(outDir, "wipo_matrix.rds"), dir = outDir)
+  wipo_pharma <- names(which(
+    wipo_matrix[, wipo_fields[["pharma"]]] != 0 & wipo_matrix[, wipo_fields[["civil"]]] == 0
+  ))
+  wipo_civil <- names(which(
+    wipo_matrix[, wipo_fields[["civil"]]] != 0 & wipo_matrix[, wipo_fields[["pharma"]]] == 0
+  ))
+  wipo_targets <- c(wipo_pharma, wipo_civil)
+
+  # 2. identify the inventors associated with those patents
+  patent_inventors <- download_patentsview_bulk(
+    "patent_inventor", outDir,
+    make_db = TRUE,
+    partition = list(series_code = function(d) substr(d$patent_id, 1, 2))
+  )
+  contrast_inventors <- dplyr::collect(dplyr::filter(
+    patent_inventors, patent_id %in% wipo_targets
+  ))
+  contrast_inventors$n_inventors <- as.numeric(tapply(
+    contrast_inventors$inventor_id, contrast_inventors$patent_id, length
+  )[contrast_inventors$patent_id])
+
+  # 3. combine patent and inventor data
+  patents <- download_patentsview_bulk("patent", outDir, make_db = TRUE)
+  patents_target <- as.data.frame(dplyr::collect(dplyr::select(dplyr::filter(
+    patents, as.character(number) %in% wipo_targets
+  ), number, type, date, num_claims, withdrawn, kind)))
+  rownames(patents_target) <- patents_target$number
+  contrast_inventors <- cbind(contrast_inventors, patents_target[contrast_inventors$patent_id, -1])
+  contrast_inventors$WIPO_class <- c(
+    "FALSE" = "Civil Engineering", "TRUE" = "Pharmaceuticals"
+  )[as.character(contrast_inventors$patent_id %in% wipo_pharma)]
+
+  # 4. add assignee data
+  patent_assignees <- download_patentsview_bulk(
+    "patent_assignee", outDir,
+    make_db = TRUE,
+    partition = list(series_code = function(d) substr(d$patent_id, 1, 2))
+  )
+  assignees <- dplyr::collect(dplyr::filter(
+    patent_assignees, patent_id %in% contrast_inventors$patent_id
+  ))
+  assignees <- download_patentsview_bulk("rawassignee", outDir, make_db = TRUE)
+  assignees_target <- dplyr::collect(dplyr::filter(
+    assignees,
+    as.character(patent_id) %in% contrast_inventors$patent_id & sequence == 0 & !is.na(organization)
+  ))
+  contrast_inventors$assignee_id <- structure(
+    assignees_target$assignee_id,
+    names = assignees_target$patent_id
+  )[contrast_inventors$patent_id]
+  contrast_inventors$assignee_type <- structure(
+    assignees_target$type,
+    names = assignees_target$patent_id
+  )[contrast_inventors$patent_id]
+  contrast_inventors$assignee_organization <- structure(
+    assignees_target$organization,
+    names = assignees_target$patent_id
+  )[contrast_inventors$patent_id]
+
+  # 5. add location information
+  locations <- download_patentsview_bulk("location", outDir, make_db = TRUE)
+  locations_target <- as.data.frame(dplyr::collect(dplyr::filter(
+    locations, id %in% contrast_inventors$location_id
+  )))
+  locations_target[is.na(locations_target$country), "country"] <- "US"
+  locations_target <- locations_target[, !colnames(locations_target) %in% c("state", "county")]
+  rownames(locations_target) <- locations_target$id
+  contrast_inventors <- contrast_inventors[contrast_inventors$location_id %in% locations_target$id, -4]
+  contrast_inventors <- cbind(contrast_inventors, locations_target[contrast_inventors$location_id, -1])
+  contrast_inventors$n_countries <- as.numeric(tapply(
+    contrast_inventors$country, contrast_inventors$patent_id, function(cs) length(unique(cs))
+  )[contrast_inventors$patent_id])
+
+  # 6. add sex predictions
+  inventor_sex <- vroom::vroom(
+    paste0(outDir, "inventor_sex.csv.xz"),
+    show_col_types = FALSE
+  )
+  contrast_inventors$prob_fem <- structure(
+    inventor_sex$prob_fem,
+    names = inventor_sex$id
+  )[contrast_inventors$inventor_id]
+  contrast_inventors$pred_fem_patentsview <- structure(
+    inventor_sex$pred_fem_patentsview,
+    names = inventor_sex$id
+  )[contrast_inventors$inventor_id]
+
+  vroom::vroom_write(contrast_inventors, contrast_inventors_file, ",")
+}
+```
+
+And get a high-level feel for the set:
+```{r}
+# sex breakdowns
+## PatentsView assignments
+contrast_inventors$sex_patentsview <- "Unknown"
+contrast_inventors$sex_patentsview[contrast_inventors$pred_fem_patentsview == 1] <- "Female"
+contrast_inventors$sex_patentsview[contrast_inventors$pred_fem_patentsview == 0] <- "Male"
+sex_patentsview <- table(contrast_inventors$sex_patentsview, contrast_inventors$WIPO_class)
+sex_patentsview <- sweep(sex_patentsview, 2, colSums(sex_patentsview), "/") * 100
+kable(sex_patentsview, digits = 3, caption = "Sex Breakdown - PatentsView")
+## Aggregate assignments
+contrast_inventors$sex_aggregate <- "Unknown"
+contrast_inventors$sex_aggregate[contrast_inventors$prob_fem > .5] <- "Female"
+contrast_inventors$sex_aggregate[contrast_inventors$prob_fem < .5] <- "Male"
+sex_aggregate <- table(contrast_inventors$sex_aggregate, contrast_inventors$WIPO_class)
+sex_aggregate <- sweep(sex_aggregate, 2, colSums(sex_aggregate), "/") * 100
+kable(sex_aggregate, digits = 3, caption = "Sex Breakdown - Aggregate")
+## Combined -- defaults to PatentsView, falls back on aggregate
+contrast_inventors$pred_female <- contrast_inventors$pred_fem_patentsview == 1 |
+  (contrast_inventors$pred_fem_patentsview != 0 & contrast_inventors$prob_fem > .5)
+contrast_inventors$pred_male <- contrast_inventors$pred_fem_patentsview == 0 |
+  (contrast_inventors$pred_fem_patentsview != 1 & contrast_inventors$prob_fem < .5)
+contrast_inventors$pred_sex <- "Unknown"
+contrast_inventors$pred_sex[contrast_inventors$pred_female] <- "Female"
+contrast_inventors$pred_sex[contrast_inventors$pred_male] <- "Male"
+sex_combined <- table(contrast_inventors$pred_sex, contrast_inventors$WIPO_class)
+sex_combined <- sweep(sex_combined, 2, colSums(sex_combined), "/") * 100
+kable(sex_combined, digits = 3, caption = "Sex Breakdown - Combined")
+# patent-level summary
+contrast_inventors$patent_id <- as.character(contrast_inventors$patent_id)
+unique_patents <- contrast_inventors[!duplicated(contrast_inventors$patent_id), ]
+unique_patents$any_female <- tapply(
+  contrast_inventors$pred_female, contrast_inventors$patent_id, any
+)[unique_patents$patent_id]
+nrow(unique_patents)
+
+kable(rbind(
+  "Countries Per Patent" = summary(unique_patents$n_countries),
+  "Inventors Per Patent" = summary(unique_patents$n_inventors)
+), digits = 3)
+```
+
+# Class Breakdown
+
+WIPO classes are defined by sets of International Patent Classification classes,
+which align with Cooperative Patent Classification (CPC) classes,
+so we can take a finer look at our contrasts by breaking out those classes:
+
+```{r}
+cpc_matrix_file <- paste0(outDir, "contrast_cpc_matrix.rds")
+if (file.exists(cpc_matrix_file)) {
+  cpc_matrix <- readRDS(cpc_matrix_file)
+} else {
+  cpc <- download_patentsview_bulk("cpc_current", outDir, make_db = TRUE)
+  cpc_matrix <- patentsview_class_matrix(dplyr::compute(dplyr::filter(
+    cpc, patent_id %in% contrast_inventors$patent_id
+  )), cpc_matrix_file, dir = outDir)
+}
+
+cpc_group <- as.data.frame(download_patentsview_bulk("cpc_group", outDir))
+rownames(cpc_group) <- cpc_group$id
+
+# see which CPC classes best represent each focal WIPO class
+wipo_cpc <- vapply(c("Civil Engineering", "Pharmaceuticals"), function(class) {
+  ids <- unique_patents$patent_id[unique_patents$WIPO_class == class]
+  ids <- ids[ids %in% rownames(cpc_matrix)]
+  colSums(cpc_matrix[ids, ] != 0)
+}, cpc_matrix[1, ])
+wipo_cpc <- as.data.frame(sweep(wipo_cpc, 2, table(unique_patents$WIPO_class), "/") * 100)
+wipo_cpc$Difference <- wipo_cpc$Pharmaceuticals - wipo_cpc$`Civil Engineering`
+wipo_cpc$Title <- cpc_group[rownames(wipo_cpc), "title"]
+wipo_cpc <- wipo_cpc[order(-wipo_cpc$Difference), ]
+kable(
+  wipo_cpc[c(1:20, seq_len(20) + nrow(wipo_cpc) - 20), ],
+  digits = 3, caption = "Percent of focal patents in which each CPC class appears"
+)
+```
+
+We can also look at inventor sex breakdowns within CPC classes to see which CPC classes might be driving
+the WIPO class inventor sex differences:
+```{r}
+sex_cpc <- vapply(c("Female", "Male"), function(sex) {
+  ids <- contrast_inventors$patent_id[contrast_inventors$pred_sex == sex]
+  ids <- ids[ids %in% rownames(cpc_matrix)]
+  colSums(cpc_matrix[ids, ] != 0)
+}, cpc_matrix[1, ])
+sex_cpc <- as.data.frame(sweep(
+  sex_cpc, 2, table(contrast_inventors$pred_sex, exclude = "Unknown"), "/"
+) * 100)
+sex_cpc$Difference <- sex_cpc$Female - sex_cpc$Male
+sex_cpc$`Class Difference` <- wipo_cpc[rownames(sex_cpc), "Difference"]
+sex_cpc$Title <- cpc_group[rownames(sex_cpc), "title"]
+sex_cpc <- sex_cpc[order(-sex_cpc$Difference), ]
+kable(
+  sex_cpc[c(1:20, seq_len(20) + nrow(sex_cpc) - 20), ],
+  digits = 3, caption = "Percent of inventors in each sex group on a patent with the given class"
+)
+```
+
+# Inventor Sex Distribution Over Time
+
+Frequencies of patent categories change over time:
+
+```{r}
+unique_patents$year <- substr(unique_patents$date, 1, 4)
+wipo_trends <- as.data.frame(table(unique_patents$WIPO_class, unique_patents$year))
+colnames(wipo_trends) <- c("WIPO_Class", "Year", "Patents")
+library(splot)
+splot(Patents ~ Year * WIPO_Class, wipo_trends, line.type = "b", title = FALSE)
+```
+
+Frequencies of new inventors by assigned sex also changes over time:
+
+```{r}
+contrast_inventors$year <- substr(contrast_inventors$date, 1, 4)
+contrast_inventors <- contrast_inventors[order(contrast_inventors$date), ]
+unique_inventors <- contrast_inventors[!duplicated(contrast_inventors$inventor_id), ]
+sex_trends <- as.data.frame(table(unique_inventors$pred_sex, unique_inventors$year))
+colnames(sex_trends) <- c("Assigned_Sex", "Year", "Inventors")
+splot(Inventors ~ Year * Assigned_Sex, sex_trends, line.type = "b", title = FALSE)
+```
+
+How much might a difference in sex distribution between classes be due to time? That is,
+we might expect to see more new inventor participation in the dominant or rising class
+regardless of sex, which could shift to sex distributions between classes.
+
+To get at this, we might look at the distribution of first-seen inventors by sex group between classes over time:
+
+```{r}
+wipo_sex_yearly <- as.data.frame(t(vapply(split(
+  unique_inventors[, c("WIPO_class", "pred_sex")], unique_inventors$year
+), function(d) {
+  s <- table(d$pred_sex, d$WIPO_class, exclude = "Unknown")
+  s <- s / rowSums(s) * 100
+  s[, 2] - s[, 1]
+}, numeric(2))))
+wipo_sex_yearly$Year <- rownames(wipo_sex_yearly)
+splot(
+  wipo_sex_yearly[, 1:2] ~ wipo_sex_yearly$Year,
+  line.type = "b",
+  title = "Sex Distribution Ballance Between WIPO Classes", labx = "Year",
+  laby = "Percent Difference (Pharmaceuticals - Civil Engineering)"
+)
+```
+
+Here we can see that first-time female-assigned inventors have consistently been more shifted toward
+pharmaceuticals than first-time male-assigned inventors, and that in both groups there has been
+a fairly consistent trend toward pharmaceuticals. Though it is interesting to see that in the early
+years, first-time female-assigned inventors were more evenly split between classes, and
+later on, first-time male-assigned inventors were more evenly split between classes, though there
+is a more recent trend in the original direction.
