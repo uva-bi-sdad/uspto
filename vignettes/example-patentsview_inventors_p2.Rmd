@@ -25,8 +25,8 @@ knitr::opts_chunk$set(
 )
 library(uspto)
 library(knitr)
-library(lusilab)
-library(sf)
+library(Matrix)
+library(plotly)
 outDir <- "../patentsview/"
 if (!dir.exists(outDir)) outDir <- "../../patentsview/"
 ```
@@ -472,6 +472,8 @@ inventor_moves$female <- unique_inventors[inventor_moves$inventor_id, "pred_fem"
 length(unique(inventor_moves$inventor_id))
 ```
 
+## Most Recent Moves
+
 First, we might look at origin and destination state of moves in the latest 3 years for each sex group:
 ```{r}
 moves <- inventor_moves[inventor_moves$date > "2018-12-31", c("from", "to", "female")]
@@ -511,8 +513,10 @@ migrations <- migrations[su, su]
 migrations <- migrations[order(-rowSums(migrations)), order(-rowSums(migrations))]
 migrations_female <- migrations_female[rownames(migrations), colnames(migrations)]
 migrations_male <- migrations_male[rownames(migrations), colnames(migrations)]
-dimnames(migrations_female) <- dimnames(migrations_male) <- rep(list(unname(state_names[colnames(migrations)])), 2)
-diag(migrations_female) <- diag(migrations_male) <- 0
+dimnames(migrations_female) <- dimnames(migrations_male) <- rep(
+  list(unname(state_names[colnames(migrations)])), 2
+)
+# diag(migrations_female) <- diag(migrations_male) <- 0
 migrations_female <- migrations_female / sum(migrations_female) * 100
 migrations_male <- migrations_male / sum(migrations_male) * 100
 
@@ -524,10 +528,110 @@ palette <- scico::scico(nrow(migrations), palette = "vik")
 
 Percent of female-assigned inventor moves between 2018 and 2021:
 ```{r}
-chorddiag(migrations_female, groupColors = palette, showTicks = FALSE, groupnamePadding = 5)
+m <- migrations_female
+diag(m) <- 0
+chorddiag(m, groupColors = palette, showTicks = FALSE, groupnamePadding = 5)
 ```
 
 Percent of male-assigned inventor moves between 2018 and 2021:
 ```{r}
-chorddiag(migrations_male, groupColors = palette, showTicks = FALSE, groupnamePadding = 5)
+m <- migrations_male
+diag(m) <- 0
+chorddiag(m, groupColors = palette, showTicks = FALSE, groupnamePadding = 5)
 ```
+
+```{r}
+migration_difference <- migrations_female - migrations_male
+order <- names(sort(-apply(migration_difference, 1, median)))
+migration_difference <- data.frame(
+  Difference = as.numeric(migration_difference),
+  From = factor(rep(rownames(migrations_female), each = nrow(migrations)), order, ordered = TRUE),
+  To = factor(colnames(migrations_female), order, ordered = TRUE)
+)
+library(plotly)
+config(plot_ly(
+  migration_difference,
+  x = ~To, y = ~From, z = ~Difference,
+  type = "heatmap", colors = leaflet::colorNumeric(palette, c(0, 1.35), reverse = TRUE)
+), displayModeBar = FALSE, showTips = FALSE, showAxisDragHandles = FALSE)
+```
+
+## Organization Attractiveness
+
+One way to interpret an inventor's move from one organization to another is that the target
+organization is more attractive. From this, we might derive a measure of organization attractiveness,
+and we might see if different organizations are attractive to the different sex groups:
+
+```{r}
+# we'll only be interested in moves with associated organizations, and with different
+# to and from organizations:
+organization_moves <- inventor_moves[!is.na(inventor_moves$assignee_id), ]
+organization_moves <- organization_moves[!is.na(organization_moves$from_assignee), ]
+organization_moves <- organization_moves[
+  organization_moves$assignee_id != organization_moves$from_assignee,
+]
+data.frame(
+  moves = nrow(organization_moves),
+  inventors = length(unique(organization_moves$inventor_id))
+)
+
+# now we can just see how often each organization is the destination of a move:
+organization_move_frequency <- table(organization_moves$assignee_id, organization_moves$female)
+rownames(organization_move_frequency) <- organizations[
+  rownames(organization_move_frequency), "assignee_organization"
+]
+organization_move_frequency <- as.data.frame(cbind(
+  organization_move_frequency,
+  sweep(organization_move_frequency, 2, colSums(organization_move_frequency), "/") * 100
+))
+colnames(organization_move_frequency) <- c("Male", "Female", "Male_Percent", "Female_Percent")
+organization_move_frequency$Difference <- organization_move_frequency$Female_Percent -
+  organization_move_frequency$Male_Percent
+organization_move_frequency <- organization_move_frequency[
+  order(-organization_move_frequency$Difference),
+]
+kable(organization_move_frequency[c(1:20, 1:20 + nrow(organization_move_frequency) - 20), ], digits = 3)
+```
+
+We might also look at this within each of the latest years to see if there are trends:
+```{r}
+organization_moves$year <- substr(organization_moves$date, 1, 4)
+organization_moves$assignee_id <- as.factor(organization_moves$assignee_id)
+organization_yearly_difference <- do.call(rbind, lapply(2011:2021, function(year) {
+  d <- organization_moves[organization_moves$year == year, ]
+  m <- table(d$assignee_id, d$female)
+  m <- sweep(m, 2, colSums(m), "/") * 100
+  m[, 2] - m[, 1]
+}))
+organization_yearly_difference <- organization_yearly_difference[
+  , colSums(organization_yearly_difference != 0) == 11
+]
+
+# overall trends
+organization_trends <- cor(
+  organization_yearly_difference, seq_len(nrow(organization_yearly_difference))^3
+)[, 1]
+organizations_trending <- names(sort(abs(organization_trends), TRUE)[1:9])
+splot(
+  organization_yearly_difference[, organizations_trending] ~ as.character(2011:2021),
+  levels = list(mv = organizations[organizations_trending, "assignee_organization"]),
+  line.type = "b", title = "Organization Move Target Percent Difference over Time",
+  laby = "Percent Difference (Female - Male)", labx = "Year", lpos = "topright",
+  leg = "inside", myl = c(-.9, 1.7)
+)
+
+# recent trends
+organization_trends <- cor(
+  organization_yearly_difference[(1:4) + 7, ], (1:4)^3
+)[, 1]
+organizations_trending <- names(sort(abs(organization_trends), TRUE)[1:9])
+splot(
+  organization_yearly_difference[, organizations_trending] ~ as.character(2011:2021),
+  levels = list(mv = organizations[organizations_trending, "assignee_organization"]),
+  line.type = "b", title = "Organization Move Target Percent Difference over Time",
+  laby = "Percent Difference (Female - Male)", labx = "Year", lpos = "bottomright",
+  leg = "inside", myl = c(-.8, .6)
+)
+```
+
+Of course, this is only looking at organizational moved that coincided with physical moves.
